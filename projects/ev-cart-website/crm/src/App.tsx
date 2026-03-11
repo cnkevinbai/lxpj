@@ -5,6 +5,8 @@ import zhCN from 'antd/locale/zh_CN'
 import Login from './pages/Login'
 import CRMLayout from './components/layout/CRMLayout'
 import Dashboard from './pages/Dashboard'
+import CustomerList from './pages/Customers'
+import LeadList from './pages/Leads'
 
 // 占位页面
 const Placeholder = ({ title }: { title: string }) => (
@@ -42,8 +44,8 @@ const App: React.FC = () => {
           >
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />
-            <Route path="customers" element={<Placeholder title="客户管理" />} />
-            <Route path="leads" element={<Placeholder title="线索管理" />} />
+            <Route path="customers" element={<CustomerList />} />
+            <Route path="leads" element={<LeadList />} />
             <Route path="opportunities" element={<Placeholder title="商机管理" />} />
             <Route path="orders" element={<Placeholder title="订单管理" />} />
             <Route path="products" element={<Placeholder title="产品管理" />} />
