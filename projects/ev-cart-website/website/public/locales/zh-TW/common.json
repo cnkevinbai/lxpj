@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "home": "首頁",
+    "products": "產品中心",
+    "solutions": "解決方案",
+    "cases": "案例展示",
+    "support": "服務支持",
+    "about": "關於我們",
+    "contact": "聯繫我們",
+    "inquiry": "立即詢價"
+  },
+  "hero": {
+    "title": "引領綠色出行新時代",
+    "subtitle": "四川道達智能車輛製造有限公司專業生產電動觀光車 15 年，為全球客戶提供高品質綠色出行解決方案",
+    "exploreProducts": "探索產品",
+    "contactUs": "聯繫我們"
+  },
+  "features": {
+    "title": "為什麼選擇四川道達智能",
+    "subtitle": "15 年專注，200+ 經銷商網絡，50000+ 客戶信賴",
+    "range": {
+      "title": "超長續航",
+      "desc": "80-120km 續航，滿足全天運營需求"
+    },
+    "safety": {
+      "title": "安全可靠",
+      "desc": "通過 ISO9001、CE 等多項國際認證"
+    },
+    "custom": {
+      "title": "定製服務",
+      "desc": "支持車型、顏色、配置全方位定製"
+    },
+    "service": {
+      "title": "全球服務",
+      "desc": "全國 200+ 經銷商，24 小時響應"
+    }
+  },
+  "products": {
+    "title": "熱門車型",
+    "subtitle": "多樣化車型，滿足景區、酒店、房地產、工廠等多種場景需求",
+    "seats": "座",
+    "range": "續航",
+    "learnMore": "瞭解詳情"
+  },
+  "cta": {
+    "title": "獲取免費報價",
+    "subtitle": "留下您的需求，我們的專業顧問將在 24 小時內與您聯繫",
+    "button": "立即諮詢"
+  },
+  "footer": {
+    "products": "產品",
+    "solutions": "解決方案",
+    "support": "服務支持",
+    "company": "公司",
+    "privacy": "隱私政策",
+    "terms": "使用條款",
+    "icp": "ICP 備案",
+    "copyright": "© {{year}} 四川道達智能車輛製造有限公司。All rights reserved."
+  }
+}

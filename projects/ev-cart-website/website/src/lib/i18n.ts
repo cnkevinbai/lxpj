@@ -4,6 +4,7 @@ import LanguageDetector from 'i18next-browser-languagedetector'
 
 import translationZh from '../../public/locales/zh-CN/common.json'
 import translationEn from '../../public/locales/en/common.json'
+import translationZhTW from '../../public/locales/zh-TW/common.json'
 
 const resources = {
   'zh-CN': {
@@ -11,6 +12,9 @@ const resources = {
   },
   en: {
     translation: translationEn,
+  },
+  'zh-TW': {
+    translation: translationZhTW,
   },
 }
 
@@ -28,6 +32,7 @@ i18n
       order: ['navigator', 'htmlTag', 'path', 'subdomain'],
       caches: ['localStorage'],
     },
+    supportedLngs: ['zh-CN', 'en', 'zh-TW'],
   })
 
 export default i18n
