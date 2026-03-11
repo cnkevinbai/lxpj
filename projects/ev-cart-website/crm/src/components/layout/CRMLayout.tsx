@@ -20,14 +20,35 @@ const { Header, Sider, Content } = Layout
 
 const menuItems = [
   { key: '/dashboard', icon: <DashboardOutlined />, label: '仪表盘' },
-  { key: '/customers', icon: <TeamOutlined />, label: '客户管理' },
-  { key: '/leads', icon: <InboxOutlined />, label: '线索管理' },
-  { key: '/opportunities', icon: <OpportunityOutlined />, label: '商机管理' },
-  { key: '/orders', icon: <ShoppingCartOutlined />, label: '订单管理' },
-  { key: '/products', icon: <ShopOutlined />, label: '产品管理' },
-  { key: '/dealers', icon: <SolutionOutlined />, label: '经销商' },
-  { key: '/jobs', icon: <SolutionOutlined />, label: '招聘管理' },
-  { key: '/settings', icon: <SettingOutlined />, label: '系统设置' },
+  {
+    key: 'business',
+    icon: <TeamOutlined />,
+    label: '业务管理',
+    children: [
+      { key: '/customers', label: '客户管理' },
+      { key: '/leads', label: '线索管理' },
+      { key: '/opportunities', label: '商机管理' },
+      { key: '/orders', label: '订单管理' },
+    ],
+  },
+  {
+    key: 'products',
+    icon: <ShopOutlined />,
+    label: '产品管理',
+    children: [
+      { key: '/products', label: '产品列表' },
+    ],
+  },
+  {
+    key: 'admin',
+    icon: <SettingOutlined />,
+    label: '系统管理',
+    children: [
+      { key: '/users', label: '用户管理' },
+      { key: '/roles', label: '角色管理' },
+      { key: '/settings', label: '系统设置' },
+    ],
+  },
 ]
 
 const CRMLayout: React.FC = () => {

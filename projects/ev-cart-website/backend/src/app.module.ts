@@ -54,6 +54,7 @@ import { UploadModule } from './modules/upload/upload.module'
     // 业务模块
     AuthModule,
     UserModule,
+    RoleModule,
     CustomerModule,
     ProductModule,
     LeadModule,

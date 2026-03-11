@@ -10,23 +10,9 @@ import LeadList from './pages/Leads'
 import Opportunities from './pages/Opportunities'
 import Orders from './pages/Orders'
 import ProductList from './pages/Products'
-
-// 占位页面
-const Placeholder = ({ title }: { title: string }) => (
-  <div>
-    <h1 className="text-2xl font-bold mb-4">{title}</h1>
-    <p className="text-gray-500">开发中...</p>
-  </div>
-)
-
-// 受保护路由
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const token = localStorage.getItem('accessToken')
-  if (!token) {
-    return <Navigate to="/login" replace />
-  }
-  return <>{children}</>
-}
+import Users from './pages/Users'
+import Roles from './pages/Roles'
+import Settings from './pages/Settings'
 
 const App: React.FC = () => {
   return (
@@ -40,9 +26,7 @@ const App: React.FC = () => {
           <Route
             path="/"
             element={
-              <ProtectedRoute>
-                <CRMLayout />
-              </ProtectedRoute>
+              <CRMLayout />
             }
           >
             <Route index element={<Navigate to="/dashboard" replace />} />
@@ -52,9 +36,9 @@ const App: React.FC = () => {
             <Route path="opportunities" element={<Opportunities />} />
             <Route path="orders" element={<Orders />} />
             <Route path="products" element={<ProductList />} />
-            <Route path="dealers" element={<Placeholder title="经销商管理" />} />
-            <Route path="jobs" element={<Placeholder title="招聘管理" />} />
-            <Route path="settings" element={<Placeholder title="系统设置" />} />
+            <Route path="users" element={<Users />} />
+            <Route path="roles" element={<Roles />} />
+            <Route path="settings" element={<Settings />} />
           </Route>
         </Routes>
       </BrowserRouter>
