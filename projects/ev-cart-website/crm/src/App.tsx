@@ -17,6 +17,9 @@ import Integration from './pages/Integration'
 import Dealers from './pages/Dealers'
 import Jobs from './pages/Jobs'
 import Export from './pages/Export'
+import LeadCreate from './pages/LeadCreate'
+import CustomerCreate from './pages/CustomerCreate'
+import MobileDashboard from './pages/MobileDashboard'
 import Solutions from './pages/Solutions'
 import Cases from './pages/Cases'
 
@@ -45,6 +48,9 @@ const App: React.FC = () => {
             <Route path="dealers" element={<Dealers />} />
             <Route path="jobs" element={<Jobs />} />
             <Route path="export" element={<Export />} />
+            <Route path="leads/create" element={<LeadCreate />} />
+            <Route path="customers/create" element={<CustomerCreate />} />
+            <Route path="mobile" element={<MobileDashboard />} />
             <Route path="users" element={<Users />} />
             <Route path="roles" element={<Roles />} />
             <Route path="settings" element={<Settings />} />
