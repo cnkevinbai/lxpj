@@ -7,6 +7,7 @@ import { RedisModule } from './database/redis.module'
 // 模块
 import { AuthModule } from './modules/auth/auth.module'
 import { UserModule } from './modules/user/user.module'
+import { RoleModule } from './modules/role/role.module'
 import { CustomerModule } from './modules/customer/customer.module'
 import { ProductModule } from './modules/product/product.module'
 import { LeadModule } from './modules/lead/lead.module'
@@ -18,6 +19,9 @@ import { CmsModule } from './modules/cms/cms.module'
 import { HealthModule } from './modules/health/health.module'
 import { SettingModule } from './modules/setting/setting.module'
 import { UploadModule } from './modules/upload/upload.module'
+import { IntegrationModule } from './modules/integration/integration.module'
+import { EmailModule } from './modules/email/email.module'
+import { SmsModule } from './modules/sms/sms.module'
 
 @Module({
   imports: [
@@ -67,6 +71,8 @@ import { UploadModule } from './modules/upload/upload.module'
     SettingModule,
     UploadModule,
     IntegrationModule,
+    EmailModule,
+    SmsModule,
   ],
 })
 export class AppModule {}

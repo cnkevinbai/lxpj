@@ -48,6 +48,14 @@ const menuItems = [
     ],
   },
   {
+    key: 'hr',
+    icon: <TeamOutlined />,
+    label: '招聘管理',
+    children: [
+      { key: '/jobs', label: '职位管理' },
+    ],
+  },
+  {
     key: 'admin',
     icon: <SettingOutlined />,
     label: '系统管理',

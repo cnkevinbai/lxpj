@@ -15,6 +15,7 @@ import Roles from './pages/Roles'
 import Settings from './pages/Settings'
 import Integration from './pages/Integration'
 import Dealers from './pages/Dealers'
+import Jobs from './pages/Jobs'
 import Solutions from './pages/Solutions'
 import Cases from './pages/Cases'
 
@@ -41,6 +42,7 @@ const App: React.FC = () => {
             <Route path="orders" element={<Orders />} />
             <Route path="products" element={<ProductList />} />
             <Route path="dealers" element={<Dealers />} />
+            <Route path="jobs" element={<Jobs />} />
             <Route path="users" element={<Users />} />
             <Route path="roles" element={<Roles />} />
             <Route path="settings" element={<Settings />} />
