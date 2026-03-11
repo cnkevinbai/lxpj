@@ -93,6 +93,7 @@ import { CdnModule } from './modules/cdn/cdn.module'
     ReportModule,
     ImportModule,
     PdfModule,
+    RecommendModule,
   ],
 })
 export class AppModule {}

@@ -114,6 +114,8 @@ function AppRoutes() {
                 <Route path="follow-up/:targetType/:targetId" element={<FollowUpLog />} />
                 <Route path="performance" element={<SalesPerformance />} />
                 <Route path="permissions" element={<PermissionPanel />} />
+                <Route path="recommendations" element={<SmartRecommendations />} />
+                <Route path="data-viz" element={<DataVisualization />} />
               </Routes>
             </Layout>
           </ProtectedRoute>
