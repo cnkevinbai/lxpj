@@ -66,6 +66,7 @@ import { UploadModule } from './modules/upload/upload.module'
     HealthModule,
     SettingModule,
     UploadModule,
+    IntegrationModule,
   ],
 })
 export class AppModule {}

@@ -47,6 +47,7 @@ const menuItems = [
       { key: '/users', label: '用户管理' },
       { key: '/roles', label: '角色管理' },
       { key: '/settings', label: '系统设置' },
+      { key: '/integration', label: '第三方集成' },
     ],
   },
 ]

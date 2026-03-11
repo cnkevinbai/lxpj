@@ -13,6 +13,9 @@ import ProductList from './pages/Products'
 import Users from './pages/Users'
 import Roles from './pages/Roles'
 import Settings from './pages/Settings'
+import Solutions from './pages/Solutions'
+import Cases from './pages/Cases'
+import Integration from './pages/Integration'
 
 const App: React.FC = () => {
   return (
@@ -39,7 +42,12 @@ const App: React.FC = () => {
             <Route path="users" element={<Users />} />
             <Route path="roles" element={<Roles />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="integration" element={<Integration />} />
           </Route>
+
+          {/* 官网路由 */}
+          <Route path="/solutions" element={<Solutions />} />
+          <Route path="/cases" element={<Cases />} />
         </Routes>
       </BrowserRouter>
     </ConfigProvider>
