@@ -3,7 +3,10 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ConfigProvider } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
 import { AuthProvider, useAuth } from './hooks/useAuth'
+import { DarkModeProvider } from './hooks/useDarkMode'
 import SideMenu from './components/layout/SideMenu'
+import UserProfile from './components/layout/UserProfile'
+import QuickActions from './components/common/QuickActions'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import ForeignDashboard from './pages/ForeignDashboard'
@@ -14,6 +17,10 @@ import CustomerCreate from './pages/CustomerCreate'
 import FollowUpLog from './pages/FollowUpLog'
 import SalesPerformance from './pages/SalesPerformance'
 import PermissionPanel from './pages/PermissionPanel'
+import Profile from './pages/Profile'
+import AiChat from './pages/AiChat'
+import SmartRecommendations from './pages/SmartRecommendations'
+import DataVisualization from './pages/DataVisualization'
 
 // 受保护的路由组件
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -117,6 +124,7 @@ function AppRoutes() {
                 <Route path="recommendations" element={<SmartRecommendations />} />
                 <Route path="data-viz" element={<DataVisualization />} />
                 <Route path="ai-chat" element={<AiChat />} />
+                <Route path="profile" element={<Profile />} />
               </Routes>
             </Layout>
           </ProtectedRoute>
@@ -133,11 +141,13 @@ function AppRoutes() {
 function App() {
   return (
     <ConfigProvider locale={zhCN}>
-      <BrowserRouter>
-        <AuthProvider>
-          <AppRoutes />
-        </AuthProvider>
-      </BrowserRouter>
+      <DarkModeProvider>
+        <BrowserRouter>
+          <AuthProvider>
+            <AppRoutes />
+          </AuthProvider>
+        </BrowserRouter>
+      </DarkModeProvider>
     </ConfigProvider>
   )
 }

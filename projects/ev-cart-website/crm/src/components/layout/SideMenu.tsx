@@ -13,6 +13,8 @@ import {
   BarChartOutlined,
   SettingOutlined,
   UserOutlined,
+  RobotOutlined,
+  StarOutlined,
 } from '@ant-design/icons'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
@@ -112,9 +114,19 @@ const SideMenu: React.FC<SideMenuProps> = ({ collapsed }) => {
       label: '业绩看板',
     },
     {
-      key: '/crm/follow-up-logs',
-      icon: <FileTextOutlined />,
-      label: '跟进记录',
+      key: '/crm/recommendations',
+      icon: <StarOutlined />,
+      label: '智能推荐',
+    },
+    {
+      key: '/crm/data-viz',
+      icon: <BarChartOutlined />,
+      label: '数据大屏',
+    },
+    {
+      key: '/crm/ai-chat',
+      icon: <RobotOutlined />,
+      label: 'AI 客服',
     },
     {
       type: 'divider',
