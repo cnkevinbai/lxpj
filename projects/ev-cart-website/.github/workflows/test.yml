@@ -1,0 +1,77 @@
+name: Test
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: evcart_test
+          POSTGRES_USER: evcart
+          POSTGRES_PASSWORD: evcart123
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: '**/package-lock.json'
+
+    - name: Install dependencies
+      run: |
+        npm ci
+        cd website && npm ci
+        cd ../backend && npm ci
+
+    - name: Run lint
+      run: |
+        cd website && npm run lint
+        cd ../backend && npm run lint
+
+    - name: Run unit tests
+      run: |
+        cd website && npm run test:cov
+        cd ../backend && npm run test:cov
+
+    - name: Run E2E tests
+      run: |
+        npx playwright install --with-deps
+        npx playwright test
+
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./website/coverage/lcov.info,./backend/coverage/lcov.info
+        flags: unittests
