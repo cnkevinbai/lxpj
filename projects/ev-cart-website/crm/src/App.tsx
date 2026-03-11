@@ -7,6 +7,8 @@ import CRMLayout from './components/layout/CRMLayout'
 import Dashboard from './pages/Dashboard'
 import CustomerList from './pages/Customers'
 import LeadList from './pages/Leads'
+import Opportunities from './pages/Opportunities'
+import Orders from './pages/Orders'
 
 // 占位页面
 const Placeholder = ({ title }: { title: string }) => (
@@ -46,8 +48,8 @@ const App: React.FC = () => {
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="customers" element={<CustomerList />} />
             <Route path="leads" element={<LeadList />} />
-            <Route path="opportunities" element={<Placeholder title="商机管理" />} />
-            <Route path="orders" element={<Placeholder title="订单管理" />} />
+            <Route path="opportunities" element={<Opportunities />} />
+            <Route path="orders" element={<Orders />} />
             <Route path="products" element={<Placeholder title="产品管理" />} />
             <Route path="dealers" element={<Placeholder title="经销商管理" />} />
             <Route path="jobs" element={<Placeholder title="招聘管理" />} />
