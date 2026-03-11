@@ -2,8 +2,21 @@
 -- 电动观光车官网 + CRM 系统 - 数据库结构设计
 -- =====================================================
 -- 创建时间：2026-03-11
+-- 更新时间：2026-03-11 (添加经销商 + 招聘模块)
 -- 数据库：PostgreSQL 15
 -- 开发者：渔晓白 ⚙️
+-- =====================================================
+-- 模块清单 (10 个模块，25 张表):
+--   1. 用户与权限 (2 表)
+--   2. 客户管理 (2 表)
+--   3. 线索管理 (1 表)
+--   4. 产品管理 (2 表)
+--   5. 商机管理 (2 表)
+--   6. 订单管理 (2 表)
+--   7. 经销商管理 (3 表) ⭐ 新增
+--   8. 人才招聘 (3 表) ⭐ 新增
+--   9. 官网内容 (2 表)
+--   10. 系统配置 (2 表)
 -- =====================================================
 
 -- 启用扩展
@@ -240,7 +253,7 @@ CREATE TABLE order_production (
 );
 
 -- =====================================================
--- 7. 官网内容
+-- 10. 官网内容
 -- =====================================================
 
 -- 案例表
@@ -281,7 +294,162 @@ CREATE TABLE news (
 );
 
 -- =====================================================
--- 8. 系统配置
+-- 7. 经销商管理
+-- =====================================================
+
+-- 经销商申请表
+CREATE TABLE dealer_applications (
+    id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    company_name    VARCHAR(200) NOT NULL,
+    contact_person  VARCHAR(100) NOT NULL,
+    contact_phone   VARCHAR(20) NOT NULL,
+    contact_email   VARCHAR(255) NOT NULL,
+    province        VARCHAR(50) NOT NULL,
+    city            VARCHAR(50) NOT NULL,
+    district        VARCHAR(50),
+    address         TEXT,
+    business_type   VARCHAR(50),  -- 贸易公司、4S 店、维修厂、其他
+    existing_brand  VARCHAR(200),  -- 现有代理品牌
+    annual_revenue  VARCHAR(50),  -- 年营业额
+    team_size       VARCHAR(20),  -- 团队规模
+    investment_plan VARCHAR(50),  -- 投资计划
+    expected_area   VARCHAR(50),  -- 期望区域
+    message         TEXT,  -- 留言
+    status          VARCHAR(20) DEFAULT 'pending',  -- pending, reviewing, approved, rejected
+    reviewer_id     UUID REFERENCES users(id),
+    review_comment  TEXT,
+    reviewed_at     TIMESTAMP,
+    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    INDEX idx_status (status),
+    INDEX idx_province (province),
+    INDEX idx_city (city)
+);
+
+-- 经销商信息表
+CREATE TABLE dealers (
+    id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    application_id  UUID REFERENCES dealer_applications(id),
+    dealer_code     VARCHAR(50) UNIQUE NOT NULL,  -- 经销商编码
+    company_name    VARCHAR(200) NOT NULL,
+    logo_url        VARCHAR(500),
+    contact_person  VARCHAR(100) NOT NULL,
+    contact_phone   VARCHAR(20) NOT NULL,
+    contact_email   VARCHAR(255) NOT NULL,
+    province        VARCHAR(50) NOT NULL,
+    city            VARCHAR(50) NOT NULL,
+    address         TEXT NOT NULL,
+    latitude        DECIMAL(10,8),  -- 纬度
+    longitude       DECIMAL(11,8),  -- 经度
+    level           VARCHAR(20) DEFAULT 'standard',  -- standard, gold, platinum
+    authorized_area VARCHAR(200),  -- 授权区域
+    authorized_products JSONB DEFAULT '[]',  -- 授权产品
+    status          VARCHAR(20) DEFAULT 'active',  -- active, inactive, suspended
+    contract_start  DATE,
+    contract_end    DATE,
+    sales_target    DECIMAL(12,2),  -- 销售目标
+    sales_actual    DECIMAL(12,2) DEFAULT 0,  -- 实际销售
+    owner_id        UUID REFERENCES users(id),  -- 负责经理
+    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    INDEX idx_status (status),
+    INDEX idx_level (level),
+    INDEX idx_province_city (province, city)
+);
+
+-- 经销商政策表
+CREATE TABLE dealer_policies (
+    id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    title           VARCHAR(200) NOT NULL,
+    type            VARCHAR(50) NOT NULL,  -- support, training, rebate, protection
+    content         TEXT NOT NULL,
+    icon            VARCHAR(100),
+    sort_order      INT DEFAULT 0,
+    status          VARCHAR(20) DEFAULT 'active',
+    published_at    TIMESTAMP,
+    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    INDEX idx_type (type),
+    INDEX idx_status (status)
+);
+
+-- =====================================================
+-- 8. 人才招聘
+-- =====================================================
+
+-- 招聘岗位表
+CREATE TABLE jobs (
+    id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    title           VARCHAR(200) NOT NULL,
+    department      VARCHAR(100) NOT NULL,  -- 部门
+    location        VARCHAR(100) NOT NULL,  -- 工作地点
+    type            VARCHAR(20) NOT NULL,  -- full_time, part_time, intern
+    level           VARCHAR(50),  -- 职位级别
+    salary_range    VARCHAR(50),  -- 薪资范围
+    description     TEXT NOT NULL,  -- 职位描述
+    requirements    JSONB NOT NULL,  -- 任职要求
+    benefits        JSONB DEFAULT '[]',  -- 福利待遇
+    status          VARCHAR(20) DEFAULT 'active',  -- active, closed
+    apply_deadline  DATE,
+    view_count      INT DEFAULT 0,
+    apply_count     INT DEFAULT 0,
+    created_by      UUID REFERENCES users(id),
+    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    INDEX idx_status (status),
+    INDEX idx_department (department),
+    INDEX idx_location (location)
+);
+
+-- 职位申请表
+CREATE TABLE job_applications (
+    id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    job_id          UUID NOT NULL REFERENCES jobs(id) ON DELETE CASCADE,
+    name            VARCHAR(100) NOT NULL,
+    phone           VARCHAR(20) NOT NULL,
+    email           VARCHAR(255) NOT NULL,
+    resume_url      VARCHAR(500),  -- 简历文件 URL
+    education       VARCHAR(50),  -- 学历
+    major           VARCHAR(100),  -- 专业
+    experience_years INT,  -- 工作年限
+    current_company VARCHAR(200),  -- 现任公司
+    expected_salary VARCHAR(50),  -- 期望薪资
+    message         TEXT,  -- 留言
+    status          VARCHAR(20) DEFAULT 'new',  -- new, reviewing, interview, offer, rejected, hired
+    reviewer_id     UUID REFERENCES users(id),
+    review_comment  TEXT,
+    interview_date  TIMESTAMP,
+    interviewed_by  UUID REFERENCES users(id),
+    hired_at        TIMESTAMP,
+    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    INDEX idx_job (job_id),
+    INDEX idx_status (status)
+);
+
+-- 企业文化表
+CREATE TABLE culture (
+    id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    type            VARCHAR(50) NOT NULL,  -- vision, mission, values, story
+    title           VARCHAR(200) NOT NULL,
+    content         TEXT NOT NULL,
+    images          JSONB DEFAULT '[]',
+    video_url       VARCHAR(500),
+    sort_order      INT DEFAULT 0,
+    status          VARCHAR(20) DEFAULT 'active',
+    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    INDEX idx_type (type)
+);
+
+-- =====================================================
+-- 9. 系统配置
 -- =====================================================
 
 -- 系统配置表
@@ -360,6 +528,33 @@ SELECT
     AVG(probability) as avg_probability
 FROM opportunities
 GROUP BY stage;
+
+-- =====================================================
+-- 统计视图更新
+-- =====================================================
+
+-- 经销商统计视图
+CREATE VIEW dealer_stats AS
+SELECT 
+    level,
+    status,
+    COUNT(*) as count,
+    SUM(sales_target) as total_target,
+    SUM(sales_actual) as total_actual
+FROM dealers
+GROUP BY level, status;
+
+-- 招聘统计视图
+CREATE VIEW recruitment_stats AS
+SELECT 
+    j.department,
+    j.status as job_status,
+    COUNT(DISTINCT j.id) as job_count,
+    COUNT(ja.id) as application_count,
+    COUNT(CASE WHEN ja.status = 'hired' THEN 1 END) as hired_count
+FROM jobs j
+LEFT JOIN job_applications ja ON j.id = ja.job_id
+GROUP BY j.department, j.status;
 
 -- =====================================================
 -- 结束
