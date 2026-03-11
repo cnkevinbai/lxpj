@@ -9,6 +9,7 @@ import CustomerList from './pages/Customers'
 import LeadList from './pages/Leads'
 import Opportunities from './pages/Opportunities'
 import Orders from './pages/Orders'
+import ProductList from './pages/Products'
 
 // 占位页面
 const Placeholder = ({ title }: { title: string }) => (
@@ -50,7 +51,7 @@ const App: React.FC = () => {
             <Route path="leads" element={<LeadList />} />
             <Route path="opportunities" element={<Opportunities />} />
             <Route path="orders" element={<Orders />} />
-            <Route path="products" element={<Placeholder title="产品管理" />} />
+            <Route path="products" element={<ProductList />} />
             <Route path="dealers" element={<Placeholder title="经销商管理" />} />
             <Route path="jobs" element={<Placeholder title="招聘管理" />} />
             <Route path="settings" element={<Placeholder title="系统设置" />} />

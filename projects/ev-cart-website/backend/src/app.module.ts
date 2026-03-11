@@ -5,15 +5,19 @@ import { ThrottlerModule } from '@nestjs/throttler'
 import { RedisModule } from './database/redis.module'
 
 // 模块
+import { AuthModule } from './modules/auth/auth.module'
 import { UserModule } from './modules/user/user.module'
 import { CustomerModule } from './modules/customer/customer.module'
 import { ProductModule } from './modules/product/product.module'
 import { LeadModule } from './modules/lead/lead.module'
+import { OpportunityModule } from './modules/opportunity/opportunity.module'
 import { OrderModule } from './modules/order/order.module'
 import { DealerModule } from './modules/dealer/dealer.module'
 import { JobModule } from './modules/job/job.module'
 import { CmsModule } from './modules/cms/cms.module'
 import { HealthModule } from './modules/health/health.module'
+import { SettingModule } from './modules/setting/setting.module'
+import { UploadModule } from './modules/upload/upload.module'
 
 @Module({
   imports: [
@@ -48,15 +52,19 @@ import { HealthModule } from './modules/health/health.module'
     ]),
 
     // 业务模块
+    AuthModule,
     UserModule,
     CustomerModule,
     ProductModule,
     LeadModule,
+    OpportunityModule,
     OrderModule,
     DealerModule,
     JobModule,
     CmsModule,
     HealthModule,
+    SettingModule,
+    UploadModule,
   ],
 })
 export class AppModule {}
