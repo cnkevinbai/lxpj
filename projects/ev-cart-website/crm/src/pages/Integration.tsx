@@ -16,7 +16,7 @@ const Integration: React.FC = () => {
       platform: 'dingtalk',
       name: '钉钉',
       webhook: 'https://oapi.dingtalk.com/robot/send?access_token=xxx',
-      events: ['新线索', '订单变更'],
+      events: ['新线索', '订单变更', '商机阶段变更'],
       status: true,
     },
     {
@@ -24,8 +24,51 @@ const Integration: React.FC = () => {
       platform: 'wecom',
       name: '企业微信',
       webhook: 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=xxx',
-      events: ['新线索'],
+      events: ['新线索', '订单变更'],
+      status: true,
+    },
+    {
+      id: 3,
+      platform: 'feishu',
+      name: '飞书',
+      webhook: 'https://open.feishu.cn/open-apis/bot/v2/hook/xxx',
+      events: ['新线索', '审批通知'],
       status: false,
+    },
+    {
+      id: 4,
+      type: 'email',
+      name: '邮件服务',
+      config: {
+        host: 'smtp.qq.com',
+        port: 465,
+        user: 'noreply@daoda-auto.com',
+      },
+      events: ['验证码', '新线索通知'],
+      status: true,
+    },
+    {
+      id: 5,
+      type: 'sms',
+      name: '短信服务',
+      config: {
+        provider: 'aliyun',
+        signName: '四川道达智能',
+      },
+      events: ['验证码', '新线索通知'],
+      status: true,
+    },
+    {
+      id: 6,
+      type: 'oss',
+      name: '对象存储',
+      config: {
+        provider: 'aliyun',
+        bucket: 'daoda-auto',
+        region: 'oss-cn-shanghai',
+      },
+      events: ['文件上传', '图片存储'],
+      status: true,
     },
   ]
 
