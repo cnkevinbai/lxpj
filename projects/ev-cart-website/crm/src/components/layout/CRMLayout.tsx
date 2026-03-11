@@ -40,6 +40,14 @@ const menuItems = [
     ],
   },
   {
+    key: 'channels',
+    icon: <ShopOutlined />,
+    label: '渠道管理',
+    children: [
+      { key: '/dealers', label: '经销商管理' },
+    ],
+  },
+  {
     key: 'admin',
     icon: <SettingOutlined />,
     label: '系统管理',
