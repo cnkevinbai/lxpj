@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "home": "首页",
+    "products": "产品中心",
+    "solutions": "解决方案",
+    "cases": "案例展示",
+    "support": "服务支持",
+    "about": "关于我们",
+    "contact": "联系我们",
+    "inquiry": "立即询价"
+  },
+  "hero": {
+    "title": "引领绿色出行新时代",
+    "subtitle": "EV Cart 集团专业生产电动观光车 15 年，为全球客户提供高品质绿色出行解决方案",
+    "exploreProducts": "探索产品",
+    "contactUs": "联系我们"
+  },
+  "features": {
+    "title": "为什么选择 EV Cart",
+    "subtitle": "15 年专注，200+ 经销商网络，50000+ 客户信赖",
+    "range": {
+      "title": "超长续航",
+      "desc": "80-120km 续航，满足全天运营需求"
+    },
+    "safety": {
+      "title": "安全可靠",
+      "desc": "通过 ISO9001、CE 等多项国际认证"
+    },
+    "custom": {
+      "title": "定制服务",
+      "desc": "支持车型、颜色、配置全方位定制"
+    },
+    "service": {
+      "title": "全球服务",
+      "desc": "全国 200+ 经销商，24 小时响应"
+    }
+  },
+  "products": {
+    "title": "热门车型",
+    "subtitle": "多样化车型，满足景区、酒店、房地产、工厂等多种场景需求",
+    "seats": "座",
+    "range": "续航",
+    "learnMore": "了解详情"
+  },
+  "cta": {
+    "title": "获取免费报价",
+    "subtitle": "留下您的需求，我们的专业顾问将在 24 小时内与您联系",
+    "button": "立即咨询"
+  },
+  "footer": {
+    "products": "产品",
+    "solutions": "解决方案",
+    "support": "服务支持",
+    "company": "公司",
+    "privacy": "隐私政策",
+    "terms": "使用条款",
+    "icp": "京 ICP 备 XXXXXXXX 号",
+    "copyright": "© {{year}} EV Cart 集团。All rights reserved."
+  }
+}

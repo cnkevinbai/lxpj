@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "home": "Home",
+    "products": "Products",
+    "solutions": "Solutions",
+    "cases": "Cases",
+    "support": "Support",
+    "about": "About Us",
+    "contact": "Contact",
+    "inquiry": "Get Quote"
+  },
+  "hero": {
+    "title": "Leading the New Era of Green Mobility",
+    "subtitle": "EV Cart Group has been specializing in electric sightseeing cars for 15 years, providing high-quality green mobility solutions for customers worldwide",
+    "exploreProducts": "Explore Products",
+    "contactUs": "Contact Us"
+  },
+  "features": {
+    "title": "Why Choose EV Cart",
+    "subtitle": "15 years of expertise, 200+ dealer network, 50000+ trusted customers",
+    "range": {
+      "title": "Long Range",
+      "desc": "80-120km range, meeting all-day operation needs"
+    },
+    "safety": {
+      "title": "Safe & Reliable",
+      "desc": "ISO9001, CE and other international certifications"
+    },
+    "custom": {
+      "title": "Customization",
+      "desc": "Full customization support for model, color, and configuration"
+    },
+    "service": {
+      "title": "Global Service",
+      "desc": "200+ dealers nationwide, 24-hour response"
+    }
+  },
+  "products": {
+    "title": "Popular Models",
+    "subtitle": "Diverse models for scenic spots, hotels, real estate, factories and more",
+    "seats": "seats",
+    "range": "range",
+    "learnMore": "Learn More"
+  },
+  "cta": {
+    "title": "Get Free Quote",
+    "subtitle": "Leave your requirements, our professional consultants will contact you within 24 hours",
+    "button": "Consult Now"
+  },
+  "footer": {
+    "products": "Products",
+    "solutions": "Solutions",
+    "support": "Support",
+    "company": "Company",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use",
+    "icp": "ICP License",
+    "copyright": "© {{year}} EV Cart Group. All rights reserved."
+  }
+}
