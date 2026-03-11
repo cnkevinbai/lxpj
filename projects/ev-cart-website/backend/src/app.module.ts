@@ -91,6 +91,7 @@ import { CdnModule } from './modules/cdn/cdn.module'
     PermissionModule,
     NotificationModule,
     ReportModule,
+    ImportModule,
   ],
 })
 export class AppModule {}
