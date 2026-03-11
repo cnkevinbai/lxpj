@@ -15,7 +15,10 @@ export default function AboutPage() {
         {/* Hero */}
         <section className="bg-gray-900 text-white py-20">
           <div className="container-custom text-center">
-            <h1 className="heading-1 mb-4">关于 EV Cart</h1>
+            <h1 className="heading-1 mb-4">关于四川道达智能</h1>
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+              四川道达智能车辆制造有限公司
+            </p>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
               15 年专注，铸就绿色出行专家
             </p>
@@ -29,10 +32,10 @@ export default function AboutPage() {
               <div>
                 <h2 className="heading-2 mb-6">公司简介</h2>
                 <p className="text-gray-600 mb-4">
-                  EV Cart 集团成立于 2011 年，是一家专注于电动观光车、电动巡逻车、电动货车等新能源车辆研发、生产、销售于一体的高新技术企业。
+                  四川道达智能车辆制造有限公司成立于 2011 年，是一家专注于电动观光车、电动巡逻车、电动货车等新能源车辆研发、生产、销售于一体的高新技术企业。
                 </p>
                 <p className="text-gray-600 mb-4">
-                  公司总部位于江苏省苏州市，拥有现代化生产基地 50000 平方米，员工 500 余人，其中研发技术人员占比超过 30%。
+                  公司总部位于四川省，拥有现代化生产基地 50000 平方米，员工 500 余人，其中研发技术人员占比超过 30%。
                 </p>
                 <p className="text-gray-600">
                   产品远销全球 50 多个国家和地区，服务超过 50000 家客户，包括众多 5A 级景区、星级酒店、大型房地产项目等。
@@ -98,12 +101,12 @@ export default function AboutPage() {
             </div>
             <div className="max-w-3xl mx-auto">
               {[
-                { year: '2011', title: '公司成立', desc: 'EV Cart 在苏州成立，开始电动观光车研发' },
+                { year: '2011', title: '公司成立', desc: '四川道达智能成立，开始电动观光车研发' },
                 { year: '2014', title: '技术突破', desc: '自主研发 BMS 电池管理系统，续航提升 30%' },
                 { year: '2017', title: '市场扩张', desc: '产品出口至 20 个国家，建立海外销售网络' },
                 { year: '2020', title: '智能制造', desc: '新工厂投产，年产能突破 10000 台' },
                 { year: '2023', title: '行业领先', desc: '市场份额全国前三，服务客户超 50000 家' },
-                { year: '2026', title: '持续创新', desc: '推出新一代智能电动观光车，引领行业升级' },
+                { year: '2026', title: '持续创新', desc: '四川道达智能推出新一代智能电动观光车，引领行业升级' },
               ].map((item, index) => (
                 <div key={index} className="flex gap-6 mb-8 last:mb-0">
                   <div className="flex-shrink-0 w-24 text-center">
@@ -151,7 +154,7 @@ export default function AboutPage() {
         {/* CTA */}
         <section className="section bg-brand-blue text-white">
           <div className="container-custom text-center">
-            <h2 className="heading-2 mb-4">携手 EV Cart，共创绿色未来</h2>
+            <h2 className="heading-2 mb-4">携手四川道达智能，共创绿色未来</h2>
             <p className="text-xl mb-8 max-w-2xl mx-auto">
               无论您是景区、酒店、房地产还是工厂，我们都能为您提供专业的绿色出行解决方案
             </p>

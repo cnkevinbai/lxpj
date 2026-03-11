@@ -5,14 +5,14 @@ import Footer from '@/components/business/Footer'
 
 export const metadata: Metadata = {
   title: {
-    default: 'EV Cart 集团 - 电动观光车专家',
-    template: '%s | EV Cart 集团',
+    default: '四川道达智能 - 电动观光车专家',
+    template: '%s | 四川道达智能',
   },
-  description: 'EV Cart 集团专业生产电动观光车 15 年，产品覆盖景区、酒店、房地产、工厂等场景。续航 80-120km，支持定制，全国 200+ 经销商服务网络。',
-  keywords: '电动观光车，景区观光车，酒店电瓶车，电动巡逻车，观光车厂家，观光车价格，EV Cart',
-  authors: [{ name: 'EV Cart 集团' }],
-  creator: 'EV Cart 集团',
-  publisher: 'EV Cart 集团',
+  description: '四川道达智能车辆制造有限公司专业生产电动观光车 15 年，产品覆盖景区、酒店、房地产、工厂等场景。续航 80-120km，支持定制，全国 200+ 经销商服务网络。',
+  keywords: '电动观光车，景区观光车，酒店电瓶车，电动巡逻车，观光车厂家，观光车价格，四川道达智能',
+  authors: [{ name: '四川道达智能' }],
+  creator: '四川道达智能',
+  publisher: '四川道达智能',
   robots: {
     index: true,
     follow: true,
@@ -81,6 +81,8 @@ export default function RootLayout({
             `,
           }}
         />
+        {/* 公司名称 */}
+        <meta name="author" content="四川道达智能车辆制造有限公司" />
       </head>
       <body className="min-h-screen bg-white">
         <Navbar />

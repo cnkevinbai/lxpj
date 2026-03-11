@@ -83,7 +83,7 @@ const CRMLayout: React.FC = () => {
       <Sider trigger={null} collapsible collapsed={collapsed} theme="light">
         <div className="h-16 flex items-center justify-center">
           <h1 className={`font-bold text-xl ${collapsed ? 'hidden' : 'block'}`}>
-            EV Cart CRM
+            道达智能 CRM
           </h1>
         </div>
         <Menu

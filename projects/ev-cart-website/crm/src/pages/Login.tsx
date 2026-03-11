@@ -30,7 +30,7 @@ const Login: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <Card className="w-full max-w-md" title="EV Cart CRM 登录">
+      <Card className="w-full max-w-md" title="道达智能 CRM 登录">
         <Form
           name="login"
           initialValues={{ remember: true }}
