@@ -9,6 +9,9 @@ export interface Response<T> {
   timestamp: string
 }
 
+/**
+ * 响应转换拦截器
+ */
 @Injectable()
 export class TransformInterceptor<T> implements NestInterceptor<T, Response<T>> {
   intercept(context: ExecutionContext, next: CallHandler): Observable<Response<T>> {

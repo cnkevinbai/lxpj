@@ -2,6 +2,9 @@ import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from
 import { Request, Response } from 'express'
 import logger from '../lib/logger'
 
+/**
+ * HTTP 异常过滤器
+ */
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
