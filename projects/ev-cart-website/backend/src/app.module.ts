@@ -84,6 +84,10 @@ import { CdnModule } from './modules/cdn/cdn.module'
     OauthModule,
     CdnModule,
     FollowUpModule,
+    ForeignLeadModule,
+    ForeignCustomerModule,
+    ForeignInquiryModule,
+    ForeignOrderModule,
   ],
 })
 export class AppModule {}
