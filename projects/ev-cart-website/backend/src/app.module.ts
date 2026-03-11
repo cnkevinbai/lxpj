@@ -94,6 +94,7 @@ import { CdnModule } from './modules/cdn/cdn.module'
     ImportModule,
     PdfModule,
     RecommendModule,
+    AiChatModule,
   ],
 })
 export class AppModule {}

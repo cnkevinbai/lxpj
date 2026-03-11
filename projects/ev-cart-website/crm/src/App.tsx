@@ -116,6 +116,7 @@ function AppRoutes() {
                 <Route path="permissions" element={<PermissionPanel />} />
                 <Route path="recommendations" element={<SmartRecommendations />} />
                 <Route path="data-viz" element={<DataVisualization />} />
+                <Route path="ai-chat" element={<AiChat />} />
               </Routes>
             </Layout>
           </ProtectedRoute>
