@@ -1,0 +1,108 @@
+version: '3.8'
+
+services:
+  # PostgreSQL 数据库
+  postgres:
+    image: postgres:15-alpine
+    container_name: evcart-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: evcart
+      POSTGRES_USER: evcart
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-evcart123}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    networks:
+      - evcart-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U evcart"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis 缓存
+  redis:
+    image: redis:7-alpine
+    container_name: evcart-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - evcart-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 官网 (Next.js)
+  website:
+    build:
+      context: ./website
+      dockerfile: Dockerfile
+    container_name: evcart-website
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      BACKEND_URL: http://backend:3001
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - evcart-network
+
+  # 后端 API (NestJS)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: evcart-backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: evcart
+      DB_USER: evcart
+      DB_PASSWORD: ${DB_PASSWORD:-evcart123}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      JWT_SECRET: ${JWT_SECRET}
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - evcart-network
+
+  # CRM 系统 (React)
+  crm:
+    build:
+      context: ./crm
+      dockerfile: Dockerfile
+    container_name: evcart-crm
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      BACKEND_URL: http://backend:3001
+    ports:
+      - "3002:3002"
+    depends_on:
+      - backend
+    networks:
+      - evcart-network
+
+networks:
+  evcart-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:

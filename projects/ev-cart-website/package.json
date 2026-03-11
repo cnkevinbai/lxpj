@@ -1,0 +1,59 @@
+{
+  "name": "evcart-website",
+  "version": "0.1.0",
+  "private": true,
+  "description": "电动观光车官网 + CRM 系统",
+  "author": "渔晓白 <yuxiaobai@openclaw.local>",
+  "license": "UNLICENSED",
+  "workspaces": [
+    "website",
+    "backend",
+    "crm"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:website\" \"npm run dev:backend\" \"npm run dev:crm\"",
+    "dev:website": "cd website && npm run dev",
+    "dev:backend": "cd backend && npm run start:dev",
+    "dev:crm": "cd crm && npm run dev",
+    "build": "npm run build:website && npm run build:backend && npm run build:crm",
+    "build:website": "cd website && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "build:crm": "cd crm && npm run build",
+    "start": "npm run start:website && npm run start:backend && npm run start:crm",
+    "start:website": "cd website && npm run start",
+    "start:backend": "cd backend && npm run start",
+    "start:crm": "cd crm && npm run start",
+    "lint": "npm run lint:website && npm run lint:backend && npm run lint:crm",
+    "lint:website": "cd website && npm run lint",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:crm": "cd crm && npm run lint",
+    "test": "npm run test:website && npm run test:backend && npm run test:crm",
+    "test:website": "cd website && npm run test",
+    "test:backend": "cd backend && npm run test",
+    "test:crm": "cd crm && npm run test",
+    "selfcheck": "bash scripts/selfcheck.sh",
+    "setup": "bash scripts/setup.sh",
+    "db:migrate": "cd backend && npm run migration:run",
+    "db:seed": "psql -h $DB_HOST -U $DB_USER -d $DB_NAME -f database/seed.sql"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/bj754946/pj.git"
+  },
+  "keywords": [
+    "evcart",
+    "electric-vehicle",
+    "website",
+    "crm",
+    "nextjs",
+    "nestjs",
+    "react"
+  ]
+}
