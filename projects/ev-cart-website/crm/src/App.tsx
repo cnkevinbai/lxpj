@@ -1,0 +1,60 @@
+import React from 'react'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { ConfigProvider } from 'antd'
+import zhCN from 'antd/locale/zh_CN'
+import Login from './pages/Login'
+import CRMLayout from './components/layout/CRMLayout'
+import Dashboard from './pages/Dashboard'
+
+// 占位页面
+const Placeholder = ({ title }: { title: string }) => (
+  <div>
+    <h1 className="text-2xl font-bold mb-4">{title}</h1>
+    <p className="text-gray-500">开发中...</p>
+  </div>
+)
+
+// 受保护路由
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const token = localStorage.getItem('accessToken')
+  if (!token) {
+    return <Navigate to="/login" replace />
+  }
+  return <>{children}</>
+}
+
+const App: React.FC = () => {
+  return (
+    <ConfigProvider locale={zhCN}>
+      <BrowserRouter>
+        <Routes>
+          {/* 公开路由 */}
+          <Route path="/login" element={<Login />} />
+          
+          {/* 受保护路由 */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <CRMLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Navigate to="/dashboard" replace />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="customers" element={<Placeholder title="客户管理" />} />
+            <Route path="leads" element={<Placeholder title="线索管理" />} />
+            <Route path="opportunities" element={<Placeholder title="商机管理" />} />
+            <Route path="orders" element={<Placeholder title="订单管理" />} />
+            <Route path="products" element={<Placeholder title="产品管理" />} />
+            <Route path="dealers" element={<Placeholder title="经销商管理" />} />
+            <Route path="jobs" element={<Placeholder title="招聘管理" />} />
+            <Route path="settings" element={<Placeholder title="系统设置" />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </ConfigProvider>
+  )
+}
+
+export default App
