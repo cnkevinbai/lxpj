@@ -1,5 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm'
 
+/**
+ * 用户实体
+ * 支持部门区分（内贸/外贸）
+ */
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -20,14 +24,20 @@ export class User {
   @Column({ length: 500, nullable: true })
   avatarUrl: string
 
-  @Column({ default: 'sales' })
-  role: string
+  @Column({ length: 50, default: 'sales' })
+  role: string // admin, manager, sales, support
 
-  @Column({ default: 'active' })
-  status: string
+  @Column({ length: 50, default: 'domestic' })
+  department: string // 'domestic' (内贸) or 'foreign' (外贸)
+
+  @Column({ length: 50, default: 'active' })
+  status: string // active, inactive, locked
 
   @Column({ nullable: true })
   lastLoginAt: Date
+
+  @Column({ nullable: true })
+  lastLoginIp: string
 
   @CreateDateColumn()
   createdAt: Date
