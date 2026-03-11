@@ -22,6 +22,7 @@ import { UploadModule } from './modules/upload/upload.module'
 import { IntegrationModule } from './modules/integration/integration.module'
 import { EmailModule } from './modules/email/email.module'
 import { SmsModule } from './modules/sms/sms.module'
+import { ExportModule } from './modules/export/export.module'
 
 @Module({
   imports: [
@@ -73,6 +74,7 @@ import { SmsModule } from './modules/sms/sms.module'
     IntegrationModule,
     EmailModule,
     SmsModule,
+    ExportModule,
   ],
 })
 export class AppModule {}
