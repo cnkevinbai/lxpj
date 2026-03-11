@@ -25,6 +25,8 @@ import { SmsModule } from './modules/sms/sms.module'
 import { ExportModule } from './modules/export/export.module'
 import { PaymentModule } from './modules/payment/payment.module'
 import { AnalyticsModule } from './modules/analytics/analytics.module'
+import { OauthModule } from './modules/oauth/oauth.module'
+import { CdnModule } from './modules/cdn/cdn.module'
 
 @Module({
   imports: [
@@ -79,6 +81,8 @@ import { AnalyticsModule } from './modules/analytics/analytics.module'
     ExportModule,
     PaymentModule,
     AnalyticsModule,
+    OauthModule,
+    CdnModule,
   ],
 })
 export class AppModule {}
