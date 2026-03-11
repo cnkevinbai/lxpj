@@ -20,6 +20,8 @@ import Export from './pages/Export'
 import LeadCreate from './pages/LeadCreate'
 import CustomerCreate from './pages/CustomerCreate'
 import MobileDashboard from './pages/MobileDashboard'
+import FollowUpLog from './pages/FollowUpLog'
+import SalesPerformance from './pages/SalesPerformance'
 import Solutions from './pages/Solutions'
 import Cases from './pages/Cases'
 
@@ -51,6 +53,8 @@ const App: React.FC = () => {
             <Route path="leads/create" element={<LeadCreate />} />
             <Route path="customers/create" element={<CustomerCreate />} />
             <Route path="mobile" element={<MobileDashboard />} />
+            <Route path="follow-up/:targetType/:targetId" element={<FollowUpLog />} />
+            <Route path="performance" element={<SalesPerformance />} />
             <Route path="users" element={<Users />} />
             <Route path="roles" element={<Roles />} />
             <Route path="settings" element={<Settings />} />

@@ -83,6 +83,7 @@ import { CdnModule } from './modules/cdn/cdn.module'
     AnalyticsModule,
     OauthModule,
     CdnModule,
+    FollowUpModule,
   ],
 })
 export class AppModule {}
