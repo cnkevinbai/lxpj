@@ -1,212 +1,124 @@
-'use client'
+import React from 'react'
+import { Button, Space, Card, Row, Col, Form, Input, message } from 'antd'
+import { MailOutlined, PhoneOutlined, EnvironmentOutlined, ArrowLeftOutlined } from '@ant-design/icons'
 
-import { useState } from 'react'
-import SEO from '@/components/seo/SEO'
-import Button from '@/components/ui/Button'
+const { TextArea } = Input
 
-export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    email: '',
-    subject: '',
-    message: '',
-  })
-  const [submitted, setSubmitted] = useState(false)
+const Contact: React.FC = () => {
+  const [form] = Form.useForm()
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log('Contact form submitted:', formData)
-    setSubmitted(true)
-  }
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    })
-  }
-
-  if (submitted) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center max-w-md">
-          <div className="text-6xl mb-4">✓</div>
-          <h1 className="heading-2 mb-4">提交成功</h1>
-          <p className="text-gray-600 mb-8">
-            感谢您的留言，我们将尽快与您联系
-          </p>
-          <a href="/" className="btn-primary">返回首页</a>
-        </div>
-      </div>
-    )
+  const onFinish = (values: any) => {
+    console.log('Contact form:', values)
+    message.success('留言提交成功！我们会尽快联系您。')
+    form.resetFields()
   }
 
   return (
-    <>
-      <SEO
-        title="联系我们 - EV Cart 集团"
-        description="联系 EV Cart 集团，获取电动观光车产品咨询和服务支持"
-        url="https://www.evcart.com/contact"
-      />
-
-      <div className="min-h-screen bg-gray-50 py-12">
-        <div className="container-custom">
-          <div className="text-center mb-12">
-            <h1 className="heading-2 mb-4">联系我们</h1>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              如有任何疑问或需求，请随时与我们联系，我们的专业团队将为您提供优质服务
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* 联系信息 */}
-            <div>
-              <div className="card p-8 mb-6">
-                <h2 className="heading-3 mb-6">联系方式</h2>
-                <div className="space-y-4">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-brand-blue/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <svg className="w-6 h-6 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold mb-1">电话咨询</h3>
-                      <p className="text-gray-600">400-XXX-XXXX</p>
-                      <p className="text-sm text-gray-500">工作日 9:00-18:00</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-brand-blue/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <svg className="w-6 h-6 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold mb-1">邮箱联系</h3>
-                      <p className="text-gray-600">info@evcart.com</p>
-                      <p className="text-sm text-gray-500">24 小时内回复</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-brand-blue/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <svg className="w-6 h-6 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold mb-1">公司地址</h3>
-                      <p className="text-gray-600">江苏省苏州市 XX 区 XX 路 XX 号</p>
-                      <p className="text-sm text-gray-500">欢迎来访参观</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* 地图占位 */}
-              <div className="card overflow-hidden">
-                <div className="aspect-video bg-gray-200 flex items-center justify-center">
-                  <p className="text-gray-500">地图加载中...</p>
-                </div>
-              </div>
-            </div>
-
-            {/* 联系表单 */}
-            <div className="card p-8">
-              <h2 className="heading-3 mb-6">在线留言</h2>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                    姓名 *
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    required
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-transparent"
-                    placeholder="请输入您的姓名"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                      手机号 *
-                    </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      required
-                      value={formData.phone}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-transparent"
-                      placeholder="请输入您的手机号"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                      邮箱
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-transparent"
-                      placeholder="请输入您的邮箱"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
-                    主题
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-transparent"
-                    placeholder="请输入主题"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                    留言内容 *
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={6}
-                    required
-                    value={formData.message}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-transparent"
-                    placeholder="请输入您的留言内容"
-                  />
-                </div>
-
-                <Button type="submit" variant="primary" size="lg" className="w-full">
-                  提交留言
-                </Button>
-              </form>
-            </div>
-          </div>
-        </div>
+    <div style={{ minHeight: '100vh', background: '#f5f5f5' }}>
+      {/* 导航栏 */}
+      <div style={{ padding: '20px 50px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#fff', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+        <h1 style={{ margin: 0, fontSize: 24, color: '#1890ff' }}>EV Cart</h1>
+        <Space size="large">
+          <a href="/" style={{ color: '#666' }}>首页</a>
+          <a href="/products" style={{ color: '#666' }}>产品中心</a>
+          <a href="/about" style={{ color: '#666' }}>关于我们</a>
+          <a href="/contact" style={{ color: '#1890ff' }}>联系我们</a>
+          <Button type="primary">登录系统</Button>
+        </Space>
       </div>
-    </>
+
+      {/* 内容区域 */}
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 20px' }}>
+        {/* 返回按钮 */}
+        <Button icon={<ArrowLeftOutlined />} style={{ marginBottom: 24 }} onClick={() => window.history.back()}>
+          返回首页
+        </Button>
+
+        <Row gutter={32}>
+          {/* 联系信息 */}
+          <Col span={12}>
+            <Card title="联系方式" style={{ marginBottom: 24 }}>
+              <div style={{ padding: '20px 0' }}>
+                <div style={{ marginBottom: 24 }}>
+                  <MailOutlined style={{ fontSize: 24, color: '#1890ff', marginRight: 12 }} />
+                  <span style={{ fontSize: 16 }}>support@evcart.com</span>
+                </div>
+                <div style={{ marginBottom: 24 }}>
+                  <PhoneOutlined style={{ fontSize: 24, color: '#52c41a', marginRight: 12 }} />
+                  <span style={{ fontSize: 16 }}>400-888-8888</span>
+                </div>
+                <div>
+                  <EnvironmentOutlined style={{ fontSize: 24, color: '#faad14', marginRight: 12 }} />
+                  <span style={{ fontSize: 16 }}>深圳市南山区科技园</span>
+                </div>
+              </div>
+            </Card>
+
+            <Card title="工作时间">
+              <p style={{ lineHeight: 2, color: '#666' }}>
+                周一至周五：9:00 - 18:00<br/>
+                周六：10:00 - 17:00<br/>
+                周日及法定节假日休息
+              </p>
+            </Card>
+          </Col>
+
+          {/* 联系表单 */}
+          <Col span={12}>
+            <Card title="在线留言">
+              <Form form={form} layout="vertical" onFinish={onFinish}>
+                <Form.Item
+                  name="name"
+                  label="姓名"
+                  rules={[{ required: true, message: '请输入您的姓名' }]}
+                >
+                  <Input placeholder="请输入您的姓名" />
+                </Form.Item>
+
+                <Form.Item
+                  name="email"
+                  label="邮箱"
+                  rules={[
+                    { required: true, message: '请输入您的邮箱' },
+                    { type: 'email', message: '请输入正确的邮箱格式' }
+                  ]}
+                >
+                  <Input placeholder="请输入您的邮箱" />
+                </Form.Item>
+
+                <Form.Item
+                  name="phone"
+                  label="电话"
+                >
+                  <Input placeholder="请输入您的电话" />
+                </Form.Item>
+
+                <Form.Item
+                  name="message"
+                  label="留言内容"
+                  rules={[{ required: true, message: '请输入留言内容' }]}
+                >
+                  <TextArea rows={4} placeholder="请输入您的留言内容" />
+                </Form.Item>
+
+                <Form.Item>
+                  <Button type="primary" htmlType="submit" block size="large">
+                    提交留言
+                  </Button>
+                </Form.Item>
+              </Form>
+            </Card>
+          </Col>
+        </Row>
+      </div>
+
+      {/* 页脚 */}
+      <div style={{ padding: '40px 50px', background: '#333', color: '#fff', textAlign: 'center', marginTop: 40 }}>
+        <p>© 2026 EV Cart. All rights reserved.</p>
+        <p>联系方式：400-888-8888 | 邮箱：info@evcart.com</p>
+      </div>
+    </div>
   )
 }
+
+export default Contact
