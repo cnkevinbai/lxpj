@@ -33,6 +33,8 @@ import Reports from './pages/Reports'
 import MessageCenter from './pages/MessageCenter'
 import Finance from './pages/Finance'
 import Inventory from './pages/Inventory'
+import Orders from './pages/Orders'
+import ERP from './pages/ERP'
 
 const App: React.FC = () => {
   return (
@@ -92,6 +94,12 @@ const App: React.FC = () => {
             
             {/* 库存管理 */}
             <Route path="inventory" element={<Inventory />} />
+            
+            {/* 订单管理 */}
+            <Route path="orders" element={<Orders />} />
+            
+            {/* ERP 系统 */}
+            <Route path="erp" element={<ERP />} />
             
             {/* 404 重定向 */}
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
