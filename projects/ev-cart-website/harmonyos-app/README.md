@@ -35,17 +35,38 @@ harmonyos-app/
 ├── entry/
 │   └── src/main/ets/
 │       ├── entryability/
+│       │   └── EntryAbility.ets       # 入口能力
 │       ├── pages/
-│       │   ├── Index.ets         # 首页
-│       │   ├── Customers.ets     # 客户管理
-│       │   ├── Orders.ets        # 订单管理
-│       │   ├── Inventory.ets     # 库存查询
-│       │   └── Profile.ets       # 个人中心
-│       └── common/
-│           └── services/
-│               ├── ApiService.ets    # API 服务
-│               └── StorageService.ets # 存储服务
-└── package.json
+│       │   ├── Index.ets              # 首页 ✅
+│       │   ├── Login.ets              # 登录页 ✅
+│       │   ├── Customers.ets          # 客户列表 📝
+│       │   ├── CustomerDetail.ets     # 客户详情 📝
+│       │   ├── Orders.ets             # 订单列表 📝
+│       │   ├── OrderDetail.ets        # 订单详情 📝
+│       │   ├── Inventory.ets          # 库存查询 📝
+│       │   ├── Finance.ets            # 财务报表 📝
+│       │   └── Profile.ets            # 个人中心 📝
+│       ├── common/
+│       │   ├── services/
+│       │   │   ├── ApiService.ets     # API 服务 ✅
+│       │   │   ├── AuthService.ets    # 认证服务 ✅
+│       │   │   └── StorageService.ets # 存储服务 ✅
+│       │   ├── components/
+│       │   │   ├── NavBar.ets         # 导航栏 ✅
+│       │   │   ├── TabBar.ets         # 底部导航 📝
+│       │   │   └── CustomerCard.ets   # 客户卡片 ✅
+│       │   ├── utils/
+│       │   │   ├── Constants.ets      # 常量定义 ✅
+│       │   │   └── DateFormat.ets     # 日期格式化 ✅
+│       │   └── models/
+│       │       └── Customer.ets       # 数据模型 ✅
+│       └── resources/
+│           └── base/
+│               ├── element/           # 资源文件
+│               └── media/             # 媒体资源
+├── package.json
+├── README.md
+└── DEVELOPMENT_GUIDE.md  # 开发指南 ✅
 ```
 
 ## 🎯 功能模块
