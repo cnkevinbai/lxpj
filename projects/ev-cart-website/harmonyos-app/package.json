@@ -1,0 +1,18 @@
+{
+  "name": "evcart-harmonyos-app",
+  "version": "1.0.0",
+  "description": "EV Cart 鸿蒙原生应用",
+  "main": "index.ets",
+  "scripts": {
+    "dev": "hvigorw assembleHap --mode module",
+    "build": "hvigorw assembleHap --mode release"
+  },
+  "dependencies": {
+    "@ohos/axios": "^2.2.0",
+    "@ohos/net": "^1.0.0",
+    "@ohos/data.preferences": "^1.0.0"
+  },
+  "devDependencies": {
+    "@ohos/hvigor-ohos-plugin": "^4.0.0"
+  }
+}
