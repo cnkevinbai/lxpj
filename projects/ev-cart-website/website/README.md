@@ -1,6 +1,6 @@
-# EV Cart 官网
+# 四川道达智能官网
 
-> 基于 Next.js 14 的官方网站
+> 四川道达智能车辆制造有限公司 - 基于 Next.js 14 的官方网站
 
 ## 🚀 快速开始
 
@@ -24,22 +24,33 @@ npm start
 website/
 ├── src/
 │   ├── app/
-│   │   ├── layout.tsx      # 根布局
-│   │   ├── page.tsx        # 首页
-│   │   ├── products/       # 产品中心
-│   │   ├── about/          # 关于我们
-│   │   └── contact/        # 联系我们
-│   └── components/         # 组件
-├── public/                 # 静态资源
-└── package.json
+│   │   ├── layout.tsx      # 根布局 ✅
+│   │   ├── page.tsx        # 首页 ✅
+│   │   ├── products/       # 产品中心 ✅
+│   │   ├── about/          # 关于我们 ✅
+│   │   └── contact/        # 联系我们 ✅
+│   └── components/         # 组件 📝
+├── public/                 # 静态资源 📝
+├── package.json
+├── tsconfig.json
+└── README.md
 ```
+
+**详细设计文档**: [DESIGN_GUIDE.md](DESIGN_GUIDE.md)
 
 ## 🎯 功能特性
 
+### 已完成 ✅
 - ✅ 响应式设计
 - ✅ SEO 优化
 - ✅ 静态生成
 - ✅ API 集成
+- ✅ 在线留言
+
+### 规划中 📝
+- 📝 产品详情
+- 📝 新闻列表
+- 📝 多语言支持
 
 ## 📝 页面列表
 
@@ -76,6 +87,8 @@ vercel deploy
 
 ## 📞 联系方式
 
-- 官网：https://www.evcart.com
-- 邮箱：info@evcart.com
-- 电话：400-888-8888
+- **公司**: 四川道达智能车辆制造有限公司
+- **官网**: https://www.ddzn.com
+- **邮箱**: info@ddzn.com
+- **电话**: 400-888-8888
+- **地址**: 四川省眉山市
