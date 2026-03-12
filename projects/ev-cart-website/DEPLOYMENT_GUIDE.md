@@ -1,450 +1,287 @@
-# 道达智能 CRM+ERP 系统部署指南
+# EV Cart 系统部署指南
 
-> 版本：v1.0.0  
-> 更新日期：2026-03-12  
-> 作者：渔晓白 ⚙️
+> 生产环境部署完整指南
 
----
+## 📋 前置要求
 
-## 📋 目录
+- Node.js 18+
+- PostgreSQL 14+
+- Nginx（可选）
+- Docker（可选）
 
-1. [系统架构](#系统架构)
-2. [环境要求](#环境要求)
-3. [快速部署](#快速部署)
-4. [配置说明](#配置说明)
-5. [数据库初始化](#数据库初始化)
-6. [服务启动](#服务启动)
-7. [健康检查](#健康检查)
-8. [常见问题](#常见问题)
+## 🚀 快速部署
 
----
-
-## 系统架构
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Nginx 负载均衡                        │
-│              SSL/HTTPS + 静态资源 + 反向代理             │
-└─────────────┬───────────────────────────────────────────┘
-              │
-    ┌─────────┴─────────┐
-    │                   │
-┌───▼────┐        ┌────▼───┐
-│ 官网   │        │ CRM    │  ← 前端应用
-│ (Next) │        │(React) │
-└────────┘        └────────┘
-                        │
-              ┌─────────▼─────────┐
-              │                   │
-         ┌────▼───┐        ┌─────▼────┐
-         │  ERP   │        │  后端 API │  ← 后端服务
-         │(React) │        │ (NestJS) │
-         └────────┘        └─────┬────┘
-                                 │
-                       ┌─────────▼─────────┐
-                       │                   │
-                  ┌────▼───┐        ┌─────▼────┐
-                  │PostgreSQL│      │  Redis   │  ← 数据存储
-                  └────────┘        └──────────┘
-```
-
----
-
-## 环境要求
-
-### 硬件要求
-
-| 组件 | 最低配置 | 推荐配置 |
-|-----|---------|---------|
-| **CPU** | 4 核 | 8 核+ |
-| **内存** | 8GB | 16GB+ |
-| **磁盘** | 50GB SSD | 100GB+ SSD |
-| **带宽** | 10Mbps | 100Mbps+ |
-
-### 软件要求
-
-| 软件 | 版本 | 说明 |
-|-----|------|------|
-| **Node.js** | >= 18.0 | 运行时环境 |
-| **PostgreSQL** | >= 14.0 | 数据库 |
-| **Redis** | >= 6.0 | 缓存 |
-| **Nginx** | >= 1.20 | Web 服务器 |
-| **Docker** | >= 20.0 (可选) | 容器化部署 |
-
----
-
-## 快速部署
-
-### 方式一：源码部署
-
-#### 1. 克隆代码
+### 1. 数据库初始化
 
 ```bash
-git clone <repository-url>
-cd ev-cart-website
+# 创建数据库
+sudo -u postgres psql -c "CREATE DATABASE evcart;"
+sudo -u postgres psql -c "CREATE USER evcart WITH PASSWORD 'evcart123';"
+sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE evcart TO evcart;"
+
+# 执行迁移脚本
+cd database/migrations
+for file in *.sql; do
+  sudo -u postgres psql -d evcart -f $file
+done
 ```
 
-#### 2. 安装后端依赖
+### 2. 后端部署
 
 ```bash
 cd backend
-npm install --production
+
+# 安装依赖
+npm install
+
+# 配置环境变量
+cp .env.example .env
+# 编辑 .env 文件，配置数据库连接等
+
+# 构建
+npm run build
+
+# 启动（开发环境）
+npm run start:dev
+
+# 启动（生产环境）
+npm run start:prod
+
+# 或使用 PM2
+pm2 start dist/main.js --name evcart-api
 ```
 
-#### 3. 安装前端依赖
+### 3. 前端部署
 
 ```bash
-# CRM
-cd ../crm
-npm install --production
+cd crm
 
-# ERP
-cd ../erp-frontend
-npm install --production
+# 安装依赖
+npm install
 
-# 官网
-cd ../website
-npm install --production
+# 配置 API 地址
+# 编辑 .env 或 vite.config.ts
+
+# 构建
+npm run build
+
+# 部署到 Nginx
+# 将 dist/ 目录内容复制到 Nginx 网站根目录
 ```
 
-#### 4. 构建前端
+### 4. Nginx 配置
+
+```nginx
+server {
+    listen 80;
+    server_name crm.evcart.com;
+
+    # 前端静态文件
+    location / {
+        root /var/www/evcart-crm;
+        try_files $uri $uri/ /index.html;
+    }
+
+    # 后端 API 代理
+    location /api/ {
+        proxy_pass http://localhost:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+```
+
+### 5. SSL 证书配置
 
 ```bash
-# CRM
-cd ../crm
-npm run build
-
-# ERP
-cd ../erp-frontend
-npm run build
-
-# 官网
-cd ../website
-npm run build
+# 使用 Let's Encrypt
+sudo certbot --nginx -d crm.evcart.com
 ```
 
-#### 5. 构建后端
+## 🔧 环境变量配置
 
-```bash
-cd ../backend
-npm run build
+### 后端 .env
+
+```env
+# 数据库
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=evcart
+DB_PASSWORD=evcart123
+DB_DATABASE=evcart
+
+# JWT
+JWT_SECRET=your-secret-key-change-in-production
+JWT_EXPIRES_IN=7d
+
+# 服务器
+PORT=3001
+NODE_ENV=production
+
+# 邮件
+EMAIL_ENABLED=true
+EMAIL_SMTP_HOST=smtp.qq.com
+EMAIL_SMTP_PORT=587
+EMAIL_USERNAME=noreply@evcart.com
+EMAIL_PASSWORD=your-password
+
+# 短信
+SMS_ENABLED=false
+SMS_PROVIDER=aliyun
 ```
 
-### 方式二：Docker 部署
+### 前端 .env
 
-#### 1. 启动服务
+```env
+# API 地址
+VITE_API_BASE_URL=https://api.evcart.com/api/v1
+
+# 应用配置
+VITE_APP_TITLE=EV Cart CRM
+VITE_APP_VERSION=1.0.0
+```
+
+## 🐳 Docker 部署
+
+### docker-compose.yml
+
+```yaml
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: evcart
+      POSTGRES_USER: evcart
+      POSTGRES_PASSWORD: evcart123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/migrations:/docker-entrypoint-initdb.d
+
+  backend:
+    build: ./backend
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: evcart
+      DB_PASSWORD: evcart123
+      DB_DATABASE: evcart
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+
+  frontend:
+    build: ./crm
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+```
+
+### 启动命令
 
 ```bash
 docker-compose up -d
 ```
 
-#### 2. 查看状态
+## 📊 性能优化
 
+### 1. 数据库优化
+- 创建索引
+- 配置连接池
+- 定期 VACUUM
+
+### 2. 后端优化
+- 启用缓存（Redis）
+- 使用集群模式
+- 启用 Gzip 压缩
+
+### 3. 前端优化
+- 代码分割
+- 图片压缩
+- CDN 加速
+- 启用缓存
+
+## 🔒 安全配置
+
+### 1. 防火墙
 ```bash
-docker-compose ps
+# 只开放必要端口
+sudo ufw allow 22
+sudo ufw allow 80
+sudo ufw allow 443
+sudo ufw enable
 ```
 
----
+### 2. 数据库安全
+- 修改默认端口
+- 限制远程访问
+- 定期备份
 
-## 配置说明
+### 3. 应用安全
+- 启用 HTTPS
+- 配置 CORS
+- 设置安全头
 
-### 后端配置 (.env)
+## 📝 运维监控
 
+### 1. 日志管理
 ```bash
-# 数据库
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-DATABASE_NAME=daoda_crm
-DATABASE_USER=postgres
-DATABASE_PASSWORD=your_password
+# 查看后端日志
+pm2 logs evcart-api
 
-# Redis
-REDIS_HOST=localhost
-REDIS_PORT=6379
-REDIS_PASSWORD=your_password
-
-# JWT
-JWT_SECRET=your_jwt_secret_key
-JWT_EXPIRES_IN=7d
-
-# 第三方集成
-DINGTALK_APP_KEY=your_app_key
-DINGTALK_APP_SECRET=your_app_secret
-DINGTALK_AGENT_ID=your_agent_id
-
-# 文件存储
-UPLOAD_PATH=/data/uploads
-MAX_FILE_SIZE=10485760
-
-# 服务器
-PORT=3002
-NODE_ENV=production
+# 查看 Nginx 日志
+tail -f /var/log/nginx/access.log
+tail -f /var/log/nginx/error.log
 ```
 
-### 前端配置
+### 2. 性能监控
+- 使用 PM2 Monitor
+- 配置 Prometheus + Grafana
+- 设置告警通知
 
-#### CRM (.env)
-
-```bash
-VITE_API_BASE_URL=/api
-VITE_APP_TITLE=道达智能 CRM
-```
-
-#### ERP (.env)
-
-```bash
-VITE_API_BASE_URL=/api/erp
-VITE_APP_TITLE=道达智能 ERP
-```
-
-#### 官网 (.env)
-
-```bash
-NEXT_PUBLIC_API_URL=/api
-NEXT_PUBLIC_SITE_TITLE=道达智能
-```
-
----
-
-## 数据库初始化
-
-### 1. 创建数据库
-
-```sql
-CREATE DATABASE daoda_crm
-  WITH ENCODING = 'UTF8'
-  LC_COLLATE = 'en_US.UTF-8'
-  LC_CTYPE = 'en_US.UTF-8';
-```
-
-### 2. 运行迁移
-
-```bash
-cd backend
-npm run typeorm migration:run
-```
-
-### 3. 初始化数据
-
-```bash
-npm run seed
-```
-
----
-
-## 服务启动
-
-### 后端服务
-
-```bash
-cd backend
-pm2 start dist/main.js --name daoda-api
-```
-
-### 前端服务
-
-#### 方案一：Nginx 静态托管
-
-```nginx
-server {
-    listen 80;
-    server_name crm.example.com;
-    
-    root /var/www/crm/dist;
-    index index.html;
-    
-    location / {
-        try_files $uri $uri/ /index.html;
-    }
-    
-    location /api {
-        proxy_pass http://localhost:3002;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-    }
-}
-```
-
-#### 方案二：Node.js 服务
-
-```bash
-# CRM
-cd crm
-pm2 start npm --name daoda-crm -- run serve
-
-# ERP
-cd erp-frontend
-pm2 start npm --name daoda-erp -- run serve
-
-# 官网
-cd website
-pm2 start npm --name daoda-web -- run start
-```
-
-### 启动所有服务
-
-```bash
-pm2 start pm2.config.js
-pm2 save
-pm2 startup
-```
-
----
-
-## 健康检查
-
-### API 健康检查
-
-```bash
-curl http://localhost:3002/health
-```
-
-**响应**:
-```json
-{
-  "status": "healthy",
-  "database": true,
-  "redis": true,
-  "memory": 45.2,
-  "uptime": 86400,
-  "timestamp": 1234567890
-}
-```
-
-### 前端检查
-
-```bash
-curl http://localhost:3000
-curl http://localhost:3001
-curl http://localhost:3003
-```
-
----
-
-## 常见问题
-
-### 1. 数据库连接失败
-
-**问题**: `Error: connect ECONNREFUSED`
-
-**解决**:
-```bash
-# 检查 PostgreSQL 状态
-systemctl status postgresql
-
-# 重启 PostgreSQL
-systemctl restart postgresql
-
-# 检查配置
-cat /etc/postgresql/14/main/pg_hba.conf
-```
-
-### 2. 端口被占用
-
-**问题**: `Error: listen EADDRINUSE`
-
-**解决**:
-```bash
-# 查看占用端口的进程
-lsof -i :3002
-
-# 杀死进程
-kill -9 <PID>
-```
-
-### 3. 内存不足
-
-**问题**: `JavaScript heap out of memory`
-
-**解决**:
-```bash
-# 增加 Node.js 内存限制
-export NODE_OPTIONS="--max-old-space-size=4096"
-```
-
-### 4. 文件上传失败
-
-**问题**: `Request entity too large`
-
-**解决**:
-```nginx
-# Nginx 配置
-client_max_body_size 10M;
-```
-
----
-
-## 监控与维护
-
-### 日志查看
-
-```bash
-# 查看所有日志
-pm2 logs
-
-# 查看特定服务日志
-pm2 logs daoda-api
-
-# 清空日志
-pm2 flush
-```
-
-### 性能监控
-
-```bash
-# 查看服务状态
-pm2 status
-
-# 查看详细信息
-pm2 show daoda-api
-
-# 重启服务
-pm2 restart daoda-api
-```
-
-### 数据备份
-
+### 3. 备份策略
 ```bash
 # 数据库备份
-pg_dump -U postgres daoda_crm > backup_$(date +%Y%m%d).sql
+pg_dump -U evcart evcart > backup_$(date +%Y%m%d).sql
 
-# Redis 备份
-redis-cli BGSAVE
+# 定期备份（crontab）
+0 2 * * * pg_dump -U evcart evcart > /backup/evcart_$(date +\%Y\%m\%d).sql
 ```
 
----
+## 🆘 故障排查
 
-## 安全加固
+### 常见问题
 
-### 1. 防火墙配置
+1. **数据库连接失败**
+   - 检查 PostgreSQL 服务状态
+   - 验证连接配置
+   - 检查防火墙规则
 
-```bash
-# 开放必要端口
-ufw allow 80/tcp
-ufw allow 443/tcp
-ufw allow 22/tcp
+2. **前端页面空白**
+   - 检查浏览器控制台错误
+   - 验证 API 地址配置
+   - 清除浏览器缓存
 
-# 启用防火墙
-ufw enable
-```
+3. **API 请求失败**
+   - 检查后端服务状态
+   - 验证 Token 是否过期
+   - 查看 Nginx 配置
 
-### 2. SSL 配置
+## 📞 技术支持
 
-```bash
-# 使用 Let's Encrypt
-certbot --nginx -d crm.example.com
-```
+- 文档：https://docs.evcart.com
+- 邮箱：support@evcart.com
+- 电话：400-888-8888
 
-### 3. 数据库安全
+## 📄 许可证
 
-```sql
--- 创建专用用户
-CREATE USER daoda_app WITH PASSWORD 'strong_password';
-GRANT CONNECT ON DATABASE daoda_crm TO daoda_app;
-GRANT USAGE ON SCHEMA public TO daoda_app;
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO daoda_app;
-```
-
----
-
-_道达智能 · 版权所有_
+Copyright © 2026 EV Cart
