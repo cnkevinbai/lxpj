@@ -1,145 +1,181 @@
 import React, { useState, useEffect } from 'react'
-import { Card, Row, Col, Statistic, Table, Progress, Tag } from 'antd'
+import { Card, Row, Col, Statistic, Progress, Table, DatePicker, Select, message } from 'antd'
 import {
-  TeamOutlined,
-  InboxOutlined,
-  OpportunityOutlined,
-  ShoppingCartOutlined,
-  RiseOutlined,
+  TrendUpOutlined,
+  TrendDownOutlined,
   DollarOutlined,
+  TeamOutlined,
+  ShoppingCartOutlined,
+  EyeOutlined,
 } from '@ant-design/icons'
-import apiClient from '../services/api'
-import dayjs from 'dayjs'
+import type { ColumnsType } from 'antd/es/table'
+import { Line, Bar, Pie } from '@ant-design/charts'
 
-/**
- * 内贸业务仪表盘
- */
+const { RangePicker } = DatePicker
+
+interface DashboardData {
+  salesToday: number
+  salesMonth: number
+  customersTotal: number
+  ordersPending: number
+  revenueGrowth: number
+  customerGrowth: number
+}
+
 const Dashboard: React.FC = () => {
-  const [stats, setStats] = useState({
-    totalLeads: 0,
-    totalCustomers: 0,
-    totalOpportunities: 0,
-    totalOrders: 0,
-    totalAmount: 0,
-    conversionRate: 0,
+  const [loading, setLoading] = useState(false)
+  const [data, setData] = useState<DashboardData>({
+    salesToday: 0,
+    salesMonth: 0,
+    customersTotal: 0,
+    ordersPending: 0,
+    revenueGrowth: 0,
+    customerGrowth: 0,
   })
-  const [recentLeads, setRecentLeads] = useState([])
-  const [topSales, setTopSales] = useState([])
+  const [dateRange, setDateRange] = useState<[any, any]>()
+
+  // 获取仪表盘数据
+  const fetchDashboard = async () => {
+    setLoading(true)
+    try {
+      const response = await fetch('/api/v1/dashboard')
+      const data = await response.json()
+      setData(data)
+    } catch (error) {
+      message.error('加载数据失败')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    loadStats()
-    loadRecentLeads()
-    loadTopSales()
+    fetchDashboard()
   }, [])
 
-  const loadStats = async () => {
-    try {
-      const response = await apiClient.get('/stats/domestic')
-      setStats(response.data)
-    } catch (error) {
-      console.error('加载统计失败', error)
-    }
+  // 销售趋势图表配置
+  const salesTrendConfig = {
+    data: [
+      { date: '03-01', sales: 120000 },
+      { date: '03-02', sales: 150000 },
+      { date: '03-03', sales: 180000 },
+      { date: '03-04', sales: 220000 },
+      { date: '03-05', sales: 190000 },
+      { date: '03-06', sales: 250000 },
+      { date: '03-07', sales: 280000 },
+    ],
+    xField: 'date',
+    yField: 'sales',
+    point: { size: 5, shape: 'circle' },
+    label: {
+      style: { fill: '#aaa' },
+    },
   }
 
-  const loadRecentLeads = async () => {
-    try {
-      const response = await apiClient.get('/leads', {
-        params: { limit: 5, businessType: 'domestic' },
-      })
-      setRecentLeads(response.data.data)
-    } catch (error) {
-      console.error('加载线索失败', error)
-    }
+  // 客户分布图表配置
+  const customerDistConfig = {
+    appendPadding: 10,
+    data: [
+      { type: 'A 级客户', value: 120 },
+      { type: 'B 级客户', value: 280 },
+      { type: 'C 级客户', value: 450 },
+    ],
+    angleField: 'value',
+    colorField: 'type',
+    radius: 0.8,
+    label: {
+      type: 'outer',
+      content: '{name} {percentage}',
+    },
   }
 
-  const loadTopSales = async () => {
-    try {
-      const response = await apiClient.get('/performance/top-sales', {
-        params: { limit: 5, businessType: 'domestic' },
-      })
-      setTopSales(response.data)
-    } catch (error) {
-      console.error('加载销售排名失败', error)
-    }
-  }
-
-  const leadColumns = [
+  // 订单状态表格
+  const orderColumns: ColumnsType = [
     {
-      title: '姓名',
-      dataIndex: 'name',
-      key: 'name',
+      title: '订单编号',
+      dataIndex: 'orderCode',
+      key: 'orderCode',
+      width: 150,
     },
     {
-      title: '手机',
-      dataIndex: 'phone',
-      key: 'phone',
+      title: '客户',
+      dataIndex: 'customer',
+      key: 'customer',
+      width: 150,
     },
     {
-      title: '意向产品',
-      dataIndex: 'productInterest',
-      key: 'productInterest',
+      title: '金额',
+      dataIndex: 'amount',
+      key: 'amount',
+      width: 120,
+      render: (amount: number) => `¥${amount.toLocaleString()}`,
     },
     {
-      title: '来源',
-      dataIndex: 'source',
-      key: 'source',
-      render: (source: string) => <Tag>{source}</Tag>,
+      title: '状态',
+      dataIndex: 'status',
+      key: 'status',
+      width: 100,
+      render: (status: string) => ({
+        pending: '待处理',
+        processing: '处理中',
+        completed: '已完成',
+      }[status] || status),
     },
     {
       title: '创建时间',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      render: (date: string) => dayjs(date).format('YYYY-MM-DD'),
+      width: 150,
+      render: (date: string) => new Date(date).toLocaleDateString(),
     },
   ]
 
-  const salesColumns = [
-    {
-      title: '排名',
-      dataIndex: 'rank',
-      key: 'rank',
-      render: (rank: number) => (
-        <span className={`font-bold ${rank <= 3 ? 'text-red-500' : ''}`}>
-          {rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank}
-        </span>
-      ),
-    },
-    {
-      title: '业务员',
-      dataIndex: 'username',
-      key: 'username',
-    },
-    {
-      title: '线索数',
-      dataIndex: 'leadCount',
-      key: 'leadCount',
-    },
-    {
-      title: '成交客户',
-      dataIndex: 'customerCount',
-      key: 'customerCount',
-    },
-    {
-      title: '业绩进度',
-      dataIndex: 'progress',
-      key: 'progress',
-      render: (progress: number) => (
-        <Progress percent={progress} status={progress >= 100 ? 'success' : 'active'} />
-      ),
-    },
+  const orders = [
+    { id: 1, orderCode: 'ORD-20260312-001', customer: '张三', amount: 15800, status: 'pending', createdAt: '2026-03-12' },
+    { id: 2, orderCode: 'ORD-20260312-002', customer: '李四', amount: 28500, status: 'processing', createdAt: '2026-03-12' },
+    { id: 3, orderCode: 'ORD-20260312-003', customer: '王五', amount: 42000, status: 'pending', createdAt: '2026-03-12' },
   ]
 
   return (
-    <div className="p-4">
+    <div>
+      {/* 日期筛选 */}
+      <Card style={{ marginBottom: 16 }}>
+        <Space>
+          <RangePicker onChange={(dates) => setDateRange(dates as [any, any])} />
+          <Select
+            defaultValue="7days"
+            style={{ width: 120 }}
+            options={[
+              { label: '最近 7 天', value: '7days' },
+              { label: '最近 30 天', value: '30days' },
+              { label: '最近 90 天', value: '90days' },
+            ]}
+          />
+        </Space>
+      </Card>
+
       {/* 统计卡片 */}
-      <Row gutter={16} className="mb-4">
+      <Row gutter={16} style={{ marginBottom: 16 }}>
         <Col span={6}>
           <Card>
             <Statistic
-              title="线索总数"
-              value={stats.totalLeads}
-              prefix={<InboxOutlined />}
+              title="今日销售额"
+              value={data.salesToday || 0}
+              precision={2}
+              prefix="¥"
               valueStyle={{ color: '#1890ff' }}
+              prefix={<DollarOutlined />}
+            />
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card>
+            <Statistic
+              title="本月销售额"
+              value={data.salesMonth || 0}
+              precision={2}
+              prefix="¥"
+              valueStyle={{ color: '#52c41a' }}
+              prefix={<DollarOutlined />}
             />
           </Card>
         </Col>
@@ -147,113 +183,50 @@ const Dashboard: React.FC = () => {
           <Card>
             <Statistic
               title="客户总数"
-              value={stats.totalCustomers}
-              prefix={<TeamOutlined />}
-              valueStyle={{ color: '#52c41a' }}
-            />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic
-              title="商机总数"
-              value={stats.totalOpportunities}
-              prefix={<OpportunityOutlined />}
-              valueStyle={{ color: '#faad14' }}
-            />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic
-              title="订单金额"
-              value={stats.totalAmount}
-              prefix={<DollarOutlined />}
-              precision={2}
+              value={data.customersTotal || 0}
+              suffix="人"
               valueStyle={{ color: '#722ed1' }}
+              prefix={<TeamOutlined />}
+            />
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card>
+            <Statistic
+              title="待处理订单"
+              value={data.ordersPending || 0}
+              suffix="个"
+              valueStyle={{ color: '#faad14' }}
+              prefix={<ShoppingCartOutlined />}
             />
           </Card>
         </Col>
       </Row>
 
-      <Row gutter={16} className="mb-4">
+      {/* 增长趋势 */}
+      <Row gutter={16} style={{ marginBottom: 16 }}>
         <Col span={12}>
-          <Card title="转化率">
-            <div className="text-center">
-              <div className="text-4xl font-bold text-brand-blue mb-2">
-                {stats.conversionRate}%
-              </div>
-              <Progress
-                percent={stats.conversionRate}
-                strokeColor={{
-                  '0%': '#108ee9',
-                  '100%': '#87d068',
-                }}
-                status="active"
-              />
-              <div className="text-sm text-gray-500 mt-2">
-                <RiseOutlined /> 较上月提升 2.5%
-              </div>
-            </div>
+          <Card title="销售趋势">
+            <Line {...salesTrendConfig} height={300} />
           </Card>
         </Col>
         <Col span={12}>
-          <Card title="业绩概览">
-            <div className="space-y-4">
-              <div>
-                <div className="flex justify-between mb-1">
-                  <span>本月目标</span>
-                  <span>¥800,000</span>
-                </div>
-                <Progress percent={65} strokeColor="#1890ff" />
-              </div>
-              <div>
-                <div className="flex justify-between mb-1">
-                  <span>季度目标</span>
-                  <span>¥2,000,000</span>
-                </div>
-                <Progress percent={45} strokeColor="#52c41a" />
-              </div>
-              <div>
-                <div className="flex justify-between mb-1">
-                  <span>年度目标</span>
-                  <span>¥8,000,000</span>
-                </div>
-                <Progress percent={28} strokeColor="#722ed1" />
-              </div>
-            </div>
+          <Card title="客户分布">
+            <Pie {...customerDistConfig} height={300} />
           </Card>
         </Col>
       </Row>
 
-      {/* 最近线索和销售排名 */}
-      <Row gutter={16}>
-        <Col span={12}>
-          <Card title="最近线索">
-            <Table
-              columns={leadColumns}
-              dataSource={recentLeads}
-              rowKey="id"
-              pagination={false}
-              size="small"
-            />
-          </Card>
-        </Col>
-        <Col span={12}>
-          <Card title="销售排名">
-            <Table
-              columns={salesColumns}
-              dataSource={topSales.map((item: any, index) => ({
-                ...item,
-                rank: index + 1,
-              }))}
-              rowKey="userId"
-              pagination={false}
-              size="small"
-            />
-          </Card>
-        </Col>
-      </Row>
+      {/* 待处理订单 */}
+      <Card title="待处理订单">
+        <Table
+          columns={orderColumns}
+          dataSource={orders}
+          rowKey="id"
+          pagination={false}
+          scroll={{ x: 800 }}
+        />
+      </Card>
     </div>
   )
 }
