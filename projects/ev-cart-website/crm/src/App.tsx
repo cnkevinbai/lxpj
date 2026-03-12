@@ -39,6 +39,10 @@ import AfterSales from './pages/AfterSales'
 import Purchase from './pages/Purchase'
 import Production from './pages/Production'
 import Export from './pages/Export'
+import Payables from './pages/Payables'
+import Invoices from './pages/Invoices'
+import Expenses from './pages/Expenses'
+import FinanceDashboard from './pages/FinanceDashboard'
 
 const App: React.FC = () => {
   return (
@@ -95,6 +99,10 @@ const App: React.FC = () => {
             
             {/* 财务管理 */}
             <Route path="finance" element={<Finance />} />
+            <Route path="finance-dashboard" element={<FinanceDashboard />} />
+            <Route path="payables" element={<Payables />} />
+            <Route path="invoices" element={<Invoices />} />
+            <Route path="expenses" element={<Expenses />} />
             
             {/* 库存管理 */}
             <Route path="inventory" element={<Inventory />} />

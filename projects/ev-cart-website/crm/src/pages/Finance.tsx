@@ -205,11 +205,14 @@ const Finance: React.FC = () => {
 
       {/* 应收账款列表 */}
       <Card
-        title="应收账款"
+        title="💰 财务管理中心"
         extra={
-          <Button type="primary" icon={<PlusOutlined />}>
-            创建应收单
-          </Button>
+          <Space>
+            <Button onClick={() => navigate('/finance-dashboard')}>财务看板</Button>
+            <Button onClick={() => navigate('/payables')}>应付账款</Button>
+            <Button onClick={() => navigate('/invoices')}>发票管理</Button>
+            <Button onClick={() => navigate('/expenses')}>费用报销</Button>
+          </Space>
         }
       >
         <Table
