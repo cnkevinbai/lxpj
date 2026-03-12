@@ -1,6 +1,6 @@
 # 四川道达智能官网
 
-> 四川道达智能车辆制造有限公司 - 基于 Next.js 14 的官方网站
+> 四川道达智能车辆制造有限公司官方网站 - 大疆风格设计
 
 ## 🚀 快速开始
 
@@ -11,11 +11,8 @@ npm install
 # 开发模式
 npm run dev
 
-# 构建生产版本
-npm run build
-
-# 启动生产服务器
-npm start
+# 访问
+http://localhost:3000
 ```
 
 ## 📁 项目结构
@@ -24,65 +21,80 @@ npm start
 website/
 ├── src/
 │   ├── app/
-│   │   ├── layout.tsx      # 根布局 ✅
-│   │   ├── page.tsx        # 首页 ✅
-│   │   ├── products/       # 产品中心 ✅
-│   │   ├── about/          # 关于我们 ✅
-│   │   └── contact/        # 联系我们 ✅
-│   └── components/         # 组件 📝
-├── public/                 # 静态资源 📝
+│   │   ├── layout.tsx      # 根布局
+│   │   ├── page.tsx        # 首页
+│   │   ├── globals.css     # 全局样式
+│   │   ├── products/       # 产品中心 📝
+│   │   ├── solutions/      # 解决方案 📝
+│   │   ├── news/           # 新闻中心 📝
+│   │   ├── cases/          # 案例展示 📝
+│   │   ├── about/          # 关于我们 📝
+│   │   ├── contact/        # 联系我们 📝
+│   │   ├── login/          # 客户登录 📝
+│   │   └── portal/         # 客户门户 📝
+│   └── components/         # 公共组件 📝
+├── public/                 # 静态资源
 ├── package.json
 ├── tsconfig.json
-└── README.md
+└── next.config.js
 ```
 
-**详细设计文档**: [DESIGN_GUIDE.md](DESIGN_GUIDE.md)
+## 🎨 设计特点
 
-## 🎯 功能特性
+### 大疆风格
+- ✅ 极简主义设计
+- ✅ 全屏 Hero 区域
+- ✅ 黑白灰配色
+- ✅ 大留白布局
+- ✅ 流畅动画效果
+
+### 技术栈
+- **框架**: Next.js 14
+- **语言**: TypeScript 5
+- **UI 库**: Ant Design 5
+- **动画**: Framer Motion
+- **样式**: Tailwind CSS
+
+## 📋 页面规划
 
 ### 已完成 ✅
-- ✅ 响应式设计
-- ✅ SEO 优化
-- ✅ 静态生成
-- ✅ API 集成
-- ✅ 在线留言
+- [x] 首页（大疆风格）
 
-### 规划中 📝
-- 📝 产品详情
-- 📝 新闻列表
-- 📝 多语言支持
+### 开发中 📝
+- [ ] 产品中心
+- [ ] 解决方案
+- [ ] 新闻中心
+- [ ] 案例展示
+- [ ] 关于我们
+- [ ] 联系我们
+- [ ] 客户登录
+- [ ] 客户门户
 
-## 📝 页面列表
+## 🔗 API 对接
 
-1. **首页** (`/`) - 产品展示/公司新闻/客户案例
-2. **产品中心** (`/products`) - EV Cart 产品系列
-3. **关于我们** (`/about`) - 公司介绍/发展历程
-4. **联系我们** (`/contact`) - 在线咨询/留言表单
+### 官网→CRM
+- `POST /api/v1/website/customers` - 客户注册
+- `POST /api/v1/website/leads` - 线索创建
+- `POST /api/v1/website/opportunities` - 商机创建
+- `POST /api/v1/website/tickets` - 工单创建
 
-## 🔗 API 集成
-
-```typescript
-// 获取产品列表
-GET /api/v1/products
-
-// 客户注册
-POST /api/v1/auth/register
-
-// 在线咨询
-POST /api/v1/website/inquiry
-```
-
-## 🎨 技术栈
-
-- **Frontend**: Next.js 14, React 18, TypeScript
-- **Styling**: Tailwind CSS, Ant Design
-- **Deployment**: Vercel
+### CRM→官网
+- `GET /api/v1/website/products` - 产品列表
+- `GET /api/v1/website/news` - 新闻列表
+- `GET /api/v1/website/cases` - 案例列表
+- `GET /api/v1/website/statistics` - 统计数据
 
 ## 🚀 部署
 
+### Vercel 部署
 ```bash
-# Vercel 部署
 vercel deploy
+```
+
+### Nginx 部署
+```bash
+npm run build
+# 将 .next 目录部署到 Nginx
 ```
 
 ## 📞 联系方式
@@ -92,3 +104,7 @@ vercel deploy
 - **邮箱**: info@ddzn.com
 - **电话**: 400-888-8888
 - **地址**: 四川省眉山市
+
+## 📄 许可证
+
+Copyright © 2026 四川道达智能车辆制造有限公司。All rights reserved.
