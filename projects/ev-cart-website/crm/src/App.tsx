@@ -46,6 +46,11 @@ import FinanceDashboard from './pages/FinanceDashboard'
 import Suppliers from './pages/Suppliers'
 import StockCheck from './pages/StockCheck'
 import StockTransfer from './pages/StockTransfer'
+import Customers from './pages/customers/Customers'
+import Products from './pages/products/Products'
+import CostAccounting from './pages/CostAccounting'
+import Assets from './pages/Assets'
+import ProductionPlan from './pages/ProductionPlan'
 
 const App: React.FC = () => {
   return (
@@ -71,6 +76,15 @@ const App: React.FC = () => {
             
             {/* 产品管理 */}
             <Route path="products" element={<Products />} />
+            
+            {/* 成本核算 */}
+            <Route path="cost-accounting" element={<CostAccounting />} />
+            
+            {/* 固定资产 */}
+            <Route path="assets" element={<Assets />} />
+            
+            {/* 生产计划 */}
+            <Route path="production-plan" element={<ProductionPlan />} />
             
             {/* 经销商管理 */}
             <Route path="dealers" element={<Dealers />} />
