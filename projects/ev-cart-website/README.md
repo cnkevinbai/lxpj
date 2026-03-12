@@ -6,6 +6,8 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
 [![Coverage](https://img.shields.io/badge/coverage-85%25-brightgreen.svg)]()
+[![Modules](https://img.shields.io/badge/modules-19-orange.svg)]()
+[![Pages](https://img.shields.io/badge/pages-34-purple.svg)]()
 
 ---
 
@@ -48,10 +50,11 @@ EV Cart 企业数字化系统是一套功能完整、技术先进的企业管理
 | 统计项 | 数量 |
 |--------|------|
 | 后端模块 | 19 个 |
-| 前端页面 | 31 个 |
+| 前端页面 | 34 个 |
 | 数据库表 | 45+ 张 |
 | API 接口 | 100+ 个 |
-| 代码行数 | ~32000 行 |
+| 代码行数 | ~33000 行 |
+| 文档文件 | 12+ 个 |
 
 ---
 
