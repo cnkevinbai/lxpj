@@ -135,7 +135,7 @@ const Portal: React.FC = () => {
         {/* 数据统计 */}
         <Row gutter={16} style={{ marginBottom: 32 }}>
           <Col span={6}>
-            <Card>
+            <Card onClick={() => window.location.href = '/portal/orders'} style={{ cursor: 'pointer' }}>
               <Statistic
                 title="我的订单"
                 value={stats.totalOrders || 0}
@@ -146,7 +146,7 @@ const Portal: React.FC = () => {
             </Card>
           </Col>
           <Col span={6}>
-            <Card>
+            <Card onClick={() => window.location.href = '/portal/orders?status=pending'} style={{ cursor: 'pointer' }}>
               <Statistic
                 title="待处理订单"
                 value={stats.pendingOrders || 0}
@@ -157,7 +157,7 @@ const Portal: React.FC = () => {
             </Card>
           </Col>
           <Col span={6}>
-            <Card>
+            <Card onClick={() => window.location.href = '/portal/tickets'} style={{ cursor: 'pointer' }}>
               <Statistic
                 title="服务工单"
                 value={stats.totalTickets || 0}
@@ -182,7 +182,11 @@ const Portal: React.FC = () => {
         </Row>
 
         {/* 最近订单 */}
-        <Card title="最近订单" style={{ marginBottom: 24 }}>
+        <Card 
+          title="最近订单" 
+          style={{ marginBottom: 24 }}
+          onClick={() => window.location.href = '/portal/orders'}
+        >
           <Table 
             columns={orderColumns} 
             dataSource={orders} 
@@ -195,7 +199,10 @@ const Portal: React.FC = () => {
         </Card>
 
         {/* 最近工单 */}
-        <Card title="最近工单">
+        <Card 
+          title="最近工单"
+          onClick={() => window.location.href = '/portal/tickets'}
+        >
           <Table 
             columns={ticketColumns} 
             dataSource={tickets} 
