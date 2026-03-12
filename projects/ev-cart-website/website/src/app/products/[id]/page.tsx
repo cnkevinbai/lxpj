@@ -1,252 +1,245 @@
-'use client'
+import React, { useState, useEffect } from 'react'
+import { Card, Button, Space, Descriptions, Table, Tag, message, Breadcrumb } from 'antd'
+import { HomeOutlined, ShoppingCartOutlined, ArrowLeftOutlined } from '@ant-design/icons'
+import { motion } from 'framer-motion'
+import { useRouter, useParams } from 'next/navigation'
 
-import { useState } from 'react'
-import { useParams } from 'next/navigation'
-import SEO from '@/components/seo/SEO'
-import Button from '@/components/ui/Button'
-
-const mockProducts = {
-  'ec-11': {
-    name: 'EC-11 电动观光车',
-    model: 'EC-11',
-    seats: 11,
-    range: 80,
-    speed: 30,
-    chargeTime: '6-8 小时',
-    motor: '4kW 交流电机',
-    battery: '48V/200Ah 铅酸电池',
-    dimensions: { length: 3960, width: 1220, height: 2050 },
-    weight: 980,
-    priceRange: '4.5 万 -5.5 万元',
-    description: 'EC-11 是专为景区、酒店设计的 11 座电动观光车，续航 80km，满足全天运营需求。',
-    features: ['超长续航', '低噪音', '零排放', '智能 BMS', '爬坡能力强', '舒适座椅'],
-    images: ['/images/ec-11-1.jpg', '/images/ec-11-2.jpg', '/images/ec-11-3.jpg'],
-  },
-  'ec-14': {
-    name: 'EC-14 电动观光车',
-    model: 'EC-14',
-    seats: 14,
-    range: 100,
-    speed: 30,
-    chargeTime: '8-10 小时',
-    motor: '5kW 交流电机',
-    battery: '72V/200Ah 锂电池',
-    dimensions: { length: 4600, width: 1220, height: 2050 },
-    weight: 1150,
-    priceRange: '6 万 -7 万元',
-    description: 'EC-14 是 14 座中型观光车，适合大型景区、度假村，续航 100km。',
-    features: ['大容量电池', '宽敞空间', '独立悬挂', '智能仪表盘', 'USB 充电', '音响系统'],
-    images: ['/images/ec-14-1.jpg', '/images/ec-14-2.jpg', '/images/ec-14-3.jpg'],
-  },
-  'ec-23': {
-    name: 'EC-23 电动巴士',
-    model: 'EC-23',
-    seats: 23,
-    range: 120,
-    speed: 35,
-    chargeTime: '10-12 小时',
-    motor: '7.5kW 交流电机',
-    battery: '96V/300Ah 锂电池',
-    dimensions: { length: 6200, width: 1600, height: 2400 },
-    weight: 1800,
-    priceRange: '10 万 -12 万元',
-    description: 'EC-23 是 23 座电动巴士，适合大型景区、机场、火车站等接驳场景。',
-    features: ['超长续航', '大容量', '空调系统', '行李舱', '无障碍设计', '智能调度'],
-    images: ['/images/ec-23-1.jpg', '/images/ec-23-2.jpg', '/images/ec-23-3.jpg'],
-  },
-}
-
-export default function ProductDetailPage() {
+const ProductDetail: React.FC = () => {
+  const router = useRouter()
   const params = useParams()
-  const productKey = params.id as string
-  const product = mockProducts[productKey as keyof typeof mockProducts]
+  const [product, setProduct] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
 
-  const [selectedImage, setSelectedImage] = useState(0)
+  useEffect(() => {
+    loadProductDetail()
+  }, [params.id])
 
-  if (!product) {
+  const loadProductDetail = async () => {
+    try {
+      const response = await fetch(`/api/v1/website/products/${params.id}`)
+      const data = await response.json()
+      setProduct(data)
+    } catch (error) {
+      message.error('加载产品详情失败')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (loading || !product) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="heading-1 mb-4">产品不存在</h1>
-          <a href="/products" className="btn-primary">返回产品列表</a>
-        </div>
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        加载中...
       </div>
     )
   }
 
+  const featureColumns = [
+    { title: '功能模块', dataIndex: 'module', width: 200 },
+    { title: '功能描述', dataIndex: 'description', width: 400 },
+    { title: '支持程度', dataIndex: 'support', width: 150, render: (s: string) => (
+      <Tag color={s === '完全支持' ? 'success' : s === '部分支持' ? 'warning' : 'default'}>{s}</Tag>
+    )},
+  ]
+
+  const pricingPlans = [
+    { name: '基础版', price: '9,800', features: ['基础功能', '5 用户许可', '标准支持'], recommended: false },
+    { name: '专业版', price: '19,800', features: ['全部功能', '20 用户许可', '优先支持', '定制开发'], recommended: true },
+    { name: '企业版', price: '面议', features: ['全部功能', '无限用户', '专属支持', '深度定制', '源码交付'], recommended: false },
+  ]
+
   return (
-    <>
-      <SEO
-        title={`${product.name} - EV Cart 集团`}
-        description={product.description}
-        image={product.images[0]}
-        url={`https://www.evcart.com/products/${productKey}`}
-        type="product"
-      />
+    <div style={{ minHeight: '100vh', background: '#f5f5f5' }}>
+      {/* 导航栏 */}
+      <div style={{ 
+        position: 'fixed', 
+        top: 0, 
+        left: 0, 
+        right: 0, 
+        zIndex: 1000,
+        padding: '20px 50px', 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        background: 'rgba(0,0,0,0.8)',
+        backdropFilter: 'blur(10px)'
+      }}>
+        <h1 style={{ margin: 0, fontSize: 20, color: '#fff', fontWeight: 700 }}>四川道达智能</h1>
+        <Space size="large">
+          <a href="/" style={{ color: '#fff', fontSize: 14, textDecoration: 'none' }}>首页</a>
+          <a href="/products" style={{ color: '#1890ff', fontSize: 14, textDecoration: 'none' }}>产品</a>
+          <a href="/solutions" style={{ color: '#fff', fontSize: 14, textDecoration: 'none' }}>解决方案</a>
+          <a href="/news" style={{ color: '#fff', fontSize: 14, textDecoration: 'none' }}>新闻</a>
+          <a href="/cases" style={{ color: '#fff', fontSize: 14, textDecoration: 'none' }}>案例</a>
+          <a href="/about" style={{ color: '#fff', fontSize: 14, textDecoration: 'none' }}>关于</a>
+          <a href="/contact" style={{ color: '#fff', fontSize: 14, textDecoration: 'none' }}>联系</a>
+          <Button type="primary" size="small" onClick={() => window.location.href = '/login'}>登录系统</Button>
+        </Space>
+      </div>
 
-      <div className="container-custom py-12">
-        {/* 产品图片 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
-          <div>
-            <div className="aspect-video bg-gray-100 rounded-xl overflow-hidden mb-4">
-              <img
-                src={product.images[selectedImage]}
-                alt={product.name}
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-              {product.images.map((img, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSelectedImage(index)}
-                  className={`aspect-video rounded-lg overflow-hidden border-2 ${
-                    selectedImage === index ? 'border-brand-blue' : 'border-transparent'
-                  }`}
-                >
-                  <img src={img} alt={`${product.name} ${index + 1}`} className="w-full h-full object-cover" />
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* 产品信息 */}
-          <div>
-            <h1 className="heading-2 mb-2">{product.name}</h1>
-            <p className="text-gray-600 mb-4">{product.description}</p>
-            <p className="text-2xl font-bold text-brand-blue mb-6">{product.priceRange}</p>
-
-            <div className="grid grid-cols-2 gap-4 mb-8">
-              <div className="card p-4">
-                <div className="text-sm text-gray-500">座位数</div>
-                <div className="text-xl font-semibold">{product.seats}座</div>
-              </div>
-              <div className="card p-4">
-                <div className="text-sm text-gray-500">续航里程</div>
-                <div className="text-xl font-semibold">{product.range}km</div>
-              </div>
-              <div className="card p-4">
-                <div className="text-sm text-gray-500">最高时速</div>
-                <div className="text-xl font-semibold">{product.speed}km/h</div>
-              </div>
-              <div className="card p-4">
-                <div className="text-sm text-gray-500">充电时间</div>
-                <div className="text-xl font-semibold">{product.chargeTime}</div>
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-4">
-              <a href="/inquiry" className="btn-primary flex-1 text-center">
-                立即询价
-              </a>
-              <a href="/contact" className="btn-outline flex-1 text-center">
-                预约试驾
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* 详细参数 */}
-        <div className="card p-8 mb-12">
-          <h2 className="heading-3 mb-6">详细参数</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="font-semibold mb-3">基本参数</h3>
-              <table className="w-full">
-                <tbody>
-                  <tr className="border-b">
-                    <td className="py-3 text-gray-600">型号</td>
-                    <td className="py-3 font-medium">{product.model}</td>
-                  </tr>
-                  <tr className="border-b">
-                    <td className="py-3 text-gray-600">座位数</td>
-                    <td className="py-3 font-medium">{product.seats}座</td>
-                  </tr>
-                  <tr className="border-b">
-                    <td className="py-3 text-gray-600">续航里程</td>
-                    <td className="py-3 font-medium">{product.range}km</td>
-                  </tr>
-                  <tr className="border-b">
-                    <td className="py-3 text-gray-600">最高时速</td>
-                    <td className="py-3 font-medium">{product.speed}km/h</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-3">动力系统</h3>
-              <table className="w-full">
-                <tbody>
-                  <tr className="border-b">
-                    <td className="py-3 text-gray-600">电机功率</td>
-                    <td className="py-3 font-medium">{product.motor}</td>
-                  </tr>
-                  <tr className="border-b">
-                    <td className="py-3 text-gray-600">电池类型</td>
-                    <td className="py-3 font-medium">{product.battery}</td>
-                  </tr>
-                  <tr className="border-b">
-                    <td className="py-3 text-gray-600">充电时间</td>
-                    <td className="py-3 font-medium">{product.chargeTime}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-3">尺寸重量</h3>
-              <table className="w-full">
-                <tbody>
-                  <tr className="border-b">
-                    <td className="py-3 text-gray-600">长×宽×高</td>
-                    <td className="py-3 font-medium">
-                      {product.dimensions.length}×{product.dimensions.width}×{product.dimensions.height}mm
-                    </td>
-                  </tr>
-                  <tr className="border-b">
-                    <td className="py-3 text-gray-600">整车重量</td>
-                    <td className="py-3 font-medium">{product.weight}kg</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-3">价格信息</h3>
-              <table className="w-full">
-                <tbody>
-                  <tr className="border-b">
-                    <td className="py-3 text-gray-600">价格区间</td>
-                    <td className="py-3 font-medium text-brand-blue">{product.priceRange}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        {/* 产品特色 */}
-        <div className="card p-8 mb-12">
-          <h2 className="heading-3 mb-6">产品特色</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {product.features.map((feature, index) => (
-              <div key={index} className="text-center p-4 bg-gray-50 rounded-lg">
-                <div className="text-2xl mb-2">✓</div>
-                <div className="text-sm font-medium">{feature}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* CTA */}
-        <div className="bg-brand-blue text-white p-12 rounded-2xl text-center">
-          <h2 className="heading-3 mb-4">获取专属报价方案</h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
-            留下您的需求，我们的专业顾问将在 24 小时内为您提供定制化的产品方案和报价
-          </p>
-          <a href="/inquiry" className="btn bg-white text-brand-blue hover:bg-gray-100">
-            立即咨询
-          </a>
+      {/* 面包屑 */}
+      <div style={{ padding: '100px 50px 20px', background: '#fff' }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+          <Breadcrumb>
+            <Breadcrumb.Item href="/">
+              <HomeOutlined />
+              <span>首页</span>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item href="/products">
+              <ShoppingCartOutlined />
+              <span>产品中心</span>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>{product.productName}</Breadcrumb.Item>
+          </Breadcrumb>
         </div>
       </div>
-    </>
+
+      {/* 产品详情 */}
+      <div style={{ padding: '0 50px 80px' }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            {/* 产品主图 + 基本信息 */}
+            <Card style={{ marginBottom: 24 }}>
+              <div style={{ display: 'flex', gap: 48 }}>
+                <div style={{ flex: 1, height: 400, background: '#f5f5f5', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <ShoppingCartOutlined style={{ fontSize: 120, color: '#d9d9d9' }} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <Tag color={product.category === 'crm' ? 'blue' : product.category === 'erp' ? 'purple' : 'green'} style={{ marginBottom: 16 }}>
+                    {product.category === 'crm' ? 'CRM 系统' : product.category === 'erp' ? 'ERP 系统' : '财务管理'}
+                  </Tag>
+                  <h1 style={{ fontSize: 36, fontWeight: 700, marginBottom: 16 }}>{product.productName}</h1>
+                  <p style={{ fontSize: 16, color: '#666', marginBottom: 24, lineHeight: 1.8 }}>{product.description}</p>
+                  <div style={{ fontSize: 32, fontWeight: 700, color: '#ff4d4f', marginBottom: 32 }}>
+                    ¥{(product.unitPrice || 0).toLocaleString()} 起
+                  </div>
+                  <Space size="large">
+                    <Button type="primary" size="large" onClick={() => window.location.href = '/contact'}>
+                      立即咨询
+                    </Button>
+                    <Button size="large" onClick={() => window.location.href = '/login'}>
+                      免费试用
+                    </Button>
+                  </Space>
+                </div>
+              </div>
+            </Card>
+
+            {/* 产品详情 */}
+            <Card title="产品详情" style={{ marginBottom: 24 }}>
+              <Descriptions bordered column={2}>
+                <Descriptions.Item label="产品编码">{product.productCode}</Descriptions.Item>
+                <Descriptions.Item label="产品类别">{product.category}</Descriptions.Item>
+                <Descriptions.Item label="部署方式">云端部署 / 本地部署</Descriptions.Item>
+                <Descriptions.Item label="用户许可">按需配置</Descriptions.Item>
+                <Descriptions.Item label="技术支持">7×24 小时</Descriptions.Item>
+                <Descriptions.Item label="更新周期">每月更新</Descriptions.Item>
+              </Descriptions>
+            </Card>
+
+            {/* 功能模块 */}
+            <Card title="功能模块" style={{ marginBottom: 24 }}>
+              <Table 
+                columns={featureColumns} 
+                dataSource={product.features || []} 
+                rowKey="id"
+                pagination={false}
+              />
+            </Card>
+
+            {/* 价格方案 */}
+            <Card title="价格方案" style={{ marginBottom: 24 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+                {pricingPlans.map((plan, index) => (
+                  <Card 
+                    key={plan.name}
+                    hoverable
+                    style={{ 
+                      textAlign: 'center',
+                      border: plan.recommended ? '2px solid #1890ff' : '1px solid #d9d9d9',
+                      position: 'relative'
+                    }}
+                  >
+                    {plan.recommended && (
+                      <Tag color="blue" style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)' }}>
+                        推荐
+                      </Tag>
+                    )}
+                    <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 16 }}>{plan.name}</h3>
+                    <div style={{ fontSize: 36, fontWeight: 700, color: '#1890ff', marginBottom: 24 }}>
+                      ¥{plan.price}
+                    </div>
+                    <ul style={{ textAlign: 'left', marginBottom: 32, paddingLeft: 20 }}>
+                      {plan.features.map((feature) => (
+                        <li key={feature} style={{ marginBottom: 8, color: '#666' }}>{feature}</li>
+                      ))}
+                    </ul>
+                    <Button type={plan.recommended ? 'primary' : 'default'} size="large" block>
+                      选择方案
+                    </Button>
+                  </Card>
+                ))}
+              </div>
+            </Card>
+
+            {/* 操作按钮 */}
+            <Card>
+              <Space size="large" style={{ justifyContent: 'center' }}>
+                <Button icon={<ArrowLeftOutlined />} size="large" onClick={() => router.back()}>
+                  返回产品列表
+                </Button>
+                <Button type="primary" size="large" onClick={() => window.location.href = '/contact'}>
+                  联系咨询
+                </Button>
+                <Button size="large" onClick={() => window.location.href = '/login'}>
+                  免费试用
+                </Button>
+              </Space>
+            </Card>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* 页脚 */}
+      <div style={{ padding: '80px 50px', background: '#000', color: '#fff' }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 60, marginBottom: 60 }}>
+            <div>
+              <h4 style={{ fontSize: 16, fontWeight: 600, marginBottom: 24, color: '#fff' }}>产品</h4>
+              <p style={{ fontSize: 14, color: '#999', marginBottom: 12 }}>CRM 系统</p>
+              <p style={{ fontSize: 14, color: '#999', marginBottom: 12 }}>ERP 系统</p>
+              <p style={{ fontSize: 14, color: '#999' }}>财务管理</p>
+            </div>
+            <div>
+              <h4 style={{ fontSize: 16, fontWeight: 600, marginBottom: 24, color: '#fff' }}>公司</h4>
+              <p style={{ fontSize: 14, color: '#999', marginBottom: 12 }}>关于我们</p>
+              <p style={{ fontSize: 14, color: '#999', marginBottom: 12 }}>联系方式</p>
+            </div>
+            <div>
+              <h4 style={{ fontSize: 16, fontWeight: 600, marginBottom: 24, color: '#fff' }}>支持</h4>
+              <p style={{ fontSize: 14, color: '#999', marginBottom: 12 }}>技术支持</p>
+              <p style={{ fontSize: 14, color: '#999', marginBottom: 12 }}>文档中心</p>
+            </div>
+            <div>
+              <h4 style={{ fontSize: 16, fontWeight: 600, marginBottom: 24, color: '#fff' }}>联系</h4>
+              <p style={{ fontSize: 14, color: '#999', marginBottom: 12 }}>info@ddzn.com</p>
+              <p style={{ fontSize: 14, color: '#999', marginBottom: 12 }}>400-888-8888</p>
+              <p style={{ fontSize: 14, color: '#999' }}>四川省眉山市</p>
+            </div>
+          </div>
+          <div style={{ borderTop: '1px solid #333', paddingTop: 40, textAlign: 'center' }}>
+            <p style={{ fontSize: 14, color: '#666' }}>
+              © 2026 四川道达智能车辆制造有限公司。All rights reserved.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
+
+export default ProductDetail
