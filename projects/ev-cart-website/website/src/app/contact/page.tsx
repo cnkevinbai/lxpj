@@ -17,7 +17,7 @@ const Contact: React.FC = () => {
     <div style={{ minHeight: '100vh', background: '#f5f5f5' }}>
       {/* 导航栏 */}
       <div style={{ padding: '20px 50px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#fff', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-        <h1 style={{ margin: 0, fontSize: 24, color: '#1890ff' }}>EV Cart</h1>
+        <h1 style={{ margin: 0, fontSize: 24, color: '#1890ff' }}>道达智能</h1>
         <Space size="large">
           <a href="/" style={{ color: '#666' }}>首页</a>
           <a href="/products" style={{ color: '#666' }}>产品中心</a>
@@ -114,8 +114,8 @@ const Contact: React.FC = () => {
 
       {/* 页脚 */}
       <div style={{ padding: '40px 50px', background: '#333', color: '#fff', textAlign: 'center', marginTop: 40 }}>
-        <p>© 2026 EV Cart. All rights reserved.</p>
-        <p>联系方式：400-888-8888 | 邮箱：info@evcart.com</p>
+        <p>© 2026 四川道达智能车辆制造有限公司。All rights reserved.</p>
+        <p>联系方式：400-888-8888 | 邮箱：info@ddzn.com</p>
       </div>
     </div>
   )

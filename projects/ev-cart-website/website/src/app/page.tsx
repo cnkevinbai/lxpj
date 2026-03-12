@@ -7,7 +7,7 @@ const Home: React.FC = () => {
     <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
       {/* 导航栏 */}
       <div style={{ padding: '20px 50px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.1)' }}>
-        <h1 style={{ color: '#fff', margin: 0, fontSize: 28 }}>EV Cart</h1>
+        <h1 style={{ color: '#fff', margin: 0, fontSize: 28 }}>四川道达智能</h1>
         <Space size="large">
           <a href="#products" style={{ color: '#fff' }}>产品中心</a>
           <a href="#about" style={{ color: '#fff' }}>关于我们</a>
@@ -18,8 +18,8 @@ const Home: React.FC = () => {
 
       {/* Hero 区域 */}
       <div style={{ textAlign: 'center', padding: '100px 20px', color: '#fff' }}>
-        <h2 style={{ fontSize: 48, marginBottom: 20 }}>EV Cart 企业数字化系统</h2>
-        <p style={{ fontSize: 20, marginBottom: 40, opacity: 0.9 }}>完整的企业数字化解决方案 - CRM + ERP + 财务 + 售后一体化</p>
+        <h2 style={{ fontSize: 48, marginBottom: 20 }}>四川道达智能车辆制造有限公司</h2>
+        <p style={{ fontSize: 20, marginBottom: 40, opacity: 0.9 }}>专业电动车制造企业 - 数字化管理系统</p>
         <Space size="large">
           <Button type="primary" size="large" style={{ height: 50, padding: '0 40px' }}>立即体验</Button>
           <Button size="large" style={{ height: 50, padding: '0 40px' }}>了解更多</Button>
@@ -82,8 +82,8 @@ const Home: React.FC = () => {
 
       {/* 页脚 */}
       <div style={{ padding: '40px 50px', background: '#333', color: '#fff', textAlign: 'center' }}>
-        <p>© 2026 EV Cart. All rights reserved.</p>
-        <p>联系方式：400-888-8888 | 邮箱：info@evcart.com</p>
+        <p>© 2026 四川道达智能车辆制造有限公司。All rights reserved.</p>
+        <p>联系方式：400-888-8888 | 邮箱：info@ddzn.com</p>
       </div>
     </div>
   )

@@ -7,7 +7,7 @@ const About: React.FC = () => {
     <div style={{ minHeight: '100vh', background: '#f5f5f5' }}>
       {/* 导航栏 */}
       <div style={{ padding: '20px 50px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#fff', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-        <h1 style={{ margin: 0, fontSize: 24, color: '#1890ff' }}>EV Cart</h1>
+        <h1 style={{ margin: 0, fontSize: 24, color: '#1890ff' }}>道达智能</h1>
         <Space size="large">
           <a href="/" style={{ color: '#666' }}>首页</a>
           <a href="/products" style={{ color: '#666' }}>产品中心</a>
@@ -26,9 +26,9 @@ const About: React.FC = () => {
 
         {/* 公司介绍 */}
         <Card style={{ marginBottom: 24 }}>
-          <h2 style={{ fontSize: 32, marginBottom: 24, textAlign: 'center' }}>关于 EV Cart</h2>
+          <h2 style={{ fontSize: 32, marginBottom: 24, textAlign: 'center' }}>关于四川道达智能</h2>
           <p style={{ fontSize: 16, lineHeight: 2, color: '#666', textAlign: 'center' }}>
-            EV Cart 企业数字化系统是一套功能完整、技术先进的企业管理系统，包含 CRM（客户关系管理）、
+            四川道达智能车辆制造有限公司是一家专业电动车制造企业，公司数字化管理系统包含 CRM（客户关系管理）、
             ERP（企业资源计划）、财务管理、售后服务四大核心系统，帮助企业实现数字化转型，提升管理效率。
           </p>
         </Card>
@@ -102,29 +102,30 @@ const About: React.FC = () => {
         </Card>
 
         {/* 团队信息 */}
-        <Card title="开发团队" style={{ marginBottom: 24 }}>
+        <Card title="公司信息" style={{ marginBottom: 24 }}>
           <p style={{ fontSize: 16, lineHeight: 2, color: '#666' }}>
-            <strong>开发者:</strong> 渔晓白 ⚙️<br/>
-            <strong>完成时间:</strong> 2026-03-12<br/>
-            <strong>开发周期:</strong> 1 天<br/>
-            <strong>版本:</strong> v1.0.0
+            <strong>公司名称:</strong> 四川道达智能车辆制造有限公司<br/>
+            <strong>简称:</strong> 四川道达智能<br/>
+            <strong>成立时间:</strong> 2026 年<br/>
+            <strong>行业:</strong> 电动车制造
           </p>
         </Card>
 
         {/* 联系方式 */}
         <Card title="联系方式">
           <p style={{ fontSize: 16, lineHeight: 2, color: '#666' }}>
-            <strong>官网:</strong> https://www.evcart.com<br/>
-            <strong>邮箱:</strong> support@evcart.com<br/>
-            <strong>电话:</strong> 400-888-8888
+            <strong>官网:</strong> https://www.ddzn.com<br/>
+            <strong>邮箱:</strong> info@ddzn.com<br/>
+            <strong>电话:</strong> 400-888-8888<br/>
+            <strong>地址:</strong> 四川省眉山市
           </p>
         </Card>
       </div>
 
       {/* 页脚 */}
       <div style={{ padding: '40px 50px', background: '#333', color: '#fff', textAlign: 'center', marginTop: 40 }}>
-        <p>© 2026 EV Cart. All rights reserved.</p>
-        <p>联系方式：400-888-8888 | 邮箱：info@evcart.com</p>
+        <p>© 2026 四川道达智能车辆制造有限公司。All rights reserved.</p>
+        <p>联系方式：400-888-8888 | 邮箱：info@ddzn.com</p>
       </div>
     </div>
   )

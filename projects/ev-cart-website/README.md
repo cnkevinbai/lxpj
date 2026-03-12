@@ -1,6 +1,6 @@
-# EV Cart 企业数字化系统
+# 四川道达智能 - 企业数字化系统
 
-> 完整的企业数字化解决方案 - CRM + ERP + 财务 + 售后一体化
+> 四川道达智能车辆制造有限公司 - 专业电动车制造企业数字化解决方案
 
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/cnkevinbai/lxpj)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -13,7 +13,7 @@
 
 ## 📖 项目简介
 
-EV Cart 企业数字化系统是一套功能完整、技术先进的企业管理系统，包含 CRM（客户关系管理）、ERP（企业资源计划）、财务管理、售后服务四大核心系统，帮助企业实现数字化转型，提升管理效率。
+四川道达智能车辆制造有限公司企业数字化系统是一套功能完整、技术先进的企业管理系统，包含 CRM（客户关系管理）、ERP（企业资源计划）、财务管理、售后服务四大核心系统，帮助电动车制造企业实现数字化转型，提升管理效率。
 
 ---
 
@@ -224,10 +224,11 @@ ev-cart-website/
 
 ## 📞 联系方式
 
-- **官网**: https://www.evcart.com
-- **邮箱**: support@evcart.com
+- **公司**: 四川道达智能车辆制造有限公司
+- **官网**: https://www.ddzn.com
+- **邮箱**: info@ddzn.com
 - **电话**: 400-888-8888
-- **团队**: 渔晓白 ⚙️
+- **地址**: 四川省眉山市
 
 ---
 
