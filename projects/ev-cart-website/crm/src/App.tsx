@@ -47,10 +47,13 @@ import Suppliers from './pages/Suppliers'
 import StockCheck from './pages/StockCheck'
 import StockTransfer from './pages/StockTransfer'
 import Customers from './pages/customers/Customers'
+import CustomerDetail from './pages/customers/CustomerDetail'
 import Products from './pages/products/Products'
+import ProductDetail from './pages/products/ProductDetail'
 import CostAccounting from './pages/CostAccounting'
 import Assets from './pages/Assets'
 import ProductionPlan from './pages/ProductionPlan'
+import OrderDetail from './pages/orders/OrderDetail'
 
 const App: React.FC = () => {
   return (
@@ -70,12 +73,15 @@ const App: React.FC = () => {
             
             {/* 客户管理 */}
             <Route path="customers" element={<Customers />} />
+            <Route path="customers/:id" element={<CustomerDetail />} />
             
             {/* 订单管理 */}
             <Route path="orders" element={<Orders />} />
+            <Route path="orders/:id" element={<OrderDetail />} />
             
             {/* 产品管理 */}
             <Route path="products" element={<Products />} />
+            <Route path="products/:id" element={<ProductDetail />} />
             
             {/* 成本核算 */}
             <Route path="cost-accounting" element={<CostAccounting />} />
