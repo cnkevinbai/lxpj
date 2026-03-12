@@ -1,350 +1,200 @@
-/**
- * 订单详情页面
- */
-
-import { router } from '@kit.ArkUI';
-import { ApiService } from '../services/ApiService';
-
-interface Order {
-  id: string;
-  orderNo: string;
-  customerName: string;
-  customerId: string;
-  status: string;
-  totalAmount: number;
-  paidAmount: number;
-  balanceAmount: number;
-  products: Array<{
-    productName: string;
-    productModel: string;
-    quantity: number;
-    unitPrice: number;
-    amount: number;
-  }>;
-  deliveryDate: string;
-  deliveryAddress: string;
-  remark: string;
-  createdAt: string;
-  salespersonName: string;
-}
+// 订单详情页面
+import { router } from '@ohos.router'
+import { apiService } from '../common/services/ApiService'
+import { ROUTES, COLORS, SPACING, ORDER_STATUS } from '../common/utils/Constants'
+import { Order } from '../common/models/Customer'
 
 @Entry
 @Component
 struct OrderDetail {
-  @State order: Order | null = null;
-  @State isLoading: boolean = true;
-  
-  private apiService: ApiService = new ApiService();
-  private orderId: string = '';
+  @State order: Order | null = null
+  @State loading: boolean = true
+  @State orderId: string = ''
 
-  aboutToAppear(): void {
-    const params = router.getParams() as Record<string, string>;
-    this.orderId = params['id'] || '';
-    this.loadOrder();
-  }
-
-  async loadOrder(): Promise<void> {
-    try {
-      const data = await this.apiService.get(`/mobile/orders/${this.orderId}`);
-      this.order = data;
-    } catch (error) {
-      console.error('加载订单详情失败', error);
-    } finally {
-      this.isLoading = false;
+  aboutToAppear() {
+    const params = router.getParams() as Record<string, string>
+    this.orderId = params?.orderId || ''
+    if (this.orderId) {
+      this.loadOrder()
     }
   }
 
   build() {
     Column() {
       // 顶部导航
-      this.Header()
-      
-      if (this.isLoading) {
-        LoadingProgress()
-          .width(50)
-          .height(50)
-          .margin({ top: 50 })
-      } else if (this.order) {
-        // 订单状态卡片
-        this.OrderStatusCard()
-        
-        // 订单信息
-        this.OrderInfo()
-        
-        // 产品列表
-        this.ProductList()
-        
-        // 收款记录
-        this.PaymentRecords()
-      }
-      
-      // 底部操作栏
-      this.BottomBar()
-    }
-    .width('100%')
-    .height('100%')
-    .backgroundColor('#F5F5F5')
-  }
-
-  // 顶部导航
-  @Builder Header() {
-    Row() {
-      Image($r('sys.media.ohos_ic_public_arrow_left'))
-        .width(24)
-        .height(24)
-        .onClick(() => {
-          router.back();
-        })
-      
-      Text('订单详情')
-        .fontSize(20)
-        .fontWeight(FontWeight.Bold)
-        .fontColor('#212121')
-        .margin({ left: 15 })
-      
-      Blank()
-      
-      // 更多操作
-      Image($r('sys.media.ohos_ic_public_more'))
-        .width(24)
-        .height(24)
-    }
-    .width('100%')
-    .height(60)
-    .padding({ left: 15, right: 15 })
-    .backgroundColor('#FFFFFF')
-    .alignItems(VerticalAlign.Center)
-  }
-
-  // 订单状态卡片
-  @Builder OrderStatusCard() {
-    Column() {
       Row() {
-        Text(this.order?.orderNo || '')
-          .fontSize(18)
-          .fontWeight(FontWeight.Bold)
-          .fontColor('#212121')
-        
-        Text(this.getStatusBadge(this.order?.status || ''))
-          .fontSize(14)
-          .fontColor('#FFFFFF')
-          .padding({ left: 8, right: 8, top: 4, bottom: 4 })
-          .backgroundColor(this.getStatusColor(this.order?.status || ''))
-          .borderRadius(4)
-          .margin({ left: 10 })
-      }
-      
-      // 进度条
-      Row() {
-        Row() {
-          Row() {
-            Text('已付')
-              .fontSize(12)
-              .fontColor('#757575')
-            
-            Text(`¥${((this.order?.paidAmount || 0) / 10000).toFixed(1)}万`)
-              .fontSize(14)
-              .fontWeight(FontWeight.Bold)
-              .fontColor('#4CAF50')
-              .margin({ left: 5 })
-          }
-          
-          Row() {
-            Text('未付')
-              .fontSize(12)
-              .fontColor('#757575')
-              .margin({ left: 20 })
-            
-            Text(`¥${((this.order?.balanceAmount || 0) / 10000).toFixed(1)}万`)
-              .fontSize(14)
-              .fontWeight(FontWeight.Bold)
-              .fontColor('#FF9800')
-              .margin({ left: 5 })
-          }
+        Button() {
+          Image($r('app.media.ic_back'))
+            .width(24)
+            .height(24)
+            .fillColor('#fff')
         }
-        
-        Text(`总计¥${((this.order?.totalAmount || 0) / 10000).toFixed(1)}万`)
-          .fontSize(16)
+        .type(ButtonType.Capsule)
+        .plain(true)
+        .onClick(() => router.back())
+
+        Text('订单详情')
+          .fontSize(20)
           .fontWeight(FontWeight.Bold)
-          .fontColor('#1976D2')
+          .fontColor('#fff')
+          .flexGrow(1)
+          .textAlign(TextAlign.Center)
       }
       .width('100%')
-      .margin({ top: 15 })
-    }
-    .backgroundColor('#FFFFFF')
-    .padding(20)
-    .margin({ bottom: 10 })
-  }
+      .height(56)
+      .backgroundColor('#1890ff')
+      .padding({ left: 16, right: 16 })
+      .alignItems(VerticalAlign.Center)
 
-  // 订单信息
-  @Builder OrderInfo() {
-    Column() {
-      this.InfoRow('客户名称', this.order?.customerName || '')
-      this.InfoRow('交货日期', this.formatDate(this.order?.deliveryDate || ''))
-      this.InfoRow('交货地址', this.order?.deliveryAddress || '')
-      this.InfoRow('销售人员', this.order?.salespersonName || '')
-      this.InfoRow('下单时间', this.formatDate(this.order?.createdAt || ''))
-      
-      if (this.order?.remark) {
-        this.InfoRow('备注', this.order.remark)
-      }
-    }
-    .backgroundColor('#FFFFFF')
-    .margin({ bottom: 10 })
-  }
-
-  // 信息行
-  @Builder InfoRow(label: string, value: string) {
-    Row() {
-      Text(label)
-        .fontSize(14)
-        .fontColor('#757575')
-        .width(100)
-      
-      Text(value)
-        .fontSize(14)
-        .fontColor('#212121')
-        .layoutWeight(1)
-    }
-    .width('100%')
-    .padding({ left: 20, right: 20, top: 15, bottom: 15 })
-  }
-
-  // 产品列表
-  @Builder ProductList() {
-    Column() {
-      Row() {
-        Text('产品明细')
-          .fontSize(16)
-          .fontWeight(FontWeight.Bold)
-          .fontColor('#212121')
-      }
-      .width('100%')
-      .padding({ left: 20, right: 20, top: 15, bottom: 10 })
-      
-      // 产品列表
-      ForEach(this.order?.products || [], (product) => {
-        Row() {
+      if (this.loading) {
+        Column() {
+          LoadingProgress()
+            .width(40)
+            .height(40)
+          Text('加载中...')
+            .fontSize(14)
+            .fontColor(COLORS.TEXT_SECONDARY)
+            .margin({ top: 16 })
+        }
+        .width('100%')
+        .flexGrow(1)
+        .justifyContent(FlexAlign.Center)
+      } else if (this.order) {
+        Scroll() {
           Column() {
-            Text(product.productName)
-              .fontSize(14)
-              .fontWeight(FontWeight.Medium)
-              .fontColor('#212121')
-            
-            Text(product.productModel)
-              .fontSize(12)
-              .fontColor('#757575')
-              .margin({ top: 4 })
-          }
-          .alignItems(HorizontalAlign.Start)
-          .layoutWeight(1)
-          
-          Column() {
-            Text(`¥${(product.unitPrice / 10000).toFixed(2)}万`)
-              .fontSize(14)
+            // 订单状态卡片
+            Column() {
+              Text(this.order.orderCode)
+                .fontSize(20)
+                .fontWeight(FontWeight.Bold)
+                .fontColor('#fff')
+                .margin({ bottom: 16 })
+
+              Text(ORDER_STATUS[this.order.status]?.label || this.order.status)
+                .fontSize(16)
+                .padding({ left: 16, right: 16, top: 8, bottom: 8 })
+                .backgroundColor(ORDER_STATUS[this.order.status]?.color || '#d9d9d9')
+                .borderRadius(4)
+                .fontColor('#fff')
+
+              Text('¥' + this.order.totalAmount.toLocaleString())
+                .fontSize(32)
+                .fontWeight(FontWeight.Bold)
+                .fontColor('#fff')
+                .margin({ top: 16 })
+
+              Text(this.order.paymentStatus === 'paid' ? '已支付' : '未支付')
+                .fontSize(14)
+                .fontColor('rgba(255,255,255,0.8)')
+                .margin({ top: 8 })
+            }
+            .width('100%')
+            .padding({ top: 40, bottom: 40 })
+            .backgroundColor('#1890ff')
+            .alignItems(HorizontalAlign.Center)
+
+            // 订单信息
+            Column() {
+              Text('订单信息')
+                .fontSize(18)
+                .fontWeight(FontWeight.Bold)
+                .fontColor(COLORS.TEXT_PRIMARY)
+                .width('100%')
+                .margin({ bottom: 16 })
+
+              this.InfoRow('订单编号', this.order.orderCode)
+              this.InfoRow('客户名称', this.order.customerName)
+              this.InfoRow('订单日期', new Date(this.order.orderDate).toLocaleDateString())
+              this.InfoRow('订单金额', '¥' + this.order.totalAmount.toLocaleString())
+              this.InfoRow('支付状态', this.order.paymentStatus === 'paid' ? '已支付' : '未支付')
+            }
+            .width('100%')
+            .backgroundColor('#fff')
+            .padding(16)
+            .margin({ top: 16 })
+
+            // 订单进度
+            Text('订单进度')
+              .fontSize(18)
               .fontWeight(FontWeight.Bold)
-              .fontColor('#FF9800')
-            
-            Text(`×${product.quantity}`)
-              .fontSize(12)
-              .fontColor('#757575')
-              .margin({ top: 4 })
+              .fontColor(COLORS.TEXT_PRIMARY)
+              .width('100%')
+              .padding({ left: 16, top: 16, bottom: 8 })
+
+            Column() {
+              this.ProgressItem('订单创建', true)
+              this.ProgressItem('订单确认', this.order.status !== 'pending')
+              this.ProgressItem('配货完成', this.order.status === 'processing' || this.order.status === 'completed')
+              this.ProgressItem('订单发货', this.order.status === 'completed')
+              this.ProgressItem('订单完成', this.order.status === 'completed')
+            }
+            .width('100%')
+            .backgroundColor('#fff')
+            .padding(16)
+            .margin({ top: 12, left: 16, right: 16 })
           }
         }
         .width('100%')
-        .padding({ left: 20, right: 20, top: 15, bottom: 15 })
-      })
-    }
-    .backgroundColor('#FFFFFF')
-    .margin({ bottom: 10 })
-  }
-
-  // 收款记录
-  @Builder PaymentRecords() {
-    Column() {
-      Row() {
-        Text('收款记录')
-          .fontSize(16)
-          .fontWeight(FontWeight.Bold)
-          .fontColor('#212121')
-        
-        Blank()
-        
-        Text('查看全部')
-          .fontSize(14)
-          .fontColor('#1976D2')
+        .flexGrow(1)
+        .backgroundColor(COLORS.BACKGROUND)
       }
-      .width('100%')
-      .padding({ left: 20, right: 20, top: 15, bottom: 10 })
-      
-      Text('暂无收款记录')
-        .fontSize(14)
-        .fontColor('#757575')
-        .margin({ top: 20, bottom: 20 })
-    }
-    .backgroundColor('#FFFFFF')
-    .margin({ bottom: 10 })
-  }
-
-  // 底部操作栏
-  @Builder BottomBar() {
-    Row() {
-      if (this.order?.status === 'pending') {
-        Button('确认订单')
-          .width('48%')
-          .height(45)
-          .backgroundColor('#4CAF50')
-      } else if (this.order?.status === 'confirmed') {
-        Button('安排生产')
-          .width('48%')
-          .height(45)
-          .backgroundColor('#1976D2')
-      } else {
-        Button('查看生产')
-          .width('48%')
-          .height(45)
-          .backgroundColor('#1976D2')
-      }
-      
-      Button('收款')
-        .width('48%')
-        .height(45)
-        .backgroundColor('#FF9800')
-        .margin({ left: '4%' })
     }
     .width('100%')
-    .height(70)
-    .padding(15)
-    .backgroundColor('#FFFFFF')
-    .alignItems(VerticalAlign.Center)
+    .height('100%')
   }
 
-  // 辅助方法
-  getStatusBadge(status: string): string {
-    const badges: Record<string, string> = {
-      'pending': '待确认',
-      'confirmed': '已确认',
-      'producing': '生产中',
-      'completed': '已完成',
-      'cancelled': '已取消',
-    };
-    return badges[status] || status;
+  @Builder
+  InfoRow(label: string, value: string) {
+    Row() {
+      Text(label)
+        .fontSize(14)
+        .fontColor(COLORS.TEXT_SECONDARY)
+        .width(100)
+
+      Text(value)
+        .fontSize(14)
+        .fontWeight(FontWeight.Bold)
+        .fontColor(COLORS.TEXT_PRIMARY)
+        .flexGrow(1)
+    }
+    .width('100%')
+    .padding({ top: 12, bottom: 12 })
   }
 
-  getStatusColor(status: string): string {
-    const colors: Record<string, string> = {
-      'pending': '#FF9800',
-      'confirmed': '#2196F3',
-      'producing': '#4CAF50',
-      'completed': '#4CAF50',
-      'cancelled': '#9E9E9E',
-    };
-    return colors[status] || '#9E9E9E';
+  @Builder
+  ProgressItem(text: string, completed: boolean) {
+    Row() {
+      Column() {
+        Circle()
+          .width(12)
+          .height(12)
+          .fill(completed ? COLORS.SUCCESS : COLORS.BORDER)
+      }
+      .margin({ right: 12 })
+
+      Text(text)
+        .fontSize(14)
+        .fontColor(completed ? COLORS.SUCCESS : COLORS.TEXT_DISABLED)
+        .flexGrow(1)
+
+      if (completed) {
+        Text('✓')
+          .fontSize(16)
+          .fontWeight(FontWeight.Bold)
+          .fontColor(COLORS.SUCCESS)
+      }
+    }
+    .width('100%')
+    .padding({ top: 12, bottom: 12 })
   }
 
-  formatDate(dateStr: string): string {
-    if (!dateStr) return '';
-    const date = new Date(dateStr);
-    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+  async loadOrder() {
+    try {
+      this.order = await apiService.get<Order>(`/orders/${this.orderId}`)
+    } catch (error) {
+      console.error('Load order failed:', error)
+    } finally {
+      this.loading = false
+    }
   }
 }

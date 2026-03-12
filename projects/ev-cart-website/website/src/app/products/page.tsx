@@ -1,112 +1,100 @@
-'use client'
+import React from 'react'
+import { Button, Space, Card, Row, Col, Tag, Input } from 'antd'
+import { ShoppingCartOutlined, ArrowLeftOutlined, SearchOutlined } from '@ant-design/icons'
 
-import { useState } from 'react'
-import SEO from '@/components/seo/SEO'
-import Button from '@/components/ui/Button'
-
-const products = [
-  { id: 'ec-11', name: 'EC-11', seats: 11, range: '80km', image: '/images/ec-11.jpg', category: '观光车' },
-  { id: 'ec-14', name: 'EC-14', seats: 14, range: '100km', image: '/images/ec-14.jpg', category: '观光车' },
-  { id: 'ec-23', name: 'EC-23', seats: 23, range: '120km', image: '/images/ec-23.jpg', category: '巴士' },
-  { id: 'ep-2', name: 'EP-2', seats: 2, range: '60km', image: '/images/ep-2.jpg', category: '巡逻车' },
-  { id: 'ef-1', name: 'EF-1', seats: 0, range: '90km', image: '/images/ef-1.jpg', category: '货车' },
-  { id: 'ec-8', name: 'EC-8', seats: 8, range: '70km', image: '/images/ec-8.jpg', category: '观光车' },
-]
-
-const categories = ['全部', '观光车', '巡逻车', '货车', '巴士']
-
-export default function ProductsPage() {
-  const [selectedCategory, setSelectedCategory] = useState('全部')
-
-  const filteredProducts = selectedCategory === '全部'
-    ? products
-    : products.filter(p => p.category === selectedCategory)
+const Products: React.FC = () => {
+  const products = [
+    { id: 1, name: 'EV Cart Pro', category: '电动车', price: 25800, image: '/products/pro.jpg', tag: '旗舰版' },
+    { id: 2, name: 'EV Cart Standard', category: '电动车', price: 19800, image: '/products/standard.jpg', tag: '标准版' },
+    { id: 3, name: 'EV Cart Lite', category: '电动车', price: 13800, image: '/products/lite.jpg', tag: 'Lite 版' },
+    { id: 4, name: '配件包 A', category: '配件', price: 380, image: '/products/accessory-a.jpg', tag: '基础' },
+    { id: 5, name: '配件包 B', category: '配件', price: 580, image: '/products/accessory-b.jpg', tag: '高级' },
+  ]
 
   return (
-    <>
-      <SEO
-        title="产品中心 - EV Cart 集团"
-        description="EV Cart 集团提供多种电动观光车、巡逻车、货车、巴士，续航 60-120km，支持定制"
-        image="/images/products-og.jpg"
-        url="https://www.evcart.com/products"
-      />
-
-      <div>
-        {/* Hero */}
-        <section className="bg-gray-900 text-white py-20">
-          <div className="container-custom text-center">
-            <h1 className="heading-1 mb-4">产品中心</h1>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              多样化车型，满足景区、酒店、房地产、工厂等多种场景需求
-            </p>
-          </div>
-        </section>
-
-        {/* 筛选 */}
-        <section className="section bg-gray-50">
-          <div className="container-custom">
-            <div className="flex flex-wrap justify-center gap-4 mb-8">
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`px-6 py-2 rounded-full font-medium transition-all ${
-                    selectedCategory === category
-                      ? 'bg-brand-blue text-white'
-                      : 'bg-white text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  {category}
-                </button>
-              ))}
-            </div>
-
-            {/* 产品列表 */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredProducts.map((product) => (
-                <div key={product.id} className="card overflow-hidden">
-                  <div className="aspect-video bg-gray-100">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <div className="text-sm text-brand-blue mb-2">{product.category}</div>
-                    <h3 className="text-xl font-semibold mb-4">{product.name} 电动{product.category}</h3>
-                    <div className="flex justify-between text-gray-600 mb-4">
-                      {product.seats > 0 && (
-                        <span>{product.seats}座</span>
-                      )}
-                      <span>续航{product.range}</span>
-                    </div>
-                    <a
-                      href={`/products/${product.id}`}
-                      className="btn-primary w-full block text-center"
-                    >
-                      了解详情
-                    </a>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* CTA */}
-        <section className="section bg-brand-blue text-white">
-          <div className="container-custom text-center">
-            <h2 className="heading-2 mb-4">没有找到合适的车型？</h2>
-            <p className="text-xl mb-8 max-w-2xl mx-auto">
-              我们提供定制化服务，根据您的具体需求定制专属车型
-            </p>
-            <a href="/contact" className="btn bg-white text-brand-blue hover:bg-gray-100">
-              联系定制
-            </a>
-          </div>
-        </section>
+    <div style={{ minHeight: '100vh', background: '#f5f5f5' }}>
+      {/* 导航栏 */}
+      <div style={{ padding: '20px 50px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#fff', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+        <h1 style={{ margin: 0, fontSize: 24, color: '#1890ff' }}>EV Cart</h1>
+        <Space size="large">
+          <a href="/" style={{ color: '#666' }}>首页</a>
+          <a href="/products" style={{ color: '#1890ff' }}>产品中心</a>
+          <a href="/about" style={{ color: '#666' }}>关于我们</a>
+          <a href="/contact" style={{ color: '#666' }}>联系我们</a>
+          <Button type="primary">登录系统</Button>
+        </Space>
       </div>
-    </>
+
+      {/* 内容区域 */}
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 20px' }}>
+        {/* 返回按钮 */}
+        <Button icon={<ArrowLeftOutlined />} style={{ marginBottom: 24 }} onClick={() => window.history.back()}>
+          返回首页
+        </Button>
+
+        {/* 页面标题 */}
+        <div style={{ textAlign: 'center', marginBottom: 40 }}>
+          <h2 style={{ fontSize: 36, marginBottom: 16 }}>产品中心</h2>
+          <p style={{ fontSize: 16, color: '#999' }}>高品质电动车及配件产品</p>
+        </div>
+
+        {/* 搜索栏 */}
+        <div style={{ marginBottom: 32, textAlign: 'center' }}>
+          <Input
+            placeholder="搜索产品"
+            prefix={<SearchOutlined />}
+            style={{ width: 400, maxWidth: '100%' }}
+            size="large"
+          />
+        </div>
+
+        {/* 产品列表 */}
+        <Row gutter={[32, 32]}>
+          {products.map((product) => (
+            <Col span={8} key={product.id}>
+              <Card
+                hoverable
+                cover={
+                  <div style={{ height: 200, background: '#f5f5f5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <ShoppingCartOutlined style={{ fontSize: 80, color: '#d9d9d9' }} />
+                  </div>
+                }
+                actions={[
+                  <Button type="primary" key="buy">立即购买</Button>,
+                  <Button key="cart">加入购物车</Button>,
+                ]}
+              >
+                <Card.Meta
+                  title={
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span>{product.name}</span>
+                      <Tag color={product.tag === '旗舰版' ? 'red' : product.tag === '标准版' ? 'blue' : 'green'}>
+                        {product.tag}
+                      </Tag>
+                    </div>
+                  }
+                  description={
+                    <div>
+                      <div style={{ color: '#999', marginBottom: 8 }}>{product.category}</div>
+                      <div style={{ fontSize: 20, fontWeight: 'bold', color: '#ff4d4f' }}>
+                        ¥{product.price.toLocaleString()}
+                      </div>
+                    </div>
+                  }
+                />
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </div>
+
+      {/* 页脚 */}
+      <div style={{ padding: '40px 50px', background: '#333', color: '#fff', textAlign: 'center', marginTop: 40 }}>
+        <p>© 2026 EV Cart. All rights reserved.</p>
+        <p>联系方式：400-888-8888 | 邮箱：info@evcart.com</p>
+      </div>
+    </div>
   )
 }
+
+export default Products

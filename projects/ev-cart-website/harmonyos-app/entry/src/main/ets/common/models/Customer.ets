@@ -21,9 +21,13 @@ export interface Order {
   orderCode: string
   customerName: string
   orderDate: string
+  deliveryDate?: string
   totalAmount: number
+  paidAmount: number
   status: 'pending' | 'processing' | 'completed' | 'cancelled'
   paymentStatus: 'unpaid' | 'paid'
+  shippingAddress?: string
+  salesRepName?: string
 }
 
 // 库存数据模型
