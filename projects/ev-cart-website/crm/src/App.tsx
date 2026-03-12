@@ -30,6 +30,7 @@ import Products from './pages/products/Products'
 import Settings from './pages/Settings'
 import Reports from './pages/Reports'
 import MessageCenter from './pages/MessageCenter'
+import Finance from './pages/Finance'
 
 const App: React.FC = () => {
   return (
@@ -80,6 +81,9 @@ const App: React.FC = () => {
             
             {/* 消息中心 */}
             <Route path="messages" element={<MessageCenter />} />
+            
+            {/* 财务管理 */}
+            <Route path="finance" element={<Finance />} />
             
             {/* 404 重定向 */}
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
