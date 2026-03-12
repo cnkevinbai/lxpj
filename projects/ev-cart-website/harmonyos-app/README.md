@@ -1,203 +1,225 @@
-# 道达智能鸿蒙应用
+# EV Cart 鸿蒙 APP
 
-> 道达智能 CRM+ERP 移动办公平台  
-> 版本：v1.0.0  
-> 开发语言：ArkTS  
-> 设计系统：道达设计语言 v1.0
-
----
+> 鸿蒙原生应用 - HarmonyOS NEXT
 
 ## 📱 应用介绍
 
-道达智能鸿蒙应用是一款集成 CRM 和 ERP 核心功能的移动办公应用，基于鸿蒙原生开发，支持客户管理、销售跟进、审批流程、库存查询等功能，让办公更高效。
-
-### 设计理念
-
-- **简洁** - 界面清爽，信息层次清晰
-- **高效** - 操作便捷，三步内完成核心操作
-- **专业** - 符合企业级应用规范
-- **可靠** - 数据安全可信
-
-### 核心功能
-
-| 模块 | 功能 | 优先级 |
-|-----|------|--------|
-| **首页** | 工作台、数据概览、快捷操作 | P0 |
-| **CRM** | 客户/线索/商机/订单管理 | P0 |
-| **ERP** | 库存查询、采购审批、财务简报 | P1 |
-| **审批** | 统一审批中心、支持内部/钉钉审批 | P0 |
-| **消息** | 通知中心、实时推送 | P0 |
-| **我的** | 个人设置、账号管理 | P1 |
-
-### 应用截图
-
-```
-┌─────────┐  ┌─────────┐  ┌─────────┐
-│  首页   │  │  CRM    │  │  审批   │
-│         │  │         │  │         │
-│ 搜索框  │  │ 客户列表 │  │ 待审批  │
-│ 快捷操作│  │ 客户卡片 │  │ 审批详情│
-│ 待办事项│  │ 筛选排序 │  │ 审批操作│
-│ 数据概览│  │ 新建客户│  │ 审批流程│
-└─────────┘  └─────────┘  └─────────┘
-```
-
----
+EV Cart 鸿蒙 APP 是一款面向企业用户的移动办公应用，提供销售管理、库存查询、客户管理等功能。
 
 ## 🚀 快速开始
 
 ### 环境要求
 
 - DevEco Studio 4.0+
-- Node.js 16.0+
-- ohpm 1.0+
-- HarmonyOS SDK API 11+
+- HarmonyOS SDK API 10+
+- Node.js 18+
 
 ### 安装依赖
 
 ```bash
+cd harmonyos-app
 ohpm install
 ```
 
-### 配置环境
+### 运行应用
 
-```bash
-# 复制环境配置
-cp .env.example .env
-
-# 编辑配置
-vim .env
-```
-
-### 运行项目
-
-```bash
-# 连接模拟器或真机
-# 点击运行按钮
-ohpm run
-```
-
----
+1. 打开 DevEco Studio
+2. 导入项目
+3. 连接设备或启动模拟器
+4. 点击运行
 
 ## 📁 项目结构
 
 ```
-entry/
-├── src/main/ets/
-│   ├── pages/          # 页面
-│   ├── components/     # 组件
-│   ├── services/       # API 服务
-│   ├── store/          # 状态管理
-│   ├── utils/          # 工具函数
-│   └── constants/      # 常量配置
-├── src/main/resources/ # 资源文件
-└── ohosTest/           # 测试代码
+harmonyos-app/
+├── entry/
+│   └── src/
+│       └── main/
+│           ├── ets/
+│           │   ├── entryability/     # 入口能力
+│           │   ├── pages/            # 页面
+│           │   │   ├── Index.ets     # 首页
+│           │   │   ├── Dashboard.ets # 仪表盘
+│           │   │   ├── Customers.ets # 客户
+│           │   │   ├── Orders.ets    # 订单
+│           │   │   ├── Inventory.ets # 库存
+│           │   │   └── Profile.ets   # 我的
+│           │   ├── common/           # 公共模块
+│           │   │   ├── services/     # 服务层
+│           │   │   │   ├── ApiService.ets
+│           │   │   │   ├── AuthService.ets
+│           │   │   │   └── StorageService.ets
+│           │   │   ├── components/   # 组件
+│           │   │   └── utils/        # 工具类
+│           │   └── entryability/
+│           ├── resources/            # 资源文件
+│           └── module.json5
+├── AppScope/
+└── build-profile.json5
 ```
 
----
+## 🎯 功能模块
 
-## 📖 开发文档
+### 1. 登录认证
+- ✅ 账号密码登录
+- ✅ 生物识别登录
+- ✅ Token 自动刷新
 
-### 入门指南
-| 文档 | 说明 | 状态 |
-|-----|------|------|
-| [快速开始](./docs/01-入门指南/QUICK_START.md) | 5 分钟快速上手 | ✅ |
-| [环境搭建](./docs/01-入门指南/ENVIRONMENT_SETUP.md) | DevEco Studio 配置 | ✅ |
+### 2. 仪表盘
+- ✅ 销售数据统计
+- ✅ 待办事项提醒
+- ✅ 快捷入口
 
-### UI 设计
-| 文档 | 说明 | 状态 |
-|-----|------|------|
-| [UI 设计规范](./docs/UI_DESIGN_SPEC.md) | UI 设计规范文档 | ✅ |
-| [UI 风格指南](./docs/UI_STYLE_GUIDE.md) | 详细 UI 风格说明 | ✅ |
+### 3. 客户管理
+- ✅ 客户列表
+- ✅ 客户详情
+- ✅ 添加客户
+- ✅ 客户跟进
 
-### 功能规格
-| 文档 | 说明 | 状态 |
-|-----|------|------|
-| [功能规格](./docs/APP_FEATURE_SPEC.md) | 功能规格说明书 | ✅ |
-| [应用模块总览](./docs/APP_MODULE_SUMMARY.md) | 应用模块总览 | ✅ |
-| [售后模块](./docs/AFTER_SALES_MODULE.md) | 售后服务模块文档 | ✅ |
+### 4. 订单管理
+- ✅ 订单列表
+- ✅ 订单详情
+- ✅ 订单状态跟踪
+- ✅ 创建订单
 
-### 开发指南
-| 文档 | 说明 | 状态 |
-|-----|------|------|
-| [开发指南](./docs/DEVELOPMENT_GUIDE.md) | 开发流程和规范 | ✅ |
+### 5. 库存查询
+- ✅ 库存列表
+- ✅ 库存详情
+- ✅ 库存预警
+- ✅ 扫码入库
 
-### API 文档
-| 文档 | 说明 | 状态 |
-|-----|------|------|
-| [API 总览](./docs/05-API 文档/API_OVERVIEW.md) | API 接口总览 | ✅ |
+### 6. 消息中心
+- ✅ 系统通知
+- ✅ 审批提醒
+- ✅ 消息已读标记
 
-### 文档结构
-| 文档 | 说明 | 状态 |
-|-----|------|------|
-| [文档结构](./docs/DOCUMENTATION_STRUCTURE.md) | 完整文档栏目说明 | ✅ |
+### 7. 个人中心
+- ✅ 个人信息
+- ✅ 修改密码
+- ✅ 设置
+- ✅ 退出登录
 
----
+## 🔧 核心技术
 
-## 🛠️ 技术栈
+### 网络请求
+```typescript
+// ApiService.ets
+@ohos.net.http
 
-| 技术 | 用途 |
-|-----|------|
-| **ArkTS** | 开发语言 |
-| **ArkUI** | UI 框架 |
-| **Router** | 路由管理 |
-| **HTTP** | 网络请求 |
-| **AppStorage** | 状态管理 |
+export class ApiService {
+  private baseUrl: string = 'https://api.evcart.com'
+  
+  async get<T>(url: string): Promise<T> {
+    // 实现 GET 请求
+  }
+  
+  async post<T>(url: string, data: any): Promise<T> {
+    // 实现 POST 请求
+  }
+}
+```
 
----
+### 数据持久化
+```typescript
+// StorageService.ets
+import dataPreferences from '@ohos.data.preferences'
 
-## 📦 构建发布
+export class StorageService {
+  async save(key: string, value: string): Promise<void>
+  async load(key: string): Promise<string>
+  async remove(key: string): Promise<void>
+}
+```
 
-### 构建 Release 包
+### UI 组件
+```typescript
+// 使用 ArkUI 声明式开发
+Column() {
+  Text('欢迎使用 EV Cart')
+    .fontSize(24)
+    .fontWeight(FontWeight.Bold)
+  
+  Button('登录')
+    .width('100%')
+    .onClick(() => {
+      // 登录逻辑
+    })
+}
+```
 
+## 📊 API 接口
+
+```typescript
+// 登录
+POST /api/v1/auth/login
+
+// 获取客户列表
+GET /api/v1/customers
+
+// 获取订单列表
+GET /api/v1/orders
+
+// 获取库存列表
+GET /api/v1/inventory/products
+
+// 获取消息列表
+GET /api/v1/messages
+```
+
+## 🎨 设计规范
+
+### 颜色
+- 主色：#1890ff
+- 成功色：#52c41a
+- 警告色：#faad14
+- 错误色：#ff4d4f
+
+### 字体
+- 标题：24px
+- 正文：16px
+- 辅助文字：14px
+
+### 间距
+- 页面边距：16px
+- 组件间距：12px
+- 卡片内边距：16px
+
+## 🚀 构建发布
+
+### 开发构建
 ```bash
-ohpm run build --mode release
+npm run build:debug
 ```
 
-### 输出路径
-
+### 发布构建
+```bash
+npm run build:release
 ```
-entry/build/default/outputs/default/entry-default-signed.hap
+
+### 打包签名
+```bash
+npm run package
 ```
 
----
+## 📱 设备支持
 
-## 📝 更新日志
+- ✅ 鸿蒙手机
+- ✅ 鸿蒙平板
+- ✅ 鸿蒙手表（精简版）
 
-### v1.0.0 (2026-03-12)
+## 📝 开发注意事项
 
-**新增功能**:
-- ✅ 首页工作台 - 搜索/快捷操作/待办/数据概览
-- ✅ 客户管理 - 列表/详情/新建/筛选
-- ✅ 线索管理 - 列表/跟进/转化
-- ✅ 商机管理 - 列表/详情/阶段管理
-- ✅ 订单管理 - 列表/详情/新建
-- ✅ 库存查询 - 列表/详情/预警
-- ✅ 采购审批 - 列表/审批/详情
-- ✅ 财务简报 - 收支概览/报表
-- ✅ 统一审批 - 待审批/已审批/审批流程
-- ✅ 消息通知 - 列表/详情/推送
+1. 使用 TypeScript 开发
+2. 遵循鸿蒙开发规范
+3. 适配不同屏幕尺寸
+4. 注意内存管理
+5. 做好错误处理
 
-**设计系统**:
-- ✅ 道达设计语言 v1.0
-- ✅ 色彩系统 - 品牌色/功能色/中性色
-- ✅ 字体系统 - 7 级字号/3 级字重
-- ✅ 组件库 - 按钮/输入框/卡片/列表
-- ✅ 动效规范 - 缓动曲线/时长规范
-- ✅ 暗黑模式 - 自动适配
+## 📞 联系方式
 
-**技术架构**:
-- ✅ ArkTS + ArkUI
-- ✅ 统一状态管理
-- ✅ API 请求封装
-- ✅ 本地存储封装
-
----
+- 官网：https://www.evcart.com
+- 邮箱：dev@evcart.com
 
 ## 📄 许可证
 
-Copyright © 2026 道达智能
-
----
-
-_道达智能 · 版权所有_
+Copyright © 2026 EV Cart

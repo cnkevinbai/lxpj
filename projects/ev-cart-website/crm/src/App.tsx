@@ -35,6 +35,7 @@ import Finance from './pages/Finance'
 import Inventory from './pages/Inventory'
 import Orders from './pages/Orders'
 import ERP from './pages/ERP'
+import AfterSales from './pages/AfterSales'
 
 const App: React.FC = () => {
   return (
@@ -100,6 +101,9 @@ const App: React.FC = () => {
             
             {/* ERP 系统 */}
             <Route path="erp" element={<ERP />} />
+            
+            {/* 售后服务 */}
+            <Route path="after-sales" element={<AfterSales />} />
             
             {/* 404 重定向 */}
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
