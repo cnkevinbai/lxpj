@@ -36,6 +36,9 @@ import Inventory from './pages/Inventory'
 import Orders from './pages/Orders'
 import ERP from './pages/ERP'
 import AfterSales from './pages/AfterSales'
+import Purchase from './pages/Purchase'
+import Production from './pages/Production'
+import Export from './pages/Export'
 
 const App: React.FC = () => {
   return (
@@ -101,6 +104,9 @@ const App: React.FC = () => {
             
             {/* ERP 系统 */}
             <Route path="erp" element={<ERP />} />
+            <Route path="purchase" element={<Purchase />} />
+            <Route path="production" element={<Production />} />
+            <Route path="export" element={<Export />} />
             
             {/* 售后服务 */}
             <Route path="after-sales" element={<AfterSales />} />

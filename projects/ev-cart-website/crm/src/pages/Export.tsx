@@ -1,95 +1,111 @@
-import React, { useState } from 'react'
-import { Card, Button, DatePicker, Select, Space, message, Table } from 'antd'
-import { DownloadOutlined } from '@ant-design/icons'
-import apiClient from '../services/api'
-import dayjs from 'dayjs'
-
-const { RangePicker } = DatePicker
+import React, { useState, useEffect } from 'react'
+import { Card, Table, Button, Space, Tag, Modal, Form, Input, InputNumber, Select, DatePicker, message, Statistic, Row, Col, Descriptions } from 'antd'
+import { PlusOutlined, EyeOutlined, FileTextOutlined } from '@ant-design/icons'
 
 const Export: React.FC = () => {
-  const [loading, setLoading] = useState(false)
-  const [dataType, setDataType] = useState('customers')
-  const [dateRange, setDateRange] = useState<[any, any] | null>(null)
+  const [orders, setOrders] = useState([])
+  const [statistics, setStatistics] = useState<any>({})
+  const [createVisible, setCreateVisible] = useState(false)
+  const [form] = Form.useForm()
 
-  const handleExport = async () => {
-    setLoading(true)
-    try {
-      const [startDate, endDate] = dateRange || []
-      
-      const response = await apiClient.get(`/export/${dataType}`, {
-        params: {
-          startDate: startDate ? dayjs(startDate).format('YYYY-MM-DD') : undefined,
-          endDate: endDate ? dayjs(endDate).format('YYYY-MM-DD') : undefined,
-        },
-        responseType: 'blob',
-      })
-
-      // 创建下载链接
-      const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
-      const url = window.URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = `${dataType}_${dayjs().format('YYYYMMDD')}.xlsx`
-      link.click()
-      window.URL.revokeObjectURL(url)
-
-      message.success('导出成功')
-    } catch (error: any) {
-      message.error('导出失败：' + (error.response?.data?.message || error.message))
-    } finally {
-      setLoading(false)
-    }
+  const statusColors: Record<string, string> = {
+    pending: 'warning',
+    approved: 'processing',
+    production: 'processing',
+    shipped: 'success',
+    completed: 'success',
+    cancelled: 'error',
   }
+
+  const statusLabels: Record<string, string> = {
+    pending: '待确认',
+    approved: '已确认',
+    production: '生产中',
+    shipped: '已发货',
+    completed: '已完成',
+    cancelled: '已取消',
+  }
+
+  const fetchOrders = async () => {
+    const response = await fetch('/api/v1/export/orders')
+    const data = await response.json()
+    setOrders(data.data || [])
+  }
+
+  const fetchStatistics = async () => {
+    const response = await fetch('/api/v1/export/statistics')
+    const data = await response.json()
+    setStatistics(data)
+  }
+
+  useEffect(() => {
+    fetchOrders()
+    fetchStatistics()
+  }, [])
+
+  const handleCreate = async (values: any) => {
+    await fetch('/api/v1/export/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(values),
+    })
+    message.success('创建成功')
+    setCreateVisible(false)
+    fetchOrders()
+  }
+
+  const columns = [
+    { title: '外贸单号', dataIndex: 'exportCode', width: 150 },
+    { title: '客户', dataIndex: 'customerName', width: 150 },
+    { title: '国家', dataIndex: 'country', width: 100 },
+    { title: '币种', dataIndex: 'currency', width: 60 },
+    { title: '订单金额', dataIndex: 'totalAmount', width: 120, render: (a: number, r: any) => `${a} ${r.currency}` },
+    { title: '订单日期', dataIndex: 'orderDate', width: 120, render: (d: string) => new Date(d).toLocaleDateString() },
+    { title: '状态', dataIndex: 'status', width: 80, render: (s: string) => <Tag color={statusColors[s]}>{statusLabels[s]}</Tag> },
+    { title: '海关状态', dataIndex: 'customsStatus', width: 100 },
+    {
+      title: '操作',
+      key: 'action',
+      width: 150,
+      render: (_: any, record: any) => (
+        <Space size="small">
+          <Button type="link" size="small" icon={<EyeOutlined />}>详情</Button>
+          <Button type="link" size="small" icon={<FileTextOutlined />}>单据</Button>
+        </Space>
+      ),
+    },
+  ]
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">数据导出</h1>
+      <Row gutter={16} style={{ marginBottom: 16 }}>
+        <Col span={6}><Card><Statistic title="外贸订单" value={statistics.total || 0} suffix="个" /></Card></Col>
+        <Col span={6}><Card><Statistic title="待确认" value={statistics.pending || 0} suffix="个" valueStyle={{ color: '#faad14' }} /></Card></Col>
+        <Col span={6}><Card><Statistic title="订单总额" value={statistics.totalAmount || 0} prefix="$" valueStyle={{ color: '#1890ff' }} /></Card></Col>
+        <Col span={6}><Card><Statistic title="已完成" value={statistics.completed || 0} suffix="个" valueStyle={{ color: '#52c41a' }} /></Card></Col>
+      </Row>
 
-      <Card className="mb-6">
-        <div className="flex flex-wrap gap-4 items-end">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">数据类型</label>
-            <Select
-              value={dataType}
-              onChange={setDataType}
-              style={{ width: 200 }}
-            >
-              <Select.Option value="customers">客户数据</Select.Option>
-              <Select.Option value="leads">线索数据</Select.Option>
-              <Select.Option value="opportunities">商机数据</Select.Option>
-              <Select.Option value="orders">订单数据</Select.Option>
-              <Select.Option value="dealers">经销商数据</Select.Option>
-            </Select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">日期范围</label>
-            <RangePicker
-              value={dateRange}
-              onChange={(dates) => setDateRange(dates as [any, any] | null)}
-            />
-          </div>
-
-          <Button
-            type="primary"
-            icon={<DownloadOutlined />}
-            onClick={handleExport}
-            loading={loading}
-          >
-            导出 Excel
-          </Button>
-        </div>
+      <Card
+        title="🌍 外贸管理"
+        extra={<Button type="primary" icon={<PlusOutlined />} onClick={() => setCreateVisible(true)}>创建外贸单</Button>}
+      >
+        <Table columns={columns} dataSource={orders} rowKey="id" pagination={{ pageSize: 20 }} />
       </Card>
 
-      <Card title="导出说明">
-        <div className="space-y-2 text-sm text-gray-600">
-          <p>✅ 支持导出客户、线索、商机、订单、经销商数据</p>
-          <p>✅ 可选择日期范围筛选数据</p>
-          <p>✅ 导出格式为 Excel (.xlsx)</p>
-          <p>✅ 单次最多导出 10000 条数据</p>
-          <p>⚠️ 大数据量导出可能需要较长时间，请耐心等待</p>
-        </div>
-      </Card>
+      <Modal title="创建外贸订单" open={createVisible} onCancel={() => setCreateVisible(false)} onOk={() => form.submit()}>
+        <Form form={form} layout="vertical" onFinish={handleCreate}>
+          <Form.Item name="customerName" label="客户名称" rules={[{ required: true }]}><Input /></Form.Item>
+          <Form.Item name="country" label="国家" rules={[{ required: true }]}><Input /></Form.Item>
+          <Form.Item name="currency" label="币种" initialValue="USD">
+            <Select><Select.Option value="USD">美元</Select.Option><Select.Option value="EUR">欧元</Select.Option><Select.Option value="GBP">英镑</Select.Option></Select>
+          </Form.Item>
+          <Form.Item name="totalAmount" label="订单金额" rules={[{ required: true }]}><InputNumber style={{ width: '100%' }} prefix="$" /></Form.Item>
+          <Form.Item name="portOfLoading" label="装运港"><Input /></Form.Item>
+          <Form.Item name="portOfDischarge" label="目的港"><Input /></Form.Item>
+          <Form.Item name="paymentTerms" label="付款条款"><Input.TextArea rows={2} placeholder="如：T/T 30% deposit, balance before shipment" /></Form.Item>
+          <Form.Item name="notes" label="备注"><Input.TextArea rows={3} /></Form.Item>
+        </Form>
+      </Modal>
     </div>
   )
 }

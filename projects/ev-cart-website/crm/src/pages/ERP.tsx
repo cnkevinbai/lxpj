@@ -1,85 +1,49 @@
-import React, { useState, useEffect } from 'react'
-import { Card, Tabs, Table, Statistic, Row, Col, Tag, Button, Space } from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Card, Row, Col, Statistic, Progress } from 'antd'
+import { ShoppingCartOutlined, FactoryOutlined, GlobalOutlined, BarChartOutlined } from '@ant-design/icons'
 
 const ERP: React.FC = () => {
-  const [purchaseOrders, setPurchaseOrders] = useState([])
-  const [productionOrders, setProductionOrders] = useState([])
-  const [exportOrders, setExportOrders] = useState([])
-
-  const fetchPurchaseOrders = async () => {
-    const response = await fetch('/api/v1/purchase/orders')
-    const data = await response.json()
-    setPurchaseOrders(data.data || [])
-  }
-
-  const fetchProductionOrders = async () => {
-    const response = await fetch('/api/v1/production/orders')
-    const data = await response.json()
-    setProductionOrders(data.data || [])
-  }
-
-  const fetchExportOrders = async () => {
-    const response = await fetch('/api/v1/export/orders')
-    const data = await response.json()
-    setExportOrders(data.data || [])
-  }
-
-  useEffect(() => {
-    fetchPurchaseOrders()
-    fetchProductionOrders()
-    fetchExportOrders()
-  }, [])
-
-  const purchaseColumns = [
-    { title: '采购单号', dataIndex: 'poCode', width: 150 },
-    { title: '供应商', dataIndex: 'supplierName', width: 200 },
-    { title: '采购日期', dataIndex: 'orderDate', width: 120, render: (d: string) => new Date(d).toLocaleDateString() },
-    { title: '金额', dataIndex: 'totalAmount', width: 120, render: (a: number) => `¥${a.toLocaleString()}` },
-    { title: '状态', dataIndex: 'status', width: 80, render: (s: string) => <Tag>{s}</Tag> },
-  ]
-
-  const productionColumns = [
-    { title: '工单号', dataIndex: 'moCode', width: 150 },
-    { title: '产品', dataIndex: 'productName', width: 200 },
-    { title: '计划数量', dataIndex: 'plannedQuantity', width: 100 },
-    { title: '完成数量', dataIndex: 'completedQuantity', width: 100 },
-    { title: '状态', dataIndex: 'status', width: 80, render: (s: string) => <Tag>{s}</Tag> },
-  ]
-
-  const exportColumns = [
-    { title: '外贸单号', dataIndex: 'exportCode', width: 150 },
-    { title: '客户', dataIndex: 'customerName', width: 200 },
-    { title: '国家', dataIndex: 'country', width: 100 },
-    { title: '金额', dataIndex: 'totalAmount', width: 120, render: (a: number) => `${a} USD` },
-    { title: '状态', dataIndex: 'status', width: 80, render: (s: string) => <Tag>{s}</Tag> },
-  ]
+  const navigate = useNavigate()
 
   return (
     <div>
-      <Card title="🏭 ERP 系统">
-        <Tabs>
-          <Tabs.TabPane tab="采购管理" key="purchase">
-            <Row gutter={16} style={{ marginBottom: 16 }}>
-              <Col span={8}><Card><Statistic title="采购订单" value={purchaseOrders.length} /></Card></Col>
-            </Row>
-            <Table columns={purchaseColumns} dataSource={purchaseOrders} rowKey="id" pagination={false} />
-          </Tabs.TabPane>
-
-          <Tabs.TabPane tab="生产管理" key="production">
-            <Row gutter={16} style={{ marginBottom: 16 }}>
-              <Col span={8}><Card><Statistic title="生产工单" value={productionOrders.length} /></Card></Col>
-            </Row>
-            <Table columns={productionColumns} dataSource={productionOrders} rowKey="id" pagination={false} />
-          </Tabs.TabPane>
-
-          <Tabs.TabPane tab="外贸管理" key="export">
-            <Row gutter={16} style={{ marginBottom: 16 }}>
-              <Col span={8}><Card><Statistic title="外贸订单" value={exportOrders.length} /></Card></Col>
-            </Row>
-            <Table columns={exportColumns} dataSource={exportOrders} rowKey="id" pagination={false} />
-          </Tabs.TabPane>
-        </Tabs>
+      <Card title="🏭 ERP 系统总览">
+        <Row gutter={16}>
+          <Col span={8}>
+            <Card 
+              hoverable 
+              onClick={() => navigate('/purchase')}
+              style={{ textAlign: 'center', cursor: 'pointer' }}
+            >
+              <ShoppingCartOutlined style={{ fontSize: 48, color: '#1890ff', marginBottom: 16 }} />
+              <h3>采购管理</h3>
+              <p style={{ color: '#999' }}>采购订单 / 供应商管理 / 入库管理</p>
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card 
+              hoverable 
+              onClick={() => navigate('/production')}
+              style={{ textAlign: 'center', cursor: 'pointer' }}
+            >
+              <FactoryOutlined style={{ fontSize: 48, color: '#722ed1', marginBottom: 16 }} />
+              <h3>生产管理</h3>
+              <p style={{ color: '#999' }}>生产工单 / 生产进度 / 质量管理</p>
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card 
+              hoverable 
+              onClick={() => navigate('/export')}
+              style={{ textAlign: 'center', cursor: 'pointer' }}
+            >
+              <GlobalOutlined style={{ fontSize: 48, color: '#52c41a', marginBottom: 16 }} />
+              <h3>外贸管理</h3>
+              <p style={{ color: '#999' }}>外贸订单 / 报关单据 / 物流跟踪</p>
+            </Card>
+          </Col>
+        </Row>
       </Card>
     </div>
   )
