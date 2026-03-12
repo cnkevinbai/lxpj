@@ -1,5 +1,6 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import Login from './pages/Login'
 import { ConfigProvider } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
 import Layout from './layout/Layout'
@@ -37,6 +38,9 @@ const App: React.FC = () => {
     <ConfigProvider locale={zhCN}>
       <BrowserRouter>
         <Routes>
+          {/* 登录页面 */}
+          <Route path="/login" element={<Login />} />
+          
           {/* 主布局路由 */}
           <Route path="/" element={<Layout />}>
             {/* 默认跳转 */}
