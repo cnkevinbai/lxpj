@@ -27,6 +27,14 @@ import { PaymentModule } from './modules/payment/payment.module'
 import { AnalyticsModule } from './modules/analytics/analytics.module'
 import { OauthModule } from './modules/oauth/oauth.module'
 import { CdnModule } from './modules/cdn/cdn.module'
+import { AuditLogModule } from './modules/audit-log/audit-log.module'
+import { UserHandoverModule } from './modules/user-handover/user-handover.module'
+import { ForeignCurrencyModule } from './modules/foreign-currency/foreign-currency.module'
+import { WhatsAppModule } from './modules/whatsapp/whatsapp.module'
+import { I18nModule } from './modules/i18n/i18n.module'
+import { CrmPoolModule } from './modules/crm-pool/crm-pool.module'
+import { CustomerProfileModule } from './modules/customer-profile/customer-profile.module'
+import { SalesForecastModule } from './modules/sales-forecast/sales-forecast.module'
 
 @Module({
   imports: [
@@ -95,6 +103,15 @@ import { CdnModule } from './modules/cdn/cdn.module'
     PdfModule,
     RecommendModule,
     AiChatModule,
+    ComplianceModule,
+    AuditLogModule,
+    UserHandoverModule,
+    ForeignCurrencyModule,
+    WhatsAppModule,
+    I18nModule,
+    CrmPoolModule,
+    CustomerProfileModule,
+    SalesForecastModule,
   ],
 })
 export class AppModule {}

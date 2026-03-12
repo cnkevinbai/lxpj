@@ -1,0 +1,13 @@
+{
+  "name": "evcart_mobile",
+  "version": "1.0.0",
+  "description": "道达智能移动办公 APP",
+  "main": "",
+  "author": "渔晓白 <yuxiaobai@evcart.com>",
+  "license": "MIT",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@ohos/hypium": "1.0.6"
+  }
+}

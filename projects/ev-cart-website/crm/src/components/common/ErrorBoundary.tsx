@@ -1,4 +1,4 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react'
+import { Component, ErrorInfo, ReactNode } from 'react'
 import { Result, Button } from 'antd'
 
 interface Props {
@@ -11,27 +11,26 @@ interface State {
   error?: Error
 }
 
-/**
- * 错误边界组件
- * 捕获并处理子组件错误
- */
-class ErrorBoundary extends Component<Props, State> {
-  public state: State = {
-    hasError: false,
+export default class ErrorBoundary extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props)
+    this.state = { hasError: false }
   }
 
-  public static getDerivedStateFromError(error: Error): State {
+  static getDerivedStateFromError(error: Error): State {
     return { hasError: true, error }
   }
 
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Uncaught error:', error, errorInfo)
-    
-    // 可以上报错误到监控系统
-    // reportError(error, errorInfo)
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('ErrorBoundary caught error:', error, errorInfo)
   }
 
-  public render() {
+  handleReset = () => {
+    this.setState({ hasError: false, error: undefined })
+    window.location.reload()
+  }
+
+  render() {
     if (this.state.hasError) {
       if (this.props.fallback) {
         return this.props.fallback
@@ -41,10 +40,10 @@ class ErrorBoundary extends Component<Props, State> {
         <Result
           status="500"
           title="页面出错了"
-          subTitle={this.state.error?.message || '请稍后重试'}
+          subTitle={this.state.error?.message || '抱歉，页面加载失败'}
           extra={
-            <Button type="primary" onClick={() => window.location.reload()}>
-              刷新页面
+            <Button type="primary" onClick={this.handleReset}>
+              重新加载
             </Button>
           }
         />
@@ -54,5 +53,3 @@ class ErrorBoundary extends Component<Props, State> {
     return this.props.children
   }
 }
-
-export default ErrorBoundary

@@ -1,8 +1,13 @@
 import { Injectable } from '@nestjs/common'
 
+import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Repository } from 'typeorm'
+import { ChatMessage } from './entities/chat-message.entity'
+
 /**
  * AI 客服服务
- * 基于规则的简单客服 (后续可接入大模型)
+ * 基于规则 + 知识库的智能客服 (后续可接入大模型)
  */
 @Injectable()
 export class AiChatService {
@@ -31,10 +36,15 @@ export class AiChatService {
     },
   }
 
+  constructor(
+    @InjectRepository(ChatMessage)
+    private chatMessageRepository: Repository<ChatMessage>,
+  ) {}
+
   /**
    * 智能回复
    */
-  async getReply(message: string): Promise<string> {
+  async getReply(message: string, userId?: string): Promise<string> {
     const lowerMessage = message.toLowerCase()
 
     // 问候
@@ -56,8 +66,62 @@ export class AiChatService {
       }
     }
 
+    // 意图识别 - 销售咨询
+    if (/价格 | 报价 | 多少钱 | 费用/.test(lowerMessage)) {
+      return '价格根据车型和配置不同，一般在 3-15 万元之间。具体报价需要根据您的具体需求来定，您可以留下联系方式，我们的销售人员会为您提供详细报价方案。'
+    }
+
+    // 意图识别 - 技术支持
+    if (/技术 | 参数 | 规格 | 配置/.test(lowerMessage)) {
+      return '我们提供详细的技术参数表，包括续航里程、最高时速、爬坡能力、充电时间等。您关注哪方面的参数呢？'
+    }
+
+    // 意图识别 - 售后服务
+    if (/售后 | 维修 | 保养 | 质保/.test(lowerMessage)) {
+      return '我们提供完善的售后服务：1 年整车质保，2 年电池质保，终身维护，全国 200+ 经销商服务网络，24 小时响应。'
+    }
+
+    // 意图识别 - 定制服务
+    if (/定制 | 定做 | 特殊/.test(lowerMessage)) {
+      return '我们支持全方位定制服务：车身颜色、座椅布局、电池容量、Logo 印刷等都可以根据您的需求定制。请问您有什么特殊需求？'
+    }
+
+    // 保存聊天记录
+    if (userId) {
+      await this.saveChatMessage(userId, message, 'user')
+    }
+
     // 默认回复
-    return '感谢您的咨询！为了给您提供更准确的信息，建议您联系我们的销售人员：400-XXX-XXXX，或留下您的联系方式，我们会尽快与您联系。'
+    const defaultReply = '感谢您的咨询！为了给您提供更准确的信息，建议您联系我们的销售人员：400-XXX-XXXX，或留下您的联系方式，我们会尽快与您联系。'
+    
+    if (userId) {
+      await this.saveChatMessage(userId, defaultReply, 'bot')
+    }
+
+    return defaultReply
+  }
+
+  /**
+   * 保存聊天记录
+   */
+  async saveChatMessage(userId: string, content: string, sender: 'user' | 'bot'): Promise<void> {
+    const message = this.chatMessageRepository.create({
+      userId,
+      content,
+      sender,
+    })
+    await this.chatMessageRepository.save(message)
+  }
+
+  /**
+   * 获取聊天历史
+   */
+  async getChatHistory(userId: string, limit: number = 50): Promise<ChatMessage[]> {
+    return this.chatMessageRepository.find({
+      where: { userId },
+      order: { createdAt: 'DESC' },
+      take: limit,
+    })
   }
 
   /**
@@ -72,5 +136,25 @@ export class AiChatService {
       '保修期多久？',
       '多久能交货？',
     ]
+  }
+
+  /**
+   * 转人工客服 (创建工单)
+   */
+  async transferToHuman(userId: string, reason: string): Promise<any> {
+    // TODO: 创建工单逻辑
+    return {
+      success: true,
+      ticketId: 'TICKET-' + Date.now(),
+      message: '已为您创建工单，客服人员将尽快与您联系。',
+    }
+  }
+
+  /**
+   * 满意度评价
+   */
+  async submitFeedback(userId: string, rating: number, comment?: string): Promise<void> {
+    // TODO: 保存满意度评价
+    console.log(`用户${userId}评分：${rating}分，评论：${comment}`)
   }
 }

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import '../styles/globals.css'
 import Navbar from '@/components/business/Navbar'
 import Footer from '@/components/business/Footer'
+import AIChatWidget from '@/components/AIChatWidget'
 
 export const metadata: Metadata = {
   title: {
@@ -90,6 +91,7 @@ export default function RootLayout({
           {children}
         </div>
         <Footer />
+        <AIChatWidget />
       </body>
     </html>
   )

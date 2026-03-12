@@ -1,0 +1,43 @@
+# 道达智能官网 robots.txt
+# 创建时间：2026-03-12
+
+User-agent: *
+Allow: /
+
+# 允许所有搜索引擎抓取
+Allow: /products/
+Allow: /solutions/
+Allow: /cases/
+Allow: /news/
+Allow: /videos/
+Allow: /about/
+Allow: /contact/
+
+# 禁止抓取后台和 API
+Disallow: /api/
+Disallow: /admin/
+Disallow: /crm/
+Disallow: /_next/
+Disallow: /static/
+
+# 站点地图
+Sitemap: https://www.evcart.com/sitemap.xml
+
+# 常见搜索引擎爬虫
+User-agent: Googlebot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Sogouspider
+Allow: /
+
+User-agent: 360Spider
+Allow: /
+
+# 爬取延迟建议（避免服务器压力）
+Crawl-delay: 1

@@ -2,152 +2,82 @@ import React from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ConfigProvider } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
-import { AuthProvider, useAuth } from './hooks/useAuth'
-import { DarkModeProvider } from './hooks/useDarkMode'
-import SideMenu from './components/layout/SideMenu'
-import UserProfile from './components/layout/UserProfile'
-import QuickActions from './components/common/QuickActions'
-import Login from './pages/Login'
+import Layout from './layout/Layout'
+
+// 经销商管理页面
+import Dealers from './pages/dealers/Dealers'
+import DealerDetail from './pages/dealers/DealerDetail'
+import DealerAssessment from './pages/dealers/DealerAssessment'
+import DealerRebate from './pages/dealers/DealerRebate'
+import DealerLevel from './pages/dealers/DealerLevel'
+import DealerAnalytics from './pages/dealers/DealerAnalytics'
+import CreateDealer from './pages/dealers/CreateDealer'
+import EditDealer from './pages/dealers/EditDealer'
+
+// 招聘管理页面
+import Jobs from './pages/jobs/Jobs'
+import CreateJob from './pages/jobs/CreateJob'
+import JobDetail from './pages/jobs/JobDetail'
+import Resumes from './pages/jobs/Resumes'
+import Interviews from './pages/jobs/Interviews'
+import RecruitmentAnalytics from './pages/jobs/RecruitmentAnalytics'
+
+// 其他现有页面
 import Dashboard from './pages/Dashboard'
-import ForeignDashboard from './pages/ForeignDashboard'
-import MobileDashboard from './pages/MobileDashboard'
-import ForeignMobileDashboard from './pages/ForeignMobileDashboard'
-import LeadCreate from './pages/LeadCreate'
-import CustomerCreate from './pages/CustomerCreate'
-import FollowUpLog from './pages/FollowUpLog'
-import SalesPerformance from './pages/SalesPerformance'
-import PermissionPanel from './pages/PermissionPanel'
-import Profile from './pages/Profile'
-import AiChat from './pages/AiChat'
-import SmartRecommendations from './pages/SmartRecommendations'
-import DataVisualization from './pages/DataVisualization'
+import Customers from './pages/customers/Customers'
+import Orders from './pages/orders/Orders'
+import Products from './pages/products/Products'
+import Settings from './pages/Settings'
 
-// 受保护的路由组件
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth()
-
-  if (loading) {
-    return <div className="flex items-center justify-center h-screen">加载中...</div>
-  }
-
-  if (!user) {
-    return <Navigate to="/crm/login" replace />
-  }
-
-  return <>{children}</>
-}
-
-// 主布局组件
-function Layout({ children }: { children: React.ReactNode }) {
-  const [collapsed, setCollapsed] = React.useState(false)
-
-  return (
-    <div className="flex h-screen bg-gray-100">
-      {/* 侧边栏 */}
-      <div className={`${collapsed ? 'w-20' : 'w-64'} transition-all duration-300`}>
-        <SideMenu collapsed={collapsed} />
-      </div>
-
-      {/* 主内容区 */}
-      <div className={`flex-1 overflow-auto ${collapsed ? 'ml-0' : ''}`}>
-        {/* 顶部导航 */}
-        <div className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4">
-          <button
-            onClick={() => setCollapsed(!collapsed)}
-            className="text-gray-500 hover:text-gray-700"
-          >
-            {collapsed ? '☰' : '✕'}
-          </button>
-          <div className="flex items-center gap-4">
-            <span className="text-gray-600">欢迎，{useAuth().user?.username}</span>
-          </div>
-        </div>
-
-        {/* 页面内容 */}
-        <div className="p-4">
-          {children}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function AppRoutes() {
-  const { user } = useAuth()
-  const businessType = user?.department === 'foreign' ? 'foreign' : 'domestic'
-
-  return (
-    <Routes>
-      {/* 登录页面 */}
-      <Route path="/crm/login" element={<Login />} />
-
-      {/* 受保护的路由 */}
-      <Route
-        path="/crm/*"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <Routes>
-                {/* 默认重定向 */}
-                <Route
-                  index
-                  element={
-                    <Navigate
-                      to={businessType === 'foreign' ? '/crm/foreign-dashboard' : '/crm/dashboard'}
-                      replace
-                    />
-                  }
-                />
-
-                {/* 内贸路由 */}
-                {businessType === 'domestic' && (
-                  <>
-                    <Route path="dashboard" element={<Dashboard />} />
-                    <Route path="mobile" element={<MobileDashboard />} />
-                    <Route path="leads/create" element={<LeadCreate />} />
-                    <Route path="customers/create" element={<CustomerCreate />} />
-                  </>
-                )}
-
-                {/* 外贸路由 */}
-                {businessType === 'foreign' && (
-                  <>
-                    <Route path="foreign-dashboard" element={<ForeignDashboard />} />
-                    <Route path="foreign-mobile" element={<ForeignMobileDashboard />} />
-                  </>
-                )}
-
-                {/* 通用路由 */}
-                <Route path="follow-up/:targetType/:targetId" element={<FollowUpLog />} />
-                <Route path="performance" element={<SalesPerformance />} />
-                <Route path="permissions" element={<PermissionPanel />} />
-                <Route path="recommendations" element={<SmartRecommendations />} />
-                <Route path="data-viz" element={<DataVisualization />} />
-                <Route path="ai-chat" element={<AiChat />} />
-                <Route path="profile" element={<Profile />} />
-              </Routes>
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-
-      {/* 默认重定向到登录 */}
-      <Route path="/" element={<Navigate to="/crm/login" replace />} />
-      <Route path="*" element={<Navigate to="/crm/login" replace />} />
-    </Routes>
-  )
-}
-
-function App() {
+const App: React.FC = () => {
   return (
     <ConfigProvider locale={zhCN}>
-      <DarkModeProvider>
-        <BrowserRouter>
-          <AuthProvider>
-            <AppRoutes />
-          </AuthProvider>
-        </BrowserRouter>
-      </DarkModeProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* 主布局路由 */}
+          <Route path="/" element={<Layout />}>
+            {/* 默认跳转 */}
+            <Route index element={<Navigate to="/dashboard" replace />} />
+            
+            {/* 仪表盘 */}
+            <Route path="dashboard" element={<Dashboard />} />
+            
+            {/* 客户管理 */}
+            <Route path="customers" element={<Customers />} />
+            
+            {/* 订单管理 */}
+            <Route path="orders" element={<Orders />} />
+            
+            {/* 产品管理 */}
+            <Route path="products" element={<Products />} />
+            
+            {/* 经销商管理 */}
+            <Route path="dealers" element={<Dealers />} />
+            <Route path="dealers/create" element={<CreateDealer />} />
+            <Route path="dealers/:id" element={<DealerDetail />} />
+            <Route path="dealers/:id/edit" element={<EditDealer />} />
+            <Route path="dealers/:id/assessments" element={<DealerAssessment />} />
+            <Route path="dealers/:id/rebates" element={<DealerRebate />} />
+            <Route path="dealers/:id/levels" element={<DealerLevel />} />
+            <Route path="dealers/analytics" element={<DealerAnalytics />} />
+            
+            {/* 招聘管理 */}
+            <Route path="jobs" element={<Jobs />} />
+            <Route path="jobs/create" element={<CreateJob />} />
+            <Route path="jobs/:id" element={<JobDetail />} />
+            <Route path="jobs/:id/edit" element={<EditDealer />} />
+            <Route path="resumes" element={<Resumes />} />
+            <Route path="interviews" element={<Interviews />} />
+            <Route path="recruitment/analytics" element={<RecruitmentAnalytics />} />
+            
+            {/* 系统设置 */}
+            <Route path="settings" element={<Settings />} />
+            
+            {/* 404 重定向 */}
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </ConfigProvider>
   )
 }

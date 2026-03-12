@@ -98,17 +98,44 @@ body {
 }
 
 /* 移动端优化 */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .stat-card {
-    @apply p-4;
+    @apply p-3;
   }
 
   .table-container {
-    @apply overflow-x-auto;
+    @apply overflow-x-auto -mx-4;
   }
 
   .table-container table {
     @apply min-w-full;
+  }
+
+  /* 隐藏非必要内容 */
+  .hidden-mobile {
+    @apply hidden;
+  }
+
+  /* 全屏宽度 */
+  .mobile-full-width {
+    @apply w-full;
+  }
+
+  /* 字体调整 */
+  .mobile-text-sm {
+    @apply text-sm;
+  }
+}
+
+/* 平板优化 */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .stat-card {
+    @apply p-5;
+  }
+
+  /* 两列布局 */
+  .tablet-grid-2 {
+    @apply grid-cols-2;
   }
 }
 

@@ -1,40 +1,67 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
+/**
+ * 案例实体
+ */
 @Entity('cases')
 export class Case {
   @PrimaryGeneratedColumn('uuid')
-  id: string
+  id: string;
 
   @Column({ length: 200 })
-  title: string
+  title: string;
 
-  @Column({ length: 200, nullable: true })
-  customerName: string
+  @Column({ length: 50 })
+  category: string; // 景区/酒店/园区/城市观光
 
-  @Column({ length: 50, nullable: true })
-  industry: string
+  @Column({ length: 100 })
+  location: string;
 
-  @Column({ length: 100, nullable: true })
-  location: string
+  @Column()
+  year: number;
 
-  @Column('jsonb', { default: [] })
-  productsUsed: string[]
-
-  @Column({ type: 'text', nullable: true })
-  description: string
-
-  @Column('jsonb', { default: [] })
-  images: string[]
-
-  @Column({ default: 'draft' })
-  status: string
+  @Column()
+  vehicles: number;
 
   @Column({ nullable: true })
-  publishedAt: Date
+  dailyPassengers?: number;
+
+  @Column({ type: 'text' })
+  description: string;
+
+  @Column({ type: 'text' })
+  challenge: string;
+
+  @Column({ type: 'text' })
+  solution: string;
+
+  @Column('simple-array', { nullable: true })
+  results: string[];
+
+  @Column({ type: 'text', nullable: true })
+  testimonialQuote?: string;
+
+  @Column({ length: 100, nullable: true })
+  testimonialAuthor?: string;
+
+  @Column({ length: 100, nullable: true })
+  testimonialPosition?: string;
+
+  @Column('simple-array', { nullable: true })
+  images: string[];
+
+  @Column({ length: 20, default: 'draft' })
+  status: 'published' | 'draft' | 'archived';
+
+  @Column({ default: 0 })
+  viewCount: number;
+
+  @Column({ default: 0 })
+  orderIndex: number;
 
   @CreateDateColumn()
-  createdAt: Date
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date
+  updatedAt: Date;
 }

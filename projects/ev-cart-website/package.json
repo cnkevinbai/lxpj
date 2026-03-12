@@ -59,5 +59,13 @@
     "nextjs",
     "nestjs",
     "react"
-  ]
+  ],
+  "main": ".eslintrc.js",
+  "directories": {
+    "test": "test"
+  },
+  "type": "commonjs",
+  "dependencies": {
+    "docx": "^9.6.1"
+  }
 }
