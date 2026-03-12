@@ -28,6 +28,8 @@ import Customers from './pages/customers/Customers'
 import Orders from './pages/orders/Orders'
 import Products from './pages/products/Products'
 import Settings from './pages/Settings'
+import Reports from './pages/Reports'
+import MessageCenter from './pages/MessageCenter'
 
 const App: React.FC = () => {
   return (
@@ -72,6 +74,12 @@ const App: React.FC = () => {
             
             {/* 系统设置 */}
             <Route path="settings" element={<Settings />} />
+            
+            {/* 报表中心 */}
+            <Route path="reports" element={<Reports />} />
+            
+            {/* 消息中心 */}
+            <Route path="messages" element={<MessageCenter />} />
             
             {/* 404 重定向 */}
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
