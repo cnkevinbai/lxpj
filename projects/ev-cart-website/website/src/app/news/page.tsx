@@ -1,59 +1,52 @@
 import React, { useState, useEffect } from 'react'
-import { Card, Row, Col, Button, Space, Input, Select, Pagination, Tag } from 'antd'
-import { SearchOutlined, ShoppingCartOutlined } from '@ant-design/icons'
+import { Card, Row, Col, Button, Space, Pagination, Tag } from 'antd'
+import { BarChartOutlined } from '@ant-design/icons'
 import { motion } from 'framer-motion'
 
-const { Option } = Select
-
-interface Product {
+interface News {
   id: string
-  productCode: string
-  productName: string
+  title: string
   category: string
-  unitPrice: number
-  description: string
+  summary: string
+  publishDate: string
+  author: string
   image?: string
 }
 
-const Products: React.FC = () => {
-  const [products, setProducts] = useState<Product[]>([])
+const News: React.FC = () => {
+  const [news, setNews] = useState<News[]>([])
   const [loading, setLoading] = useState(false)
-  const [categoryFilter, setCategoryFilter] = useState<string>('all')
-  const [searchText, setSearchText] = useState('')
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
 
   useEffect(() => {
-    loadProducts()
-  }, [page, categoryFilter])
+    loadNews()
+  }, [page])
 
-  const loadProducts = async () => {
+  const loadNews = async () => {
     setLoading(true)
     try {
       const params = new URLSearchParams({
         page: page.toString(),
         limit: '9',
-        ...(categoryFilter !== 'all' && { category: categoryFilter }),
-        ...(searchText && { search: searchText }),
       })
 
-      const response = await fetch(`/api/v1/website/products?${params}`)
+      const response = await fetch(`/api/v1/website/news?${params}`)
       const data = await response.json()
 
-      setProducts(data.data || [])
+      setNews(data.data || [])
       setTotal(data.total || 0)
     } catch (error) {
-      console.error('Load products failed:', error)
+      console.error('Load news failed:', error)
     } finally {
       setLoading(false)
     }
   }
 
   const categoryTags: Record<string, { color: string; text: string }> = {
-    'crm': { color: 'blue', text: 'CRM 系统' },
-    'erp': { color: 'purple', text: 'ERP 系统' },
-    'finance': { color: 'green', text: '财务管理' },
-    'service': { color: 'orange', text: '售后服务' },
+    'company': { color: 'blue', text: '企业新闻' },
+    'industry': { color: 'green', text: '行业资讯' },
+    'tech': { color: 'purple', text: '技术文章' },
   }
 
   return (
@@ -75,9 +68,9 @@ const Products: React.FC = () => {
         <h1 style={{ margin: 0, fontSize: 20, color: '#fff', fontWeight: 700 }}>四川道达智能</h1>
         <Space size="large">
           <a href="/" style={{ color: '#fff', fontSize: 14, textDecoration: 'none' }}>首页</a>
-          <a href="/products" style={{ color: '#1890ff', fontSize: 14, textDecoration: 'none' }}>产品</a>
+          <a href="/products" style={{ color: '#fff', fontSize: 14, textDecoration: 'none' }}>产品</a>
           <a href="/solutions" style={{ color: '#fff', fontSize: 14, textDecoration: 'none' }}>解决方案</a>
-          <a href="/news" style={{ color: '#fff', fontSize: 14, textDecoration: 'none' }}>新闻</a>
+          <a href="/news" style={{ color: '#1890ff', fontSize: 14, textDecoration: 'none' }}>新闻</a>
           <a href="/cases" style={{ color: '#fff', fontSize: 14, textDecoration: 'none' }}>案例</a>
           <a href="/about" style={{ color: '#fff', fontSize: 14, textDecoration: 'none' }}>关于</a>
           <a href="/contact" style={{ color: '#fff', fontSize: 14, textDecoration: 'none' }}>联系</a>
@@ -101,47 +94,19 @@ const Products: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 style={{ fontSize: 64, fontWeight: 700, marginBottom: 24 }}>产品中心</h1>
-          <p style={{ fontSize: 24, opacity: 0.8, maxWidth: 600 }}>
-            专业企业数字化管理系统 · 助力企业数字化转型
+          <h1 style={{ fontSize: 64, fontWeight: 700, marginBottom: 24 }}>新闻中心</h1>
+          <p style={{ fontSize: 24, opacity: 0.8 }}>
+            了解最新的企业动态和行业资讯
           </p>
         </motion.div>
       </div>
 
-      {/* 筛选栏 */}
-      <div style={{ padding: '40px 50px', background: '#fff' }}>
-        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
-          <Space size="large" wrap>
-            <Input
-              placeholder="搜索产品"
-              prefix={<SearchOutlined />}
-              style={{ width: 300 }}
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              onPressEnter={loadProducts}
-            />
-            <Select
-              value={categoryFilter}
-              onChange={setCategoryFilter}
-              style={{ width: 200 }}
-              placeholder="产品分类"
-            >
-              <Option value="all">全部产品</Option>
-              <Option value="crm">CRM 系统</Option>
-              <Option value="erp">ERP 系统</Option>
-              <Option value="finance">财务管理</Option>
-              <Option value="service">售后服务</Option>
-            </Select>
-          </Space>
-        </div>
-      </div>
-
-      {/* 产品列表 */}
+      {/* 新闻列表 */}
       <div style={{ padding: '80px 50px' }}>
         <div style={{ maxWidth: 1400, margin: '0 auto' }}>
           <Row gutter={[32, 32]}>
-            {products.map((product, index) => (
-              <Col span={8} key={product.id}>
+            {news.map((item, index) => (
+              <Col span={8} key={item.id}>
                 <motion.div
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -151,30 +116,32 @@ const Products: React.FC = () => {
                     hoverable
                     cover={
                       <div style={{ height: 200, background: '#f5f5f5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <ShoppingCartOutlined style={{ fontSize: 80, color: '#d9d9d9' }} />
+                        <BarChartOutlined style={{ fontSize: 80, color: '#d9d9d9' }} />
                       </div>
                     }
                     actions={[
-                      <Button type="primary" key="detail">了解详情</Button>,
-                      <Button key="contact">联系咨询</Button>,
+                      <Button type="link" key="read">阅读全文 →</Button>,
                     ]}
                   >
                     <Card.Meta
                       title={
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <span>{product.productName}</span>
-                          <Tag color={categoryTags[product.category]?.color || 'default'}>
-                            {categoryTags[product.category]?.text || product.category}
+                        <div style={{ marginBottom: 8 }}>
+                          <Tag color={categoryTags[item.category]?.color || 'default'}>
+                            {categoryTags[item.category]?.text || item.category}
                           </Tag>
                         </div>
                       }
                       description={
                         <div>
-                          <div style={{ color: '#999', marginBottom: 8, height: 40, overflow: 'hidden' }}>
-                            {product.description}
-                          </div>
-                          <div style={{ fontSize: 20, fontWeight: 'bold', color: '#ff4d4f' }}>
-                            ¥{(product.unitPrice || 0).toLocaleString()} 起
+                          <h3 style={{ fontSize: 18, marginBottom: 12, height: 48, overflow: 'hidden' }}>
+                            {item.title}
+                          </h3>
+                          <p style={{ color: '#999', marginBottom: 16, height: 60, overflow: 'hidden' }}>
+                            {item.summary}
+                          </p>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', color: '#999', fontSize: 14 }}>
+                            <span>{item.author}</span>
+                            <span>{new Date(item.publishDate).toLocaleDateString()}</span>
                           </div>
                         </div>
                       }
@@ -192,7 +159,7 @@ const Products: React.FC = () => {
               total={total} 
               pageSize={9}
               onChange={setPage}
-              showTotal={(total) => `共 ${total} 个产品`}
+              showTotal={(total) => `共 ${total} 条新闻`}
             />
           </div>
         </div>
@@ -236,4 +203,4 @@ const Products: React.FC = () => {
   )
 }
 
-export default Products
+export default News
