@@ -1,188 +1,249 @@
-# 车联网管理平台 (IoV Platform)
+# iov-platform 道达智能车辆管理平台
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Java](https://img.shields.io/badge/Java-17+-green.svg)](https://openjdk.org/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen.svg)](https://spring.io/projects/spring-boot)
+<div align="center">
 
-## 项目概述
+[![版本](https://img.shields.io/badge/版本-1.0.0-blue.svg)](https://github.com/daod/iov-platform)
+[![许可证](https://img.shields.io/badge/许可证-MIT-green.svg)](LICENSE)
+[![Java](https://img.shields.io/badge/Java-17+-orange.svg)](https://openjdk.org/)
+[![React](https://img.shields.io/badge/React-18+-61dafb.svg)](https://react.dev/)
 
-车联网管理平台是四川道达智能车辆制造有限公司开发的一套企业级车联网车辆管理平台，支持无人驾驶电动观光车和常规新能源电动观光车的车联网场景。
+**企业级车联网管理平台 | 云边端协同 | 三协议支持**
 
-### 🚀 核心特性
+[快速开始](#-快速开始) · [功能特性](#-功能特性) · [技术架构](#-技术架构) · [部署指南](#-部署指南)
 
-| 特性 | 描述 |
-|------|------|
-| **模块化架构** | 所有功能模块独立开发、独立部署 |
-| **热插拔热更新** | 支持模块动态加载/卸载/更新，无感热更新 |
-| **标准化功能单元** | 统一的模块接口和开发规范 (SFU) |
-| **云边端协同** | 云端中心、边缘节点、车载终端三层架构 |
-| **多租户账号体系** | 支持生产厂家、经销商、运营者等多角色独立使用 |
-| **熔断与回滚** | 自动化熔断机制，错误率超阈值自动回滚 |
-
-### 🏗️ 架构设计
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                      微内核架构 (Microkernel)                    │
-├─────────────────────────────────────────────────────────────────┤
-│  PluginManager │ SandboxManager │ CircuitBreaker │ RollbackMgr │
-├─────────────────────────────────────────────────────────────────┤
-│                      业务模块层 (Business)                       │
-│  vehicle-access │ monitor-service │ alarm-service │ ota-service │
-├─────────────────────────────────────────────────────────────────┤
-│                      适配器层 (Adapter)                          │
-│              jtt808-adapter │ mqtt-adapter                       │
-├─────────────────────────────────────────────────────────────────┤
-│                      边缘层 (Edge)                               │
-│                 edge-proxy │ edge-gateway                        │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-详细架构设计请参阅: [架构设计文档](docs/architecture/ARCHITECTURE_OVERVIEW.md)
-
-## 项目结构
-
-```
-iov-platform/
-├── core/                       # 核心框架
-│   ├── plugin-framework/       # 模块化框架 ✅
-│   ├── hot-reload-engine/      # 热更新引擎 ✅
-│   ├── config-center/          # 配置中心 ✅
-│   └── event-bus/              # 事件总线 ✅
-│
-├── modules/                    # 业务模块
-│   ├── vehicle-access/         # 车辆接入服务 ✅
-│   ├── monitor-service/        # 监控服务 ✅
-│   ├── alarm-service/          # 告警服务 ✅
-│   ├── ota-service/            # OTA升级服务 ✅
-│   ├── remote-control/         # 远程控制服务 ✅
-│   ├── tenant-service/         # 租户服务 ✅
-│   ├── role-service/           # 角色服务 ✅
-│   ├── sub-account-service/    # 子账户服务 ✅
-│   ├── user-service/           # 用户服务 ✅
-│   └── jtt808-adapter/         # JT/T 808协议适配器 ✅
-│
-├── edge/                       # 边缘计算组件
-│   └── edge-proxy/             # 边缘代理 ✅
-│
-├── gateway/                    # API网关
-├── deploy/                     # 部署配置
-│   ├── docker/                 # Docker配置
-│   └── k8s/                    # Kubernetes配置
-│
-└── docs/                       # 文档
-    ├── architecture/           # 架构设计文档
-    ├── development/            # 开发规范文档
-    └── modules/                # 模块设计文档
-```
-
-## 开发环境搭建
-
-### 环境要求
-
-- JDK 17+
-- Maven 3.8+
-- Docker & Docker Compose
-- Git
-
-### 快速启动
-
-1. **克隆项目**
-```bash
-git clone <repository-url>
-cd iov-platform
-```
-
-2. **启动开发环境依赖**
-```bash
-cd deploy/docker
-docker-compose -f docker-compose-dev.yml up -d
-```
-
-3. **构建项目**
-```bash
-mvn clean install
-```
-
-### 开发规范
-
-请参阅: [模块开发规范](docs/development/MODULE_SPECIFICATION.md)
-
-## 核心设计理念
-
-### 模块化 · 热插拔 · 标准化 · 可扩展
-
-本系统采用 **"微内核 + 动态插件"** 架构范式：
-
-1. **接口优先原则**: 先写接口文档，再写实现代码
-2. **加载器核心**: PluginManager 负责模块加载/卸载/版本管理
-3. **沙箱机制**: 模块权限控制、资源配额、安全隔离
-4. **监控埋点**: 每个模块暴露标准监控指标
-5. **回滚策略**: 自动化熔断机制，错误率超阈值自动回滚
-
-详细分析请参阅: [架构分析文档](docs/architecture/ARCHITECTURE_ANALYSIS.md)
-
-## 模块开发状态
-
-| 类型 | 总数 | 已完成 | 进度 |
-|------|------|--------|------|
-| Core Modules | 4 | 4 | 100% |
-| Business Modules | 6 | 6 | 100% |
-| Tenant Modules | 3 | 3 | 100% |
-| Adapter Modules | 1 | 1 | 100% |
-| Edge Modules | 1 | 1 | 100% |
-| **总计** | **15** | **15** | **100%** |
-
-详细状态请参阅: [模块开发状态](MODULE_DEVELOPMENT_STATUS.md)
-
-## 技术栈
-
-### 后端
-
-| 技术 | 版本 | 用途 |
-|------|------|------|
-| Java | 17+ | 开发语言 |
-| Spring Boot | 3.x | 应用框架 |
-| Spring Cloud | 2023.x | 微服务框架 |
-| Netty | 4.1.x | 网络框架 |
-| PostgreSQL | 15+ | 关系数据库 |
-| Redis | 7.x | 缓存 |
-| EMQX | 5.x | MQTT Broker |
-| Kafka | 3.x | 消息队列 |
-
-### 运维
-
-| 技术 | 版本 | 用途 |
-|------|------|------|
-| Docker | 24+ | 容器化 |
-| Kubernetes | 1.28+ | 容器编排 |
-| Prometheus | 2.x | 监控指标 |
-| Grafana | 10.x | 可视化 |
-
-## 文档索引
-
-### 架构文档
-
-- [架构概览](docs/architecture/ARCHITECTURE_OVERVIEW.md)
-- [架构分析](docs/architecture/ARCHITECTURE_ANALYSIS.md)
-
-### 开发规范
-
-- [模块开发规范](docs/development/MODULE_SPECIFICATION.md)
-- [开发指南](docs/development-guide.md)
-
-### 模块文档
-
-- [热更新引擎](docs/modules/MODULE_HOT_RELOAD_ENGINE.md)
-- [JT/T 808适配器](docs/modules/MODULE_JTT808_ADAPTER.md)
-- [OTA服务](docs/modules/MODULE_OTA_SERVICE.md)
-- [远程控制](docs/modules/MODULE_REMOTE_CONTROL.md)
-- [边缘代理](docs/modules/MODULE_EDGE_PROXY.md)
-
-## 许可证
-
-本项目采用 Apache 2.0 许可证。
+</div>
 
 ---
 
-_文档维护：渔晓白_
+## 📖 项目简介
+
+iov-platform 是道达智能车辆管理平台的核心系统，提供车辆接入、实时监控、远程控制、OTA升级、数据分析等全栈能力。
+
+### 核心特性
+
+- 🚀 **云边端协同架构** - 支持云端统一管理、边缘节点就近处理
+- 🔌 **三协议支持** - JT/T 808、MQTT、HTTP 全覆盖
+- 🔐 **安全合规** - 国密 SM3/SM4、数据脱敏、JWT认证
+- 📊 **实时监控** - Grafana 仪表盘、链路追踪、告警推送
+- 🔄 **热插拔架构** - 微内核 + 插件化，支持无感热更新
+- 📱 **多端支持** - Web、移动APP、大屏展示
+
+---
+
+## ✨ 功能特性
+
+### 车辆接入管理
+
+| 功能 | 说明 |
+|------|------|
+| 多协议接入 | 支持 JT/T 808、MQTT、HTTP 三种协议 |
+| 设备绑定可靠性 | 鉴权码验证、Token认证、签名验证 |
+| 自动重连恢复 | 30分钟内断线重连自动恢复绑定 |
+| 心跳保活 | 5-10分钟心跳超时检测 |
+
+### 实时监控
+
+| 功能 | 说明 |
+|------|------|
+| 位置追踪 | 实时位置、轨迹回放、电子围栏 |
+| 状态监控 | 车辆状态、电池状态、故障诊断 |
+| 视频监控 | 实时视频、历史回放 |
+| 告警推送 | 实时告警、告警聚合、处理追踪 |
+
+### 远程控制
+
+| 功能 | 说明 |
+|------|------|
+| 锁车/解锁 | 远程控制车辆门锁 |
+| 诊断指令 | 远程诊断、读取故障码 |
+| 参数配置 | 远程修改终端参数 |
+| OTA升级 | 固件升级、版本管理 |
+
+### 运营管理
+
+| 功能 | 说明 |
+|------|------|
+| 车队管理 | 车队分组、调度规划 |
+| 统计报表 | 运营数据、里程统计、能耗分析 |
+| 电子围栏 | 区域管理、出入告警 |
+
+---
+
+## 🏗️ 技术架构
+
+### 系统架构
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      展示层 (Presentation)                   │
+│   React 18 + TypeScript + Ant Design 5 + Zustand          │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                      网关层 (Gateway)                        │
+│   Spring Cloud Gateway + JWT + 限流熔断                    │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                      服务层 (Service)                        │
+│   18个微服务模块 | Spring Cloud Alibaba | gRPC              │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                      数据层 (Data)                           │
+│   PostgreSQL | TimescaleDB | ClickHouse | Redis | ES       │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### 技术栈
+
+| 层级 | 技术 |
+|------|------|
+| **前端** | React 18, TypeScript, Ant Design 5, Zustand, ECharts |
+| **后端** | Java 17, Spring Boot 3, Spring Cloud Alibaba |
+| **消息** | EMQX, Kafka |
+| **数据库** | PostgreSQL, TimescaleDB, ClickHouse, Redis |
+| **搜索** | Elasticsearch |
+| **存储** | MinIO |
+| **容器** | Docker, Kubernetes |
+| **监控** | Prometheus, Grafana, Jaeger |
+
+---
+
+## 🚀 快速开始
+
+### 环境要求
+
+| 依赖 | 版本 |
+|------|------|
+| Java | 17+ |
+| Node.js | 18+ |
+| Docker | 20+ |
+| PostgreSQL | 15+ |
+| Redis | 7+ |
+
+### 启动开发环境
+
+```bash
+# 克隆项目
+git clone https://github.com/daod/iov-platform.git
+cd iov-platform
+
+# 启动基础服务
+docker-compose up -d postgres redis kafka
+
+# 启动后端
+mvn spring-boot:run
+
+# 启动前端
+cd web/iov-portal
+npm install
+npm run dev
+```
+
+### 访问地址
+
+| 服务 | 地址 |
+|------|------|
+| 前端 | http://localhost:5173 |
+| 后端 API | http://localhost:8080 |
+| Grafana | http://localhost:3000 |
+| MinIO Console | http://localhost:9001 |
+
+---
+
+## 📦 项目结构
+
+```
+iov-platform/
+├── modules/                 # 后端模块
+│   ├── vehicle-access/      # 车辆接入服务
+│   ├── monitor-service/     # 监控服务
+│   ├── alarm-service/       # 告警服务
+│   ├── ota-service/         # OTA 服务
+│   ├── remote-control/      # 远程控制服务
+│   ├── jtt808-adapter/      # JT/T 808 适配器
+│   ├── mqtt-adapter/        # MQTT 适配器
+│   ├── http-adapter/        # HTTP 适配器
+│   ├── storage-service/     # 对象存储服务
+│   ├── es-adapter/          # ES 搜索适配器
+│   └── clickhouse-sync/     # ClickHouse 同步
+├── web/                     # 前端项目
+│   └── iov-portal/          # React 前端
+├── services/                # 基础服务
+│   └── gateway/             # API 网关
+├── common/                  # 公共模块
+│   └── security-core/       # 安全核心
+├── docs/                    # 文档
+├── deploy/                  # 部署配置
+└── config/                  # 配置文件
+```
+
+---
+
+## 📚 文档
+
+| 文档 | 说明 |
+|------|------|
+| [架构设计文档](docs/architecture/ARCHITECTURE_OVERVIEW.md) | 系统架构设计 |
+| [设备绑定可靠性](docs/modules/business/DEVICE_BINDING_RELIABILITY.md) | 三协议绑定机制 |
+| [JT/T 808 适配器](docs/modules/adapter/jtt808-adapter.md) | JT/T 808 协议详解 |
+| [MQTT 适配器](docs/modules/adapter/mqtt-adapter.md) | MQTT 协议详解 |
+| [部署指南](docs/deployment/) | 生产环境部署 |
+
+---
+
+## 🛡️ 安全合规
+
+- ✅ **国密算法** - SM3 哈希、SM4 加密
+- ✅ **数据脱敏** - 手机号、身份证、VIN 等 8 种类型
+- ✅ **JWT 认证** - Token 验证、权限控制
+- ✅ **签名验证** - HMAC-SHA256、防重放攻击
+- ✅ **访问控制** - RBAC 权限模型
+
+---
+
+## 📊 监控运维
+
+- ✅ **Prometheus** - 指标收集
+- ✅ **Grafana** - 可视化仪表盘
+- ✅ **Jaeger** - 链路追踪
+- ✅ **日志聚合** - Elasticsearch + Kibana
+- ✅ **告警推送** - 钉钉/企微/邮件
+
+---
+
+## 🤝 贡献指南
+
+欢迎提交 Issue 和 Pull Request！
+
+1. Fork 本仓库
+2. 创建特性分支 (`git checkout -b feature/amazing-feature`)
+3. 提交更改 (`git commit -m 'feat: add amazing feature'`)
+4. 推送到分支 (`git push origin feature/amazing-feature`)
+5. 创建 Pull Request
+
+---
+
+## 📄 许可证
+
+[MIT License](LICENSE)
+
+---
+
+## 📮 联系方式
+
+- **官网**: https://daod.com
+- **邮箱**: dev@daod.com
+- **社区**: https://discord.gg/clawd
+
+---
+
+<div align="center">
+
+**Made with ❤️ by 渔晓白**
+
+</div>

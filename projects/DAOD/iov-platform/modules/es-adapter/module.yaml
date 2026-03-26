@@ -1,0 +1,55 @@
+# Elasticsearch Adapter - ES 搜索适配器
+
+id: es-adapter
+name: Elasticsearch Adapter
+version: 1.0.0
+description: Elasticsearch 搜索适配器，提供日志检索、轨迹搜索、全文检索能力
+type: adapter
+priority: 50
+
+dependencies:
+  - common-core
+
+provides:
+  - api: ElasticsearchService
+    version: 1.0.0
+
+configuration:
+  elasticsearch:
+    host: ${ES_HOST:localhost}
+    port: ${ES_PORT:9200}
+    username: ${ES_USERNAME:}
+    password: ${ES_PASSWORD:}
+    ssl-enabled: ${ES_SSL:false}
+  
+  indices:
+    logs: iov-logs
+    trajectory: iov-trajectory
+    alarms: iov-alarms
+    vehicles: iov-vehicles
+  
+  indexing:
+    batch-size: 1000
+    flush-interval: 5s
+  
+  search:
+    default-page-size: 20
+    max-page-size: 10000
+
+health-check:
+  enabled: true
+  interval: 30s
+  
+metrics:
+  enabled: true
+  endpoint: /actuator/prometheus
+
+endpoints:
+  api:
+    path: /api/v1/es
+    port: 8080
+    
+scaling:
+  min-instances: 1
+  max-instances: 3
+  target-cpu: 70

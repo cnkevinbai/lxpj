@@ -1,0 +1,56 @@
+# ClickHouse Sync - ClickHouse 数据同步服务
+
+id: clickhouse-sync
+name: ClickHouse Data Sync Service
+version: 1.0.0
+description: ClickHouse 数据同步服务，负责将业务数据同步到 ClickHouse 用于分析
+type: service
+priority: 55
+
+dependencies:
+  - common-core
+  - event-bus
+
+provides:
+  - api: ClickHouseSyncService
+    version: 1.0.0
+
+configuration:
+  clickhouse:
+    url: ${CLICKHOUSE_URL:jdbc:clickhouse://localhost:8123}
+    username: ${CLICKHOUSE_USER:default}
+    password: ${CLICKHOUSE_PASSWORD:}
+    database: ${CLICKHOUSE_DB:iov_analytics}
+  
+  sync:
+    batch-size: 10000
+    flush-interval: 10s
+    retry-count: 3
+    retry-delay: 5s
+  
+  retention:
+    trajectory-details: 90
+    position-realtime: 30
+    telemetry-realtime: 30
+  
+  scheduled:
+    daily-stats: "0 0 1 * * ?"
+    hourly-cleanup: "0 30 * * * ?"
+
+health-check:
+  enabled: true
+  interval: 30s
+  
+metrics:
+  enabled: true
+  endpoint: /actuator/prometheus
+
+endpoints:
+  api:
+    path: /api/v1/clickhouse
+    port: 8080
+    
+scaling:
+  min-instances: 1
+  max-instances: 2
+  target-cpu: 60

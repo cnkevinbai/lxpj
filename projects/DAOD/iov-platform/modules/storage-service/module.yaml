@@ -1,0 +1,55 @@
+# Storage Service - MinIO 对象存储服务
+
+id: storage-service
+name: Object Storage Service
+version: 1.0.0
+description: 对象存储服务，基于 MinIO 实现文件、OTA包、图片、视频存储
+type: service
+priority: 60
+
+dependencies:
+  - common-core
+
+provides:
+  - api: StorageService
+    version: 1.0.0
+
+configuration:
+  minio:
+    endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
+    access-key: ${MINIO_ACCESS_KEY:minioadmin}
+    secret-key: ${MINIO_SECRET_KEY:minioadmin}
+    public-url: ${MINIO_PUBLIC_URL:http://localhost:9000}
+  
+  buckets:
+    firmware: firmware
+    images: images
+    videos: videos
+    documents: documents
+    alarms: alarms
+  
+  upload:
+    max-size: 104857600
+    allowed-types:
+      image: image/jpeg,image/png,image/gif,image/webp
+      video: video/mp4,video/webm
+      document: application/pdf,application/msword
+      firmware: application/java-archive,application/octet-stream
+
+health-check:
+  enabled: true
+  interval: 30s
+  
+metrics:
+  enabled: true
+  endpoint: /actuator/prometheus
+
+endpoints:
+  api:
+    path: /api/v1/storage
+    port: 8080
+    
+scaling:
+  min-instances: 1
+  max-instances: 3
+  target-cpu: 70

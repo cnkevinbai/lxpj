@@ -1,0 +1,210 @@
+# 生产环境 Docker Compose 配置
+# 使用: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+version: '3.8'
+
+services:
+  # 网关服务
+  gateway:
+    image: iov-platform/gateway:${VERSION:-latest}
+    container_name: iov-gateway
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - NACOS_SERVER=nacos:8848
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - nacos
+      - redis
+    networks:
+      - iov-network
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # 前端服务
+  frontend:
+    image: iov-platform/frontend:${VERSION:-latest}
+    container_name: iov-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - gateway
+    networks:
+      - iov-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+
+  # PostgreSQL 数据库
+  postgres:
+    image: postgres:15-alpine
+    container_name: iov-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: iov_platform
+      POSTGRES_USER: iov
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-iov123456}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - iov-network
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+
+  # TimescaleDB (时序数据库)
+  timescaledb:
+    image: timescale/timescaledb:latest-pg15
+    container_name: iov-timescaledb
+    restart: always
+    environment:
+      POSTGRES_DB: iov_timeseries
+      POSTGRES_USER: iov
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-iov123456}
+    volumes:
+      - timescaledb-data:/var/lib/postgresql/data
+    networks:
+      - iov-network
+
+  # Redis 缓存
+  redis:
+    image: redis:7-alpine
+    container_name: iov-redis
+    restart: always
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    networks:
+      - iov-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+
+  # Kafka 消息队列
+  kafka:
+    image: bitnami/kafka:latest
+    container_name: iov-kafka
+    restart: always
+    environment:
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+    volumes:
+      - kafka-data:/bitnami/kafka
+    networks:
+      - iov-network
+
+  # Elasticsearch 搜索引擎
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: iov-elasticsearch
+    restart: always
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+    networks:
+      - iov-network
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+
+  # MinIO 对象存储
+  minio:
+    image: minio/minio:latest
+    container_name: iov-minio
+    restart: always
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD:-minioadmin}
+    volumes:
+      - minio-data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    networks:
+      - iov-network
+
+  # Nacos 服务注册中心
+  nacos:
+    image: nacos/nacos-server:v2.2.3
+    container_name: iov-nacos
+    restart: always
+    environment:
+      - MODE=standalone
+      - SPRING_DATASOURCE_PLATFORM=mysql
+    ports:
+      - "8848:8848"
+    networks:
+      - iov-network
+
+  # Prometheus 监控
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: iov-prometheus
+    restart: always
+    volumes:
+      - ./deploy/monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - iov-network
+
+  # Grafana 可视化
+  grafana:
+    image: grafana/grafana:latest
+    container_name: iov-grafana
+    restart: always
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin123}
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./deploy/monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+    ports:
+      - "3000:3000"
+    networks:
+      - iov-network
+
+volumes:
+  postgres-data:
+  timescaledb-data:
+  redis-data:
+  kafka-data:
+  es-data:
+  minio-data:
+  prometheus-data:
+  grafana-data:
+
+networks:
+  iov-network:
+    driver: bridge
