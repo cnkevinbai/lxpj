@@ -5,8 +5,9 @@ import com.daod.iov.modules.mqtt.api.dto.DeviceAuthRequest;
 import com.daod.iov.modules.mqtt.api.dto.DeviceAuthResult;
 import com.daod.iov.modules.vehicleaccess.api.BindingService;
 import com.daod.iov.modules.vehicleaccess.api.dto.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.daod.iov.modules.mqtt.internal.util.MqttTokenValidator;
+import com.daod.iov.modules.mqtt.internal.util.MqttTokenValidator.MqttTokenInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -26,10 +27,15 @@ public class MqttDeviceAuthHandler implements DeviceAuthHandler {
     
     private final BindingService bindingService;
     private final DeviceShadowService shadowService;
+    private final MqttTokenValidator tokenValidator;
     
-    public MqttDeviceAuthHandler(BindingService bindingService, DeviceShadowService shadowService) {
+    @Autowired
+    public MqttDeviceAuthHandler(BindingService bindingService, 
+                                  DeviceShadowService shadowService,
+                                  MqttTokenValidator tokenValidator) {
         this.bindingService = bindingService;
         this.shadowService = shadowService;
+        this.tokenValidator = tokenValidator;
     }
     
     @Override
@@ -145,19 +151,34 @@ public class MqttDeviceAuthHandler implements DeviceAuthHandler {
     /**
      * 验证 Token
      * 
-     * TODO: 实现实际的 JWT Token 验证逻辑
+     * 使用 JWT Token 验证设备身份
      */
     private TokenInfo verifyToken(String token) {
-        // 简化实现，实际应使用 JWT 解析
         if (token == null || token.isEmpty()) {
             return null;
         }
         
-        // 模拟 Token 信息
+        // 使用 JWT 验证器验证 Token
+        MqttTokenInfo mqttInfo = tokenValidator.validateAndParse(token);
+        
+        if (mqttInfo == null) {
+            log.warn("Token 验证失败");
+            return null;
+        }
+        
+        // 转换为内部 TokenInfo
         TokenInfo info = new TokenInfo();
-        info.setVin("LDA1234567890ABCD");
-        info.setTenantId("T001");
-        info.setExpireTime(LocalDateTime.now().plusHours(24));
+        info.setVin(mqttInfo.getVin());
+        info.setTenantId(mqttInfo.getTenantId());
+        info.setTerminalId(mqttInfo.getTerminalId());
+        info.setDeviceType(mqttInfo.getDeviceType());
+        
+        if (mqttInfo.getExpiration() != null) {
+            info.setExpireTime(mqttInfo.getExpiration());
+        } else {
+            // 默认 24 小时有效
+            info.setExpireTime(LocalDateTime.now().plusHours(24));
+        }
         
         return info;
     }
@@ -168,12 +189,18 @@ public class MqttDeviceAuthHandler implements DeviceAuthHandler {
     private static class TokenInfo {
         private String vin;
         private String tenantId;
+        private String terminalId;
+        private String deviceType;
         private LocalDateTime expireTime;
         
         public String getVin() { return vin; }
         public void setVin(String vin) { this.vin = vin; }
         public String getTenantId() { return tenantId; }
         public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+        public String getTerminalId() { return terminalId; }
+        public void setTerminalId(String terminalId) { this.terminalId = terminalId; }
+        public String getDeviceType() { return deviceType; }
+        public void setDeviceType(String deviceType) { this.deviceType = deviceType; }
         public LocalDateTime getExpireTime() { return expireTime; }
         public void setExpireTime(LocalDateTime expireTime) { this.expireTime = expireTime; }
         

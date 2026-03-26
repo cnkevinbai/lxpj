@@ -213,7 +213,38 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
             
             // 解析聚合结果
             Map<String, Object> result = new HashMap<>();
-            // TODO: 解析聚合结果
+            Map<String, Long> fieldCounts = new HashMap<>();
+            Map<String, Map<String, Long>> timeSeries = new HashMap<>();
+            
+            if (response.aggregations() != null && response.aggregations().containsKey("by_field")) {
+                var byFieldAgg = response.aggregations().get("by_field");
+                if (byFieldAgg != null && byFieldAgg._get() instanceof co.elastic.clients.elasticsearch._types.aggregations.StringTermsAggregate) {
+                    var stringTerms = (co.elastic.clients.elasticsearch._types.aggregations.StringTermsAggregate) byFieldAgg._get();
+                    
+                    for (var bucket : stringTerms.buckets().array()) {
+                        String key = bucket.key();
+                        long count = bucket.docCount();
+                        fieldCounts.put(key, count);
+                        
+                        // 解析时间序列
+                        if (bucket.aggregations() != null && bucket.aggregations().containsKey("over_time")) {
+                            Map<String, Long> timeData = new LinkedHashMap<>();
+                            var overTimeAgg = bucket.aggregations().get("over_time");
+                            if (overTimeAgg != null && overTimeAgg._get() instanceof co.elastic.clients.elasticsearch._types.aggregations.DateHistogramAggregate) {
+                                var dateHistogram = (co.elastic.clients.elasticsearch._types.aggregations.DateHistogramAggregate) overTimeAgg._get();
+                                for (var timeBucket : dateHistogram.buckets().array()) {
+                                    timeData.put(timeBucket.keyAsString(), timeBucket.docCount());
+                                }
+                            }
+                            timeSeries.put(key, timeData);
+                        }
+                    }
+                }
+            }
+            
+            result.put("fieldCounts", fieldCounts);
+            result.put("timeSeries", timeSeries);
+            result.put("totalFields", fieldCounts.size());
             
             return result;
         } catch (IOException e) {
