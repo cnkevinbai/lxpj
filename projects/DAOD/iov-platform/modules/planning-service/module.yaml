@@ -1,129 +1,35 @@
-# 规划服务模块配置
+# Planning Service - 调度规划服务
 
-apiVersion: iov.daod.com/v1
-kind: Module
-metadata:
-  name: planning-service
-  version: 1.0.0
-  description: 智能规划服务模块 - 路径规划/行程规划/车队调度/资源推荐
-  author: daod-team
-  license: Apache-2.0
-  labels:
-    tier: business
-    domain: planning
+id: planning-service
+name: Planning Service
+version: 1.0.0
+description: 调度规划服务，提供路径规划、行程规划、车队调度能力
+type: service
+priority: 55
 
-spec:
-  type: business
-  priority: 50
-  mainClass: com.daod.iov.modules.planning.PlanningModule
+dependencies:
+  - common-core
+
+provides:
+  - api: PlanningService
+    version: 1.0.0
+
+configuration:
+  planning:
+    algorithm: dijkstra
+    max-waypoints: 100
   
-  dependencies:
-    - name: plugin-framework
-      version: ">=1.0.0"
-      optional: false
-    - name: common-core
-      version: "^1.0.0"
-      optional: false
-    - name: event-bus
-      version: "^1.0.0"
-      optional: false
-    - name: vehicle-access
-      version: "^1.0.0"
-      optional: false
-    - name: monitor-service
-      version: "^1.0.0"
-      optional: false
-    - name: tenant-service
-      version: "^1.0.0"
-      optional: false
-    - name: config-center
-      version: "^1.0.0"
-      optional: true
-  
-  provides:
-    - name: planning-api
-      version: "1.0.0"
-      endpoints:
-        - path: /api/v1/planning/route
-          method: POST
-          description: 路径规划
-        - path: /api/v1/planning/trip
-          method: POST
-          description: 行程规划
-        - path: /api/v1/planning/fleet
-          method: POST
-          description: 车队调度
-        - path: /api/v1/planning/resource/recommend
-          method: POST
-          description: 资源推荐
-        - path: /api/v1/planning/history
-          method: GET
-          description: 规划历史
-  
-  consumes:
-    - name: vehicle-api
-      version: "^1.0.0"
-      from: vehicle-access
-    - name: monitor-api
-      version: "^1.0.0"
-      from: monitor-service
-    - name: tenant-api
-      version: "^1.0.0"
-      from: tenant-service
-    - name: event-bus
-      version: "^1.0.0"
-      from: event-bus
-  
-  extensionPoints:
-    - name: route-planner
-      interface: com.daod.iov.modules.planning.api.RoutePlanner
-      description: 路径规划器扩展点
-      multiple: false
-    - name: traffic-provider
-      interface: com.daod.iov.modules.planning.spi.TrafficProvider
-      description: 路况数据提供者扩展点
-      multiple: true
-    - name: resource-provider
-      interface: com.daod.iov.modules.planning.spi.ResourceProvider
-      description: 资源点数据提供者扩展点
-      multiple: true
-  
-  permissions:
-    - NETWORK_CONNECT
-    - FILE_READ
-    - FILE_WRITE
-  
-  resources:
-    cpu: "500m"
-    memory: "1Gi"
-    maxConnections: 500
-    maxFileDescriptors: 200
-  
-  healthCheck:
-    liveness: /health/live
-    readiness: /health/ready
-    interval: 30s
-    timeout: 5s
-    failureThreshold: 3
-    successThreshold: 1
-  
-  hotReload:
-    enabled: true
-    strategy: rolling
-    maxUnavailable: 1
-    maxSurge: 1
-    healthCheckTimeout: 60s
-    rollbackOnFailure: true
-    backupCount: 5
-  
-  observability:
-    metrics:
-      enabled: true
-      path: /metrics
-      port: 8080
-    tracing:
-      enabled: true
-      samplingRate: 0.1
-    logging:
-      level: INFO
-      format: json
+  fleet:
+    max-vehicles: 500
+
+health-check:
+  enabled: true
+  interval: 30s
+
+metrics:
+  enabled: true
+
+endpoints:
+  api:
+    path: /api/v1/planning
+    port: 8080

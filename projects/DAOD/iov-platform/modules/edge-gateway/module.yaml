@@ -1,71 +1,38 @@
-# 边缘网关模块配置
+# Edge Gateway - 边缘网关
 
-apiVersion: iov.daod.com/v1
-kind: Module
-metadata:
-  name: edge-gateway
-  version: 1.0.0
-  description: 边缘网关模块 - 边缘计算网关、协议转换、数据预处理
-  author: daod-team
-  license: Apache-2.0
+id: edge-gateway
+name: Edge Gateway
+version: 1.0.0
+description: 边缘网关模块，提供边缘计算、协议转换、数据预处理能力
+type: edge
+priority: 30
 
-spec:
-  type: edge
-  priority: 30
-  mainClass: com.daod.iov.modules.edgegateway.EdgeGatewayModule
+dependencies:
+  - common-core
+  - plugin-framework
+
+provides:
+  - api: EdgeGatewayService
+    version: 1.0.0
+
+configuration:
+  edge:
+    mode: standalone
+    cloud-url: ${CLOUD_URL:http://gateway:8080}
+    sync-interval: 60000
   
-  dependencies:
-    - name: plugin-framework
-      version: ">=1.0.0"
-      optional: false
-    - name: common-core
-      version: "^1.0.0"
-      optional: false
-    - name: event-bus
-      version: "^1.0.0"
-      optional: false
-  
-  provides:
-    - name: edge-gateway-api
-      version: "1.0.0"
-      endpoints:
-        - path: /api/v1/edge/status
-          method: GET
-          description: 获取边缘网关状态
-        - path: /api/v1/edge/data
-          method: POST
-          description: 上报边缘数据
-  
-  consumes:
-    - name: event-bus
-      version: "^1.0.0"
-      from: event-bus
-  
-  extensionPoints:
-    - name: edge-protocol-adapter
-      interface: com.daod.iov.modules.edgegateway.api.EdgeProtocolAdapter
-      description: 边缘协议适配器扩展点
-      multiple: true
-    - name: edge-data-processor
-      interface: com.daod.iov.modules.edgegateway.api.EdgeDataProcessor
-      description: 边缘数据处理器扩展点
-      multiple: true
-  
-  permissions:
-    - NETWORK_CONNECT
-    - FILE_READ
-    - FILE_WRITE
-  
-  resources:
-    cpu: "300m"
-    memory: "512Mi"
-    maxConnections: 5000
-  
-  healthCheck:
-    liveness: /health/live
-    readiness: /health/ready
-  
-  hotReload:
+  cache:
     enabled: true
-    strategy: rolling
-    rollbackOnFailure: true
+    max-size: 10000
+
+health-check:
+  enabled: true
+  interval: 30s
+
+metrics:
+  enabled: true
+
+endpoints:
+  api:
+    path: /api/v1/edge
+    port: 8080

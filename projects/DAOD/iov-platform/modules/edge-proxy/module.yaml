@@ -1,66 +1,37 @@
-apiVersion: iov.daod.com/v1
-kind: Module
-metadata:
-  name: edge-proxy
-  version: 1.0.0
-  description: 边缘代理模块 - 云边协同通信代理
-  author: daod-team
-  license: proprietary
+# Edge Proxy - 边缘代理
 
-spec:
-  type: extension
-  priority: 60
-  
-  dependencies:
-    - name: plugin-framework
-      version: "^1.0.0"
-    - name: common-core
-      version: ">=1.0.0"
+id: edge-proxy
+name: Edge Proxy
+version: 1.0.0
+description: 边缘代理模块，提供协议代理、数据转发能力
+type: edge
+priority: 35
 
-  extensionPoints:
-    - name: edge-protocol
-      interface: com.daod.iov.modules.edgeproxy.EdgeProtocol
-      description: 边缘协议扩展点
-    - name: data-sync-handler
-      interface: com.daod.iov.modules.edgeproxy.DataSyncHandler
-      description: 数据同步处理器
+dependencies:
+  - common-core
 
-  configSchema:
-    properties:
-      enabled:
-        type: boolean
-        default: true
-      mqttBroker:
-        type: string
-        default: "tcp://localhost:1883"
-        description: MQTT Broker地址
-      edgeNodeId:
-        type: string
-        description: 边缘节点ID
-      cloudEndpoint:
-        type: string
-        description: 云端服务地址
-      syncInterval:
-        type: integer
-        default: 60000
-        description: 数据同步间隔(毫秒)
-      offlineCacheSize:
-        type: integer
-        default: 10000
-        description: 离线缓存大小
-      enableCompression:
-        type: boolean
-        default: true
-        description: 是否启用数据压缩
-      
-  resources:
-    cpu: "200m"
-    memory: "512Mi"
-    
-  healthCheck:
-    liveness: /health/live
-    readiness: /health/ready
-    
-  hotReload:
+provides:
+  - api: EdgeProxyService
+    version: 1.0.0
+
+configuration:
+  proxy:
     enabled: true
-    strategy: rolling
+    timeout: 30000
+  
+  protocols:
+    - jtt808
+    - mqtt
+    - http
+
+health-check:
+  enabled: true
+  interval: 30s
+
+metrics:
+  enabled: true
+
+endpoints:
+  api:
+    path: /api/v1/edge-proxy
+    port: 8080

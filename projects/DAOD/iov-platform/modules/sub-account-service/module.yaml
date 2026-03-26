@@ -1,65 +1,32 @@
-apiVersion: iov.daod.com/v1
-kind: Module
-metadata:
-  name: sub-account-service
-  version: 1.0.0
-  description: 子账户服务模块 - 主账号子账号管理
-  author: daod-team
-  license: proprietary
+# Sub Account Service - 子账号服务
 
-spec:
-  type: business
-  priority: 55
-  
-  dependencies:
-    - name: plugin-framework
-      version: "^1.0.0"
-    - name: user-service
-      version: ">=1.0.0"
-    - name: role-service
-      version: ">=1.0.0"
-    - name: common-core
-      version: ">=1.0.0"
+id: sub-account-service
+name: Sub Account Service
+version: 1.0.0
+description: 子账号服务，提供子账号管理、权限继承能力
+type: service
+priority: 82
 
-  extensionPoints:
-    - name: account-validator
-      interface: com.daod.iov.modules.subaccount.AccountValidator
-      description: 账户验证器扩展点
-    - name: account-lifecycle-listener
-      interface: com.daod.iov.modules.subaccount.AccountLifecycleListener
-      description: 账户生命周期监听器
+dependencies:
+  - common-core
+  - user-service
 
-  configSchema:
-    properties:
-      enabled:
-        type: boolean
-        default: true
-      maxSubAccountsPerTenant:
-        type: integer
-        default: 500
-        description: 每个主账号最大子账号数
-      passwordPolicy:
-        type: string
-        default: "medium"
-        enum: ["low", "medium", "high"]
-        description: 密码策略
-      accountExpirationDays:
-        type: integer
-        default: 365
-        description: 账号过期天数(0表示永不过期)
-      enableAudit:
-        type: boolean
-        default: true
-        description: 是否启用审计日志
-      
-  resources:
-    cpu: "200m"
-    memory: "256Mi"
-    
-  healthCheck:
-    liveness: /health/live
-    readiness: /health/ready
-    
-  hotReload:
-    enabled: true
-    strategy: rolling
+provides:
+  - api: SubAccountService
+    version: 1.0.0
+
+configuration:
+  sub-account:
+    max-per-tenant: 100
+
+health-check:
+  enabled: true
+  interval: 30s
+
+metrics:
+  enabled: true
+
+endpoints:
+  api:
+    path: /api/v1/sub-account
+    port: 8080

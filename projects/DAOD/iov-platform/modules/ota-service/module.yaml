@@ -1,68 +1,38 @@
-apiVersion: iov.daod.com/v1
-kind: Module
-metadata:
-  name: ota-service
-  version: 1.0.0
-  description: OTA升级服务模块 - 车载终端远程固件升级管理
-  author: daod-team
-  license: proprietary
+# OTA Service - OTA 升级服务
 
-spec:
-  type: business
-  priority: 30
+id: ota-service
+name: OTA Service
+version: 1.0.0
+description: OTA 升级服务，提供固件管理、版本控制、升级任务调度能力
+type: service
+priority: 65
+
+dependencies:
+  - common-core
+  - storage-service
+
+provides:
+  - api: OtaService
+    version: 1.0.0
+
+configuration:
+  ota:
+    max-concurrent: 10
+    retry-count: 3
+    timeout: 300000
   
-  dependencies:
-    - name: plugin-framework
-      version: "^1.0.0"
-    - name: common-core
-      version: ">=1.0.0"
+  firmware:
+    storage-type: minio
+    bucket: firmware
 
-  extensionPoints:
-    - name: ota-strategy
-      interface: com.daod.iov.modules.ota.OtaStrategy
-      description: OTA升级策略扩展点
-    - name: firmware-validator
-      interface: com.daod.iov.modules.ota.FirmwareValidator
-      description: 固件验证器扩展点
+health-check:
+  enabled: true
+  interval: 30s
 
-  configSchema:
-    properties:
-      enabled:
-        type: boolean
-        default: true
-      maxConcurrentUpgrades:
-        type: integer
-        default: 100
-        description: 最大并发升级数
-      upgradeTimeout:
-        type: integer
-        default: 600000
-        description: 升级超时时间(毫秒)
-      retryCount:
-        type: integer
-        default: 3
-        description: 失败重试次数
-      firmwareStoragePath:
-        type: string
-        default: "/data/firmware"
-        description: 固件存储路径
-      maxFirmwareSize:
-        type: integer
-        default: 1073741824
-        description: 最大固件大小(字节)
-      autoBackup:
-        type: boolean
-        default: true
-        description: 升级前自动备份
-      
-  resources:
-    cpu: "300m"
-    memory: "512Mi"
-    
-  healthCheck:
-    liveness: /health/live
-    readiness: /health/ready
-    
-  hotReload:
-    enabled: true
-    strategy: rolling
+metrics:
+  enabled: true
+
+endpoints:
+  api:
+    path: /api/v1/ota
+    port: 8080

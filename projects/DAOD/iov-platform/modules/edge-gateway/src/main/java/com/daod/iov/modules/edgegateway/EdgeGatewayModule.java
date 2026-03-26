@@ -60,6 +60,7 @@ public class EdgeGatewayModule implements ISFU {
             
             log.info("[EdgeGateway] 初始化完成");
         } catch (Exception e) {
+            log.error("[EdgeGateway] 初始化失败", e);
             state = ModuleState.ERROR;
             healthStatus = HealthStatus.UNHEALTHY;
             throw new ModuleException("INIT_FAILED", "初始化失败: " + e.getMessage(), e);
@@ -80,6 +81,7 @@ public class EdgeGatewayModule implements ISFU {
             
             log.info("[EdgeGateway] 启动完成");
         } catch (Exception e) {
+            log.error("[EdgeGateway] 启动失败", e);
             state = ModuleState.ERROR;
             throw new ModuleException("START_FAILED", "启动失败: " + e.getMessage(), e);
         }
@@ -97,6 +99,7 @@ public class EdgeGatewayModule implements ISFU {
             
             log.info("[EdgeGateway] 已停止");
         } catch (Exception e) {
+            log.error("[EdgeGateway] 停止失败", e);
             throw new ModuleException("STOP_FAILED", "停止失败: " + e.getMessage(), e);
         }
     }

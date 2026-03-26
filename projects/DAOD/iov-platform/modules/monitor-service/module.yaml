@@ -1,70 +1,38 @@
-# 监控服务模块配置
+# Monitor Service - 监控服务
 
-apiVersion: iov.daod.com/v1
-kind: Module
-metadata:
-  name: monitor-service
-  version: 1.0.0
-  description: 监控服务模块 - 实时位置监控、轨迹回放、电子围栏
-  author: daod-team
-  license: Apache-2.0
+id: monitor-service
+name: Monitor Service
+version: 1.0.0
+description: 实时监控服务，提供位置追踪、状态监控、视频监控能力
+type: service
+priority: 75
 
-spec:
-  type: business
-  priority: 80
-  mainClass: com.daod.iov.modules.monitor.MonitorServiceModule
+dependencies:
+  - common-core
+  - event-bus
+  - vehicle-access
+
+provides:
+  - api: MonitorService
+    version: 1.0.0
+
+configuration:
+  monitor:
+    heartbeat-timeout: 300000
+    position-buffer-size: 1000
   
-  dependencies:
-    - name: plugin-framework
-      version: ">=1.0.0"
-      optional: false
-    - name: common-core
-      version: "^1.0.0"
-      optional: false
-    - name: event-bus
-      version: "^1.0.0"
-      optional: false
-    - name: vehicle-access
-      version: "^1.0.0"
-      optional: false
-  
-  provides:
-    - name: monitor-api
-      version: "1.0.0"
-      endpoints:
-        - path: /api/v1/monitor/locations
-          method: GET
-          description: 获取实时位置
-        - path: /api/v1/monitor/trajectory
-          method: GET
-          description: 获取轨迹数据
-        - path: /api/v1/monitor/geofences
-          method: GET
-          description: 获取电子围栏
-  
-  consumes:
-    - name: vehicle-api
-      version: "^1.0.0"
-      from: vehicle-access
-    - name: event-bus
-      version: "^1.0.0"
-      from: event-bus
-  
-  permissions:
-    - NETWORK_CONNECT
-    - FILE_READ
-    - FILE_WRITE
-  
-  resources:
-    cpu: "300m"
-    memory: "512Mi"
-    maxConnections: 1000
-  
-  healthCheck:
-    liveness: /health/live
-    readiness: /health/ready
-  
-  hotReload:
-    enabled: true
-    strategy: rolling
-    rollbackOnFailure: true
+  video:
+    enabled: false
+    max-streams: 10
+
+health-check:
+  enabled: true
+  interval: 30s
+
+metrics:
+  enabled: true
+
+endpoints:
+  api:
+    path: /api/v1/monitor
+    port: 8080
