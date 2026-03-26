@@ -1,0 +1,63 @@
+# 认证服务模块配置
+
+apiVersion: iov.daod.com/v1
+kind: Module
+metadata:
+  name: auth-service
+  version: 1.0.0
+  description: 认证服务模块 - 用户登录、Token管理、权限验证
+  author: daod-team
+  license: Apache-2.0
+
+spec:
+  type: core
+  priority: 10
+  mainClass: com.daod.iov.modules.auth.AuthServiceModule
+  
+  dependencies:
+    - name: plugin-framework
+      version: ">=1.0.0"
+      optional: false
+    - name: common-core
+      version: "^1.0.0"
+      optional: false
+    - name: common-security
+      version: "^1.0.0"
+      optional: false
+  
+  provides:
+    - name: auth-api
+      version: "1.0.0"
+      endpoints:
+        - path: /api/v1/auth/login
+          method: POST
+          description: 用户登录
+        - path: /api/v1/auth/logout
+          method: POST
+          description: 用户登出
+        - path: /api/v1/auth/refresh
+          method: POST
+          description: 刷新Token
+  
+  extensionPoints:
+    - name: auth-provider
+      interface: com.daod.iov.modules.auth.api.AuthProvider
+      description: 认证提供者扩展点
+      multiple: true
+  
+  permissions:
+    - NETWORK_CONNECT
+    - FILE_READ
+    - FILE_WRITE
+  
+  resources:
+    cpu: "100m"
+    memory: "128Mi"
+    maxConnections: 1000
+  
+  healthCheck:
+    liveness: /health/live
+    readiness: /health/ready
+  
+  hotReload:
+    enabled: false  # 核心模块不支持热更新

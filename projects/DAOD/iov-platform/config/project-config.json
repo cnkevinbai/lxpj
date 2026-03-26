@@ -1,0 +1,131 @@
+{
+  "project": {
+    "name": "车联网管理平台",
+    "code": "iov-platform",
+    "version": "1.0.0-SNAPSHOT",
+    "description": "四川道达智能车辆制造有限公司车联网管理平台",
+    "company": "四川道达智能车辆制造有限公司",
+    "contact": {
+      "email": "dev@daod.com",
+      "phone": "400-XXX-XXXX"
+    }
+  },
+  "development": {
+    "jdkVersion": "17",
+    "mavenVersion": "3.8+",
+    "ideRecommendations": [
+      "IntelliJ IDEA",
+      "Eclipse",
+      "VS Code"
+    ],
+    "developmentEnvironment": {
+      "os": "Windows/Linux/macOS",
+      "memory": "16GB+",
+      "disk": "100GB+"
+    }
+  },
+  "modules": {
+    "core": [
+      "plugin-framework",
+      "common-core",
+      "security-core",
+      "event-bus"
+    ],
+    "business": [
+      "vehicle-access",
+      "monitor-service",
+      "alarm-service",
+      "user-service",
+      "auth-service",
+      "tenant-service"
+    ],
+    "infrastructure": [
+      "gateway",
+      "discovery",
+      "config"
+    ]
+  },
+  "dependencies": {
+    "requiredServices": [
+      "PostgreSQL",
+      "TimescaleDB",
+      "Redis",
+      "EMQX",
+      "Kafka",
+      "ClickHouse",
+      "MinIO"
+    ],
+    "frameworkVersions": {
+      "springBoot": "3.2.0",
+      "springCloud": "2023.0.0",
+      "springCloudAlibaba": "2022.0.0.0-RC2",
+      "mybatisPlus": "3.5.5",
+      "postgresqlDriver": "42.6.0"
+    }
+  },
+  "deployment": {
+    "environments": {
+      "development": {
+        "servers": 1,
+        "description": "开发调试环境"
+      },
+      "testing": {
+        "servers": 3,
+        "description": "测试环境"
+      },
+      "production": {
+        "servers": 3,
+        "description": "企业自用生产环境"
+      }
+    },
+    "resourceRequirements": {
+      "cpu": "4 cores per server",
+      "memory": "16GB per server",
+      "storage": "500GB per server"
+    }
+  },
+  "security": {
+    "encryption": {
+      "algorithm": "SM2/SM3/SM4",
+      "description": "国密算法支持"
+    },
+    "authentication": {
+      "type": "JWT + OAuth2",
+      "tokenExpiry": "24h"
+    },
+    "compliance": [
+      "网络安全法",
+      "数据安全法",
+      "个人信息保护法"
+    ]
+  },
+  "monitoring": {
+    "components": [
+      "Prometheus",
+      "Grafana",
+      "Jaeger"
+    ],
+    "metrics": [
+      "system-resources",
+      "business-metrics",
+      "module-status"
+    ]
+  },
+  "ciCd": {
+    "pipeline": {
+      "build": "Maven",
+      "test": "JUnit 5 + Integration Tests",
+      "deploy": "Docker + Kubernetes"
+    },
+    "repository": {
+      "type": "Git",
+      "hosting": "Self-hosted/GitLab"
+    }
+  },
+  "documentation": {
+    "apiDoc": "Swagger/OpenAPI",
+    "architectureDoc": "docs/architecture/",
+    "developmentGuide": "docs/development-guide.md",
+    "moduleTemplate": "docs/module-template.md"
+  }
+}

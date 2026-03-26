@@ -20,7 +20,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     this.client.on('error', (err) => logger.error('Redis Client Error', err))
 
     await this.client.connect()
-    logger.log('✅ Redis connected')
+    logger.info('✅ Redis connected')
   }
 
   async onModuleDestroy() {

@@ -1,6 +1,6 @@
 import { Injectable, CanActivate, ExecutionContext, HttpStatus } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
-import { ThrottlerStorageException } from '@nestjs/throttler'
+import { ThrottlerException } from '@nestjs/throttler'
 
 /**
  * 速率限制守卫
@@ -26,7 +26,7 @@ export class RateLimitGuard implements CanActivate {
       // 限流检查由 ThrottlerModule 处理
       return true
     } catch (error) {
-      if (error instanceof ThrottlerStorageException) {
+      if (error instanceof ThrottlerException) {
         throw error
       }
       return true

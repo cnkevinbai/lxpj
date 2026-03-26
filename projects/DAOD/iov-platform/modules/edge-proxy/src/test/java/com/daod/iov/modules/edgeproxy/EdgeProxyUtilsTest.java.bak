@@ -1,0 +1,160 @@
+package com.daod.iov.modules.edgeproxy;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * 边缘代理模块工具类测试
+ */
+class EdgeProxyUtilsTest {
+
+    @Test
+    void testDataEncryptor() {
+        String key = "1234567890abcdef";
+        DataEncryptor encryptor = new DataEncryptor(key);
+        
+        String original = "Hello, World!";
+        String encrypted = encryptor.encrypt(original);
+        String decrypted = encryptor.decrypt(encrypted);
+        
+        assertEquals(original, decrypted);
+    }
+
+    @Test
+    void testHeartbeatManager() {
+        HeartbeatManager manager = new HeartbeatManager();
+        
+        // 测试心跳
+        manager.receiveHeartbeat("test-node");
+        assertTrue(manager.isNodeOnline("test-node"));
+        
+        // 发送心跳
+        String heartbeat = manager.sendHeartbeat("test-node");
+        assertNotNull(heartbeat);
+    }
+
+    @Test
+    void testCommandDispatcher() {
+        CommandDispatcher dispatcher = new CommandDispatcher();
+        dispatcher.start();
+        
+        // 注册处理器
+        dispatcher.registerHandler("test", message -> {
+            System.out.println("处理: " + message);
+        });
+        
+        // 测试处理消息
+        String message = "{\"commandId\":\"1\",\"commandType\":\"test\",\"timestamp\":123}";
+        dispatcher.handleMessage("edge/test/command", message.getBytes());
+        
+        dispatcher.stop();
+    }
+
+    @Test
+    void testOfflineCache() {
+        OfflineCacheManager cache = new OfflineCacheManager(100, 3600000);
+        
+        // 测试缓存
+        cache.cache("key1", "value1");
+        cache.cache("key2", "value2");
+        
+        assertEquals(2, cache.size());
+        assertEquals("value1", cache.get("key1"));
+        assertEquals("value2", cache.get("key2"));
+    }
+
+    @Test
+    void testBreakpointResume() {
+        BreakpointResumeManager manager = new BreakpointResumeManager();
+        
+        // 创建传输会话
+        BreakpointResumeManager.TransferSession session = manager.createSession("file-001", 1024000);
+        assertNotNull(session);
+        assertEquals("file-001", session.getFileId());
+        assertEquals(1024000, session.getTotalSize());
+        
+        // 测试缓存块
+        manager.cacheBlock("file-001", 0, new byte[1024]);
+        assertNotNull(manager.getCachedBlock("file-001", 0));
+        
+        manager.removeSession("file-001");
+    }
+
+    @Test
+    void testVehicleData() {
+        VehicleData data = new VehicleData();
+        data.setVehicleId("V001");
+        data.setEdgeNodeId("E001");
+        data.setLatitude(39.9);
+        data.setLongitude(116.4);
+        data.setSpeed(60.0);
+        data.setDataType("location");
+        data.setData("test");
+        
+        assertEquals("V001", data.getVehicleId());
+        assertEquals("E001", data.getEdgeNodeId());
+        assertEquals(39.9, data.getLatitude(), 0.001);
+    }
+
+    @Test
+    void testNodeHealthStatus() {
+        NodeHealthStatus status = new NodeHealthStatus();
+        status.setNodeId("node-001");
+        status.setOnline(true);
+        status.setStatus("healthy");
+        
+        assertEquals("node-001", status.getNodeId());
+        assertTrue(status.isOnline());
+        assertEquals("healthy", status.getStatus());
+    }
+
+    @Test
+    void testDataSyncConfig() {
+        DataSyncConfig config = new DataSyncConfig();
+        config.setEdgeNodeId("edge-001");
+        config.setEnabled(true);
+        config.setSyncInterval(60000);
+        config.setCacheSize(10000);
+        config.setEnableCompression(true);
+        config.setEnableEncryption(true);
+        config.setAutoRetry(true);
+        config.setMaxRetryCount(3);
+        config.setBreakPointResume(true);
+        
+        assertTrue(config.isEnabled());
+        assertTrue(config.isEnableCompression());
+        assertTrue(config.isEnableEncryption());
+        assertTrue(config.isAutoRetry());
+        assertTrue(config.isBreakPointResume());
+    }
+
+    @Test
+    void testCommandInfo() {
+        CommandInfo info = new CommandInfo();
+        info.setCommandId("cmd-001");
+        info.setEdgeNodeId("edge-001");
+        info.setCommandType("remote-control");
+        info.setCommandData("{\"action\":\"lock\"}");
+        info.setStatus("pending");
+        
+        assertEquals("cmd-001", info.getCommandId());
+        assertEquals("remote-control", info.getCommandType());
+        assertEquals("{\"action\":\"lock\"}", info.getCommandData());
+    }
+
+    @Test
+    void testSyncRecord() {
+        SyncRecord record = new SyncRecord();
+        record.setRecordId("record-001");
+        record.setEdgeNodeId("edge-001");
+        record.setTotalRecords(100);
+        record.setSyncedRecords(95);
+        record.setFailedRecords(5);
+        record.setSuccessful(false);
+        record.setErrorMessage("some errors");
+        
+        assertEquals("record-001", record.getRecordId());
+        assertFalse(record.isSuccessful());
+        assertEquals(5, record.getFailedRecords());
+    }
+}

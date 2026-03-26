@@ -1,6 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common'
 import { ApiTags, ApiOperation } from '@nestjs/swagger'
-import { PurchaseService } from './purchase.service'
+import { PurchaseService } from '../services/purchase.service'
 
 @ApiTags('采购管理')
 @Controller('purchase')

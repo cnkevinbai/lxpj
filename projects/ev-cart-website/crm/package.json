@@ -9,19 +9,21 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.21.3",
-    "antd": "^5.13.2",
+    "@ant-design/charts": "^2.6.7",
     "@ant-design/icons": "^5.2.6",
+    "@ant-design/plots": "^2.6.8",
     "@ant-design/pro-components": "^2.6.43",
+    "@tanstack/react-query": "^5.17.19",
+    "antd": "^5.13.2",
     "axios": "^1.6.7",
     "dayjs": "^1.11.10",
-    "zustand": "^4.5.0",
-    "recharts": "^2.10.4",
-    "@tanstack/react-query": "^5.17.19",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-hook-form": "^7.49.3",
-    "zod": "^3.22.4"
+    "react-router-dom": "^6.21.3",
+    "recharts": "^2.10.4",
+    "zod": "^3.22.4",
+    "zustand": "^4.5.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.52",

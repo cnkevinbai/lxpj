@@ -12,8 +12,8 @@ import {
   Request,
 } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger'
-import { DealerAssessmentService } from './dealer-assessment.service'
-import { CreateDealerAssessmentDto, UpdateDealerAssessmentDto, CalculateAssessmentDto } from './dto/dealer-assessment.dto'
+import { DealerAssessmentService } from '../services/dealer-assessment.service'
+import { CreateDealerAssessmentDto, UpdateDealerAssessmentDto, CalculateAssessmentDto } from '../dto/dealer-assessment.dto'
 
 @ApiTags('经销商考核')
 @ApiBearerAuth()

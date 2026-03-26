@@ -4,9 +4,9 @@ import { PlusOutlined, EditOutlined, DeleteOutlined, UserOutlined } from '@ant-d
 import apiClient from '../services/api'
 
 const Users: React.FC = () => {
-  const [data, setData] = useState([])
+  const [data, setData] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
-  const [roles, setRoles] = useState([])
+  const [roles, setRoles] = useState<any[]>([])
   const [modalVisible, setModalVisible] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [form] = Form.useForm()

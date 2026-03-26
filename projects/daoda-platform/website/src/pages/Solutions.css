@@ -1,0 +1,267 @@
+@import url('../styles/common.css');
+
+/**
+ * 行业智慧方案页面样式
+ * 统一风格版本
+ */
+
+.solutions-page {
+  padding-top: var(--daoda-header-height);
+}
+
+/* Header */
+.solutions-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: var(--daoda-header-height);
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--daoda-border);
+}
+
+.solutions-header .header-inner {
+  max-width: 1280px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.solutions-header .header-left {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+
+.solutions-header .brand-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: #fff;
+}
+
+.solutions-header .brand-text {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.solutions-header .main-nav {
+  display: flex;
+  gap: 32px;
+}
+
+.solutions-header .main-nav a {
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  font-size: 14px;
+  padding: 28px 0;
+}
+
+.solutions-header .main-nav a:hover,
+.solutions-header .main-nav a.active {
+  color: #fff;
+}
+
+.solutions-header .header-right {
+  display: flex;
+  align-items: center;
+}
+
+/* Hero */
+.solutions-hero {
+  position: relative;
+  padding: 120px 24px 80px;
+  overflow: hidden;
+}
+
+.solutions-hero::before {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: rgba(102, 0, 255, 0.1);
+  border-radius: 50%;
+  top: -100px;
+  right: 100px;
+  filter: blur(80px);
+}
+
+.solutions-hero .hero-content {
+  position: relative;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.solutions-hero .hero-tag {
+  display: inline-block;
+  background: rgba(102, 0, 255, 0.2);
+  color: var(--daoda-primary-light);
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+.solutions-hero .hero-title {
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 24px;
+}
+
+.solutions-hero .hero-title span {
+  display: block;
+}
+
+.solutions-hero .gradient-text {
+  background: linear-gradient(to right, var(--daoda-primary), #c084fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.solutions-hero .hero-desc {
+  font-size: 18px;
+  color: var(--daoda-text-muted);
+  line-height: 1.7;
+  margin: 0 0 32px;
+}
+
+.solutions-hero .hero-actions {
+  display: flex;
+  gap: 16px;
+}
+
+/* Sections */
+.solutions-section {
+  padding: 96px 24px;
+}
+
+.solutions-section.alt {
+  background: rgba(102, 0, 255, 0.05);
+  text-align: center;
+}
+
+.solutions-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.solutions-section .section-title {
+  font-size: 32px;
+  font-weight: 600;
+  margin: 0 0 48px;
+  text-align: center;
+}
+
+/* Scenarios */
+.scenarios-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.scenario-card {
+  padding: 32px;
+}
+
+.scenario-icon {
+  font-size: 32px;
+  margin-bottom: 16px;
+}
+
+.scenario-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 12px;
+}
+
+.scenario-desc {
+  font-size: 14px;
+  color: var(--daoda-text-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* CTA */
+.cta-title {
+  font-size: 32px;
+  font-weight: 600;
+  margin: 0 0 16px;
+}
+
+.cta-desc {
+  font-size: 16px;
+  color: var(--daoda-text-muted);
+  margin: 0 0 32px;
+}
+
+.cta-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+/* Footer */
+.solutions-footer {
+  padding: 40px 24px;
+  background: rgba(0, 0, 0, 0.3);
+  border-top: 1px solid var(--daoda-border);
+  text-align: center;
+}
+
+.solutions-footer .footer-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.solutions-footer .footer-brand span {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.solutions-footer > p {
+  font-size: 14px;
+  color: var(--daoda-text-dim);
+  margin: 0 0 8px;
+}
+
+.solutions-footer .copyright {
+  font-size: 13px;
+  opacity: 0.6;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .scenarios-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .solutions-header .main-nav {
+    display: none;
+  }
+  
+  .solutions-hero .hero-title {
+    font-size: 32px;
+  }
+  
+  .scenarios-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .hero-actions,
+  .cta-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+}

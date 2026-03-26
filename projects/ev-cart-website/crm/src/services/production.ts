@@ -1,13 +1,13 @@
-import request from '@/utils/request'
+import apiClient from './api'
 
-// 查询生产进度
-export const getProgress = async (orderId: string) => {
-  return request.get('/api/v1/integration/erp/production/progress', {
-    params: { order_id: orderId },
-  })
+export const productionApi = {
+  getOrders: (params?: any) => apiClient.get('/production/orders', { params }),
+  getOrder: (id: string) => apiClient.get(`/production/orders/${id}`),
+  createOrder: (data: any) => apiClient.post('/production/orders', data),
+  updateOrder: (id: string, data: any) => apiClient.put(`/production/orders/${id}`, data),
+  deleteOrder: (id: string) => apiClient.delete(`/production/orders/${id}`),
+  getProgress: (orderId: string) => apiClient.get(`/production/orders/${orderId}/progress`),
+  updateProgress: (orderId: string, data: any) => apiClient.post(`/production/orders/${orderId}/progress`, data),
 }
 
-// 获取生产工单详情
-export const getProductionOrder = async (id: string) => {
-  return request.get(`/api/v1/integration/erp/production/orders/${id}`)
-}
+export default productionApi

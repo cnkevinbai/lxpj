@@ -64,7 +64,7 @@ const Roles: React.FC = () => {
     setEditingId(record.id)
     form.setFieldsValue({
       ...record,
-      permissions: record.permissions.filter(p => p !== '*'),
+      permissions: record.permissions.filter((p: string) => p !== '*'),
     })
     setModalVisible(true)
   }

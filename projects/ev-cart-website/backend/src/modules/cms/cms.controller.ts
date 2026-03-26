@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { CmsService } from './cms.service';
+import { CmsService } from './services/cms.service';
 
 @Controller('api/v1/cms')
 @UseGuards(AuthGuard('jwt'))

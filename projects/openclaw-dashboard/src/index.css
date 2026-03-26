@@ -1,0 +1,295 @@
+/**
+ * OpenClaw 控制面板 - 专业设计系统规范
+ * 
+ * 基于 ui-ux-pro-max-skill 推荐的 Tech Dashboard AI 配色方案
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========== 专业设计系统变量 ========== */
+:root {
+  /* 推荐配色 - Tech Dashboard */
+  --primary-bg: #0F172A;      /* 深蓝背景 */
+  --primary-surface: #1E293B;  /* 主表面 */
+  --secondary-surface: #334155; /* 次表面 */
+  --cta-color: #22C55E;        /* CTA 绿色 */
+  --text-primary: #F8FAFC;     /* 主文字 */
+  --text-secondary: #94A3B8;   /* 次文字 */
+  
+  /* 科技感增强色 */
+  --accent-cyan: #06B6D4;
+  --accent-blue: #3B82F6;
+  --accent-purple: #A855F7;
+  --accent-pink: #EC4899;
+  
+  /* 发光效果 */
+  --glow-cyan: rgba(6, 182, 212, 0.3);
+  --glow-green: rgba(34, 197, 94, 0.3);
+  --glow-purple: rgba(168, 85, 247, 0.3);
+}
+
+/* ========== 全局样式 ========== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Fira Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--primary-bg);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+}
+
+/* 代码字体 */
+code, pre, .font-mono {
+  font-family: 'Fira Code', monospace;
+}
+
+/* ========== 自定义滚动条 ========== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--primary-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--accent-cyan), var(--accent-blue));
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--accent-blue), var(--accent-purple));
+}
+
+/* ========== 核心效果 ========== */
+
+/* 科技感网格背景 */
+.tech-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* 科技感扫描线 */
+.tech-scanline {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(6, 182, 212, 0.05) 50%,
+    transparent 100%
+  );
+  animation: scanline 8s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+/* 最小发光效果 - 可读性优先 */
+.text-glow {
+  text-shadow: 0 0 10px currentColor;
+}
+
+/* 深色到浅色过渡 */
+.dark-to-light {
+  background: linear-gradient(180deg, 
+    var(--primary-bg) 0%,
+    var(--primary-surface) 50%,
+    var(--primary-bg) 100%);
+}
+
+/* 聚焦状态 - 高可见性 */
+.focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+
+/* ========== 卡片系统 ========== */
+.card-surface {
+  background: var(--primary-surface);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  transition: all 0.2s ease;
+}
+
+.card-surface:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* ========== 按钮系统 ========== */
+.btn-primary {
+  background: var(--cta-color);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: #16A34A;
+  box-shadow: 0 0 20px var(--glow-green);
+}
+
+.btn-secondary {
+  background: var(--secondary-surface);
+  color: var(--text-primary);
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: #475569;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ========== 输入框系统 ========== */
+.input-field {
+  width: 100%;
+  padding: 14px 18px;
+  background: var(--primary-bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.input-field::placeholder {
+  color: var(--text-secondary);
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 3px var(--glow-cyan);
+}
+
+/* ========== 状态指示器 ========== */
+.status-online {
+  background: var(--cta-color);
+  box-shadow: 0 0 8px var(--glow-green);
+}
+
+.status-offline {
+  background: #64748B;
+}
+
+.status-busy {
+  background: #F59E0B;
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.3);
+}
+
+/* ========== 动画系统 ========== */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 10px var(--glow-cyan);
+  }
+  50% {
+    box-shadow: 0 0 20px var(--glow-cyan), 0 0 30px var(--glow-purple);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.3s ease-out;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+/* ========== 响应式断点 ========== */
+@media (max-width: 1440px) {
+  /* 大桌面 */
+}
+
+@media (max-width: 1024px) {
+  /* 平板 */
+}
+
+@media (max-width: 768px) {
+  /* 大手机 */
+  .sidebar {
+    position: fixed;
+    left: -280px;
+    transition: left 0.3s ease;
+  }
+  
+  .sidebar.open {
+    left: 0;
+  }
+}
+
+@media (max-width: 375px) {
+  /* 小手机 */
+}
+
+/* ========== 无障碍支持 ========== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ========== 反模式避免 ========== */
+/*
+ * ❌ 避免使用 emoji 作为图标
+ * ✅ 使用 SVG: Heroicons / Lucide
+ * 
+ * ❌ 可点击元素没有 cursor: pointer
+ * ✅ 所有可点击元素添加 cursor: pointer
+ * 
+ * ❌ 悬停状态没有过渡
+ * ✅ 添加 150-300ms 的平滑过渡
+ * 
+ * ❌ 浅色模式文字对比度不足
+ * ✅ 确保对比度 ≥ 4.5:1
+ * 
+ * ❌ 焦点状态不可见
+ * ✅ 添加可见的焦点状态
+ */

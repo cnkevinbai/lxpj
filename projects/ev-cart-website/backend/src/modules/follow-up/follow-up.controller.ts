@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, Query } from '@nestjs/common'
 import { ApiTags, ApiOperation } from '@nestjs/swagger'
-import { FollowUpService } from './follow-up.service'
+import { FollowUpService } from './services/follow-up.service'
 import { CreateFollowUpDto, UpdateFollowUpDto, FollowUpStatsDto } from './dto/follow-up.dto'
 
 @ApiTags('follow-up')

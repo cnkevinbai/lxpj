@@ -9,7 +9,7 @@ import {
   Body,
 } from '@nestjs/common'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
-import { RecycleBinService } from './recycle-bin.service'
+import { RecycleBinService } from './services/recycle-bin.service'
 
 @Controller('recycle-bin')
 @UseGuards(JwtAuthGuard)

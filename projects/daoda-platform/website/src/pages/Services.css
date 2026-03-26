@@ -1,0 +1,647 @@
+/**
+ * 全球服务页面样式
+ * 统一风格版本
+ */
+
+@import url('../styles/common.css');
+
+.services-page {
+  background: #0a0a0a;
+  color: #f1f5f9;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+/* ========== Header ========== */
+.daoda-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: 80px;
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(102, 0, 255, 0.1);
+}
+
+.daoda-header-inner {
+  max-width: 1280px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.daoda-header-left {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+
+.daoda-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #fff;
+}
+
+.daoda-brand-icon {
+  width: 32px;
+  height: 32px;
+  background: #6600ff;
+  padding: 6px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.daoda-brand-icon svg {
+  width: 20px;
+  height: 20px;
+  color: #fff;
+}
+
+.daoda-brand-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.daoda-brand-highlight {
+  color: #6600ff;
+  font-weight: 800;
+}
+
+.daoda-nav {
+  display: flex;
+  gap: 32px;
+}
+
+.daoda-nav a {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.daoda-nav a:hover,
+.daoda-nav a.active {
+  color: #6600ff;
+}
+
+.daoda-header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.daoda-lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  padding-left: 16px;
+}
+
+.daoda-lang-switch button {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.daoda-lang-switch button.active {
+  background: rgba(102, 0, 255, 0.2);
+  color: #6600ff;
+}
+
+.daoda-login-btn {
+  background: #6600ff;
+  color: #fff;
+  padding: 8px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.daoda-login-btn:hover {
+  background: #5900e6;
+}
+
+/* ========== Hero Section ========== */
+.daoda-hero {
+  position: relative;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  padding-top: 80px;
+  overflow: hidden;
+}
+
+.daoda-hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+}
+
+.daoda-hero-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to right, #0a0a0a, rgba(10, 10, 10, 0.8), transparent);
+  z-index: 1;
+}
+
+.daoda-hero-image.daoda-hero-services {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+
+.daoda-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  width: 100%;
+  text-align: center;
+}
+
+.daoda-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 9999px;
+  background: rgba(102, 0, 255, 0.2);
+  border: 1px solid rgba(102, 0, 255, 0.3);
+  color: #a78bfa;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 24px;
+}
+
+.daoda-pulse-dot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  background: #6600ff;
+  border-radius: 50%;
+}
+
+.daoda-pulse-dot::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background: #6600ff;
+  border-radius: 50%;
+  animation: daoda-ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes daoda-ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.daoda-hero-title {
+  font-size: 56px;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0 0 24px;
+}
+
+.daoda-hero-desc {
+  font-size: 18px;
+  color: #94a3b8;
+  max-width: 720px;
+  margin: 0 auto 32px;
+  line-height: 1.7;
+}
+
+/* ========== Section Container ========== */
+.daoda-section-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 80px 24px;
+}
+
+.daoda-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 48px;
+}
+
+.daoda-section-header.daoda-center {
+  flex-direction: column;
+  text-align: center;
+}
+
+.daoda-section-tag {
+  display: inline-block;
+  background: rgba(102, 0, 255, 0.2);
+  color: #a78bfa;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+}
+
+.daoda-section-title {
+  font-size: 36px;
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(135deg, #fff, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ========== Services Grid ========== */
+.daoda-services {
+  background: rgba(102, 0, 255, 0.03);
+}
+
+.daoda-services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.daoda-service-card {
+  padding: 40px 32px;
+  border-radius: 16px;
+  transition: transform 0.3s, border-color 0.2s;
+}
+
+.daoda-service-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(102, 0, 255, 0.3);
+}
+
+.daoda-service-icon {
+  width: 64px;
+  height: 64px;
+  background: rgba(102, 0, 255, 0.2);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.daoda-service-icon svg {
+  width: 32px;
+  height: 32px;
+  color: #a78bfa;
+}
+
+.daoda-service-card h3 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  color: #fff;
+}
+
+.daoda-service-card p {
+  font-size: 14px;
+  color: #94a3b8;
+  line-height: 1.7;
+  margin: 0 0 24px;
+}
+
+.daoda-service-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.daoda-service-list li {
+  font-size: 14px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.daoda-service-list li::before {
+  content: '✓';
+  color: #6600ff;
+  font-weight: 700;
+}
+
+/* ========== Timeline ========== */
+.daoda-process {
+  background: #0a0a0a;
+}
+
+.daoda-timeline {
+  position: relative;
+  padding-left: 20px;
+}
+
+.daoda-timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, rgba(102, 0, 255, 0.3), rgba(102, 0, 255, 0.1));
+}
+
+.daoda-timeline-item {
+  position: relative;
+  margin-bottom: 32px;
+  padding-left: 40px;
+}
+
+.daoda-timeline-dot {
+  position: absolute;
+  left: -10px;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  background: #6600ff;
+  border-radius: 50%;
+  border: 4px solid rgba(102, 0, 255, 0.2);
+}
+
+.daoda-timeline-content {
+  padding: 32px 24px;
+}
+
+.daoda-timeline-content h4 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  color: #fff;
+}
+
+.daoda-timeline-content p {
+  font-size: 14px;
+  color: #94a3b8;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ========== FAQ ========== */
+.daoda-faq {
+  background: rgba(102, 0, 255, 0.03);
+}
+
+.daoda-faq-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.daoda-faq-item {
+  padding: 32px 24px;
+  border-radius: 16px;
+}
+
+.daoda-faq-item h4 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  color: #fff;
+}
+
+.daoda-faq-item p {
+  font-size: 14px;
+  color: #94a3b8;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ========== Contact Info ========== */
+.daoda-contact-info {
+  background: #0a0a0a;
+}
+
+.daoda-contact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.daoda-contact-card {
+  padding: 40px 32px;
+  text-align: center;
+  border-radius: 16px;
+  transition: transform 0.3s;
+}
+
+.daoda-contact-card:hover {
+  transform: translateY(-8px);
+}
+
+.daoda-contact-icon {
+  width: 64px;
+  height: 64px;
+  background: rgba(102, 0, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+}
+
+.daoda-contact-icon svg {
+  width: 32px;
+  height: 32px;
+  color: #a78bfa;
+}
+
+.daoda-contact-card h4 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  color: #fff;
+}
+
+.daoda-contact-card p {
+  font-size: 16px;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* ========== Footer ========== */
+.daoda-footer {
+  padding: 80px 24px 40px;
+  background: #0a0a0a;
+  border-top: 1px solid rgba(102, 0, 255, 0.1);
+}
+
+.daoda-footer-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.daoda-footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+
+.daoda-footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+.daoda-footer-brand .daoda-brand-icon {
+  width: 28px;
+  height: 28px;
+  padding: 4px;
+}
+
+.daoda-footer-brand .daoda-brand-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.daoda-footer-brand span {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.daoda-footer-desc {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.7;
+  margin: 0 0 24px;
+}
+
+.daoda-footer-col h5 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 24px;
+}
+
+.daoda-footer-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.daoda-footer-col li {
+  margin-bottom: 12px;
+}
+
+.daoda-footer-col a {
+  font-size: 14px;
+  color: #64748b;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.daoda-footer-col a:hover {
+  color: #6600ff;
+}
+
+.daoda-footer-bottom {
+  padding-top: 24px;
+  border-top: 1px solid rgba(102, 0, 255, 0.1);
+  text-align: center;
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 1024px) {
+  .daoda-services-grid,
+  .daoda-contact-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .daoda-faq-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .daoda-footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .daoda-header-inner {
+    padding: 0 16px;
+  }
+  
+  .daoda-nav {
+    display: none;
+  }
+  
+  .daoda-hero-title {
+    font-size: 36px;
+  }
+  
+  .daoda-section-container {
+    padding: 60px 16px;
+  }
+  
+  .daoda-services-grid,
+  .daoda-contact-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .daoda-timeline {
+    padding-left: 16px;
+  }
+  
+  .daoda-timeline-item {
+    padding-left: 32px;
+  }
+  
+  .daoda-timeline-dot {
+    left: -6px;
+    width: 16px;
+    height: 16px;
+  }
+  
+  .daoda-footer-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}

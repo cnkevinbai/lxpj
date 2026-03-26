@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Query } from '@nestjs/common'
 import { ApiTags, ApiOperation } from '@nestjs/swagger'
-import { OpportunityService } from './opportunity.service'
+import { OpportunityService } from './services/opportunity.service'
 import { CreateOpportunityDto, UpdateOpportunityDto } from './dto/opportunity.dto'
 
 @ApiTags('opportunities')

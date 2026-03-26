@@ -48,10 +48,10 @@ export class CacheInterceptor implements NestInterceptor {
     return next.handle().pipe(
       tap(async (data) => {
         try {
-          await this.redisService.setex(
+          await this.redisService.set(
             cacheKey,
-            this.options.ttl,
             JSON.stringify(data),
+            this.options.ttl,
           )
         } catch (error) {
           console.error('Cache write error:', error)

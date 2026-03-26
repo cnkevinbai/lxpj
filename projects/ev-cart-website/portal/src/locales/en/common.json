@@ -1,0 +1,152 @@
+{
+  "meta": {
+    "title": "DAODA Intelligent Vehicle Manufacturing Innovation Platform",
+    "description": "Sichuan Daoda Intelligent Vehicle Manufacturing Co., Ltd. - Professional manufacturer of electric sightseeing cars, patrol vehicles, golf carts, and autonomous vehicles"
+  },
+  "nav": {
+    "products": "Products",
+    "solutions": "Solutions",
+    "technology": "Technology",
+    "about": "About Us",
+    "contact": "Contact",
+    "platform": "Digital Platform",
+    "login": "Login",
+    "digital_platform_full": "Sichuan Daoda Intelligent Digital Platform"
+  },
+  "hero": {
+    "product1": {
+      "title": "Beyond Boundaries",
+      "subtitle": "L4 Autonomous Sightseeing Car, Defining Future Mobility",
+      "cta_primary": "Explore Future Mobility",
+      "cta_video": "Watch Film"
+    },
+    "product2": {
+      "title": "Ride the Wind",
+      "subtitle": "800km Range, Zero Emissions",
+      "cta_primary": "Learn More",
+      "cta_video": "Watch Film"
+    },
+    "product3": {
+      "title": "The Guardian",
+      "subtitle": "Silent Patrol, Swift Response",
+      "cta_primary": "Learn More",
+      "cta_video": "Watch Film"
+    },
+    "product4": {
+      "title": "Premium Ride",
+      "subtitle": "Luxury Comfort, Golf Course Style",
+      "cta_primary": "Learn More",
+      "cta_video": "Watch Film"
+    },
+    "product5": {
+      "title": "Smart Tour",
+      "subtitle": "Scan & Go, Smart Scenic Area",
+      "cta_primary": "Learn More",
+      "cta_video": "Watch Film"
+    }
+  },
+  "products": {
+    "title": "All Products",
+    "subtitle": "Explore Daoda Intelligent Mobility Solutions",
+    "categories": {
+      "sightseeing": "Electric Sightseeing Car",
+      "patrol": "Electric Patrol Vehicle",
+      "golf": "Golf Cart",
+      "autonomous": "Autonomous Sightseeing Car",
+      "sharing": "Shared Scenic Rover"
+    },
+    "learn_more": "Learn More"
+  },
+  "technology": {
+    "title": "Technology, Unbounded",
+    "subtitle": "Innovation Driving Future Mobility",
+    "battery": {
+      "title": "Beyond Range",
+      "value": "800",
+      "unit": "km",
+      "desc": "Ultra-long Range"
+    },
+    "autonomous": {
+      "title": "Intelligence Unlimited",
+      "value": "L4",
+      "unit": "",
+      "desc": "Autonomous Driving"
+    },
+    "connected": {
+      "title": "Instant Connect",
+      "value": "5G",
+      "unit": "",
+      "desc": "Smart Connectivity"
+    },
+    "charging": {
+      "title": "Ultra Fast",
+      "value": "2",
+      "unit": "h",
+      "desc": "Fast Charging"
+    }
+  },
+  "global": {
+    "title": "Global Presence",
+    "subtitle": "Serving 500+ Customers Worldwide",
+    "cases": "Global Cases",
+    "markets": "Markets Covered"
+  },
+  "footer": {
+    "products": "Products",
+    "solutions": "Solutions",
+    "service": "Service & Support",
+    "about": "About Daoda",
+    "sitemap": "Sitemap",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use",
+    "copyright": "© 2026 Sichuan Daoda Intelligent Vehicle Manufacturing Co., Ltd. All rights reserved.",
+    "icp": "Sichuan ICP No. XXXX",
+    "subscribe_title": "Subscribe",
+    "subscribe_desc": "Get latest news and product updates",
+    "subscribe_placeholder": "Enter your email",
+    "subscribe_btn": "Subscribe"
+  },
+  "common": {
+    "learn_more": "Learn More",
+    "contact_us": "Contact Us",
+    "get_quote": "Get Quote",
+    "test_drive": "Test Drive",
+    "download": "Download",
+    "watch_video": "Watch Video",
+    "previous": "Previous",
+    "next": "Next",
+    "loading": "Loading...",
+    "error": "Load Failed",
+    "retry": "Retry"
+  },
+  "lang": {
+    "zh": "中文",
+    "en": "English",
+    "de": "Deutsch",
+    "fr": "Français",
+    "es": "Español",
+    "ar": "العربية",
+    "th": "ไทย"
+  },
+  "Solutions": {
+    "scenic": "Scenic Area Solutions",
+    "park": "Park & Campus Solutions",
+    "smart-city": "Smart City Solutions",
+    "golf": "Golf Course Solutions",
+    "custom": "Custom Solutions"
+  },
+  "Service": {
+    "after-sales": "After-Sales Service",
+    "parts": "Parts Supply",
+    "support": "Technical Support",
+    "download": "Download Center",
+    "faq": "FAQ"
+  },
+  "About": {
+    "company": "About Us",
+    "history": "Our History",
+    "honors": "Honors & Certifications",
+    "news": "News Center",
+    "careers": "Careers"
+  }
+}

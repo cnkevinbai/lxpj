@@ -1,0 +1,732 @@
+// This is your Prisma schema file
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== 用户与权限 ====================
+
+model User {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  username     String    @unique
+  password     String
+  name         String
+  phone        String?
+  avatar       String?
+  role         UserRole  @default(CUSTOMER)
+  departmentId String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  serviceTickets      ServiceTicket[]      @relation("CreatedBy")
+  assessedTickets     ServiceTicket[]      @relation("AssessedBy")
+  assignedTickets     ServiceTicket[]      @relation("AssignedTo")
+  phoneCalls          PhoneCall[]
+  remoteMessages      RemoteMessage[]
+  remoteSupports      RemoteSupport[]
+  customers           Customer[]
+  opportunities       Opportunity[]
+  employees           Employee[]
+  cmsArticles         CmsArticle[]
+  department          Department?          @relation(fields: [departmentId], references: [id])
+
+  @@index([email])
+  @@index([role])
+  @@index([departmentId])
+}
+
+enum UserRole {
+  ADMIN
+  CUSTOMER_SERVICE
+  SUPERVISOR
+  ENGINEER
+  WAREHOUSE
+  CUSTOMER
+}
+
+model Department {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  parentId    String?
+  parent      Department? @relation("ChildDepartments", fields: [parentId], references: [id])
+  children    Department[] @relation("ChildDepartments")
+  users       User[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ==================== 客户服务工单 ====================
+
+model ServiceTicket {
+  id                String           @id @default(uuid())
+  ticketNumber      String           @unique
+  customerId        String
+  customerName      String
+  customerPhone     String
+  customerEmail     String?
+  customerAddress   String?
+  
+  productId         String?
+  productName       String?
+  productModel      String?
+  serialNumber      String?
+  warrantyStatus    Boolean          @default(false)
+  warrantyExpiryDate DateTime?
+  purchaseDate      DateTime?
+  
+  type              ServiceTicketType
+  source            ServiceTicketSource
+  priority          ServiceTicketPriority
+  subject           String
+  problemDescription String @db.Text
+  problemPhotos     String[]
+  expectedResolution String? @db.Text
+  
+  receivedBy        String
+  receivedByName    String
+  receivedAt        DateTime         @default(now())
+  preliminaryAssessment String? @db.Text
+  
+  assessedBy        String?
+  assessedByName    String?
+  assessedAt        DateTime?
+  technicalDifficulty TechnicalDifficulty?
+  requiredSkills    String[]
+  productCondition  ProductCondition?
+  needParts         Boolean          @default(false)
+  estimatedParts    Json?
+  estimatedHours    Int?
+  estimatedCost     Decimal? @db.Decimal(10, 2)
+  assessmentNotes   String? @db.Text
+  
+  serviceType       ServiceType?
+  serviceTypeReason String?
+  decidedBy         String?
+  decidedAt         DateTime?
+  
+  assigneeId        String?
+  assigneeName      String?
+  scheduledTime     DateTime?
+  actualArrivalTime DateTime?
+  actualCompletionTime DateTime?
+  travelDistance    Decimal? @db.Decimal(10, 2)
+  travelExpense     Decimal? @db.Decimal(10, 2)
+  
+  status            ServiceTicketStatus @default(PENDING_RECEPTION)
+  slaDeadline       DateTime?
+  completedAt       DateTime?
+  closedAt          DateTime?
+  closedBy          String?
+  closedReason      String?
+  
+  customerConfirmed Boolean? @default(false)
+  confirmedAt       DateTime?
+  confirmedBy       String?
+  
+  rating            Int?
+  serviceAttitudeRating Int?
+  technicalSkillRating Int?
+  responseSpeedRating Int?
+  ratingComment     String? @db.Text
+  ratingTags        String[]
+  ratedAt           DateTime?
+  
+  laborFee          Decimal? @db.Decimal(10, 2)
+  partsFee          Decimal? @db.Decimal(10, 2)
+  otherFee          Decimal? @db.Decimal(10, 2)
+  discount          Decimal? @db.Decimal(10, 2)
+  totalAmount       Decimal? @db.Decimal(10, 2)
+  paymentStatus     PaymentStatus @default(UNPAID)
+  
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  createdBy         User             @relation("CreatedBy", fields: [receivedBy], references: [id])
+  assessedByUser    User?            @relation("AssessedBy", fields: [assessedBy], references: [id])
+  assignee          User?            @relation("AssignedTo", fields: [assigneeId], references: [id])
+  mail              MailService?
+  remoteSupport     RemoteSupport?
+  partsUsed         PartUsed[]
+  logs              ServiceTicketLog[]
+
+  @@index([status])
+  @@index([type])
+  @@index([priority])
+  @@index([customerId])
+  @@index([assigneeId])
+  @@index([createdAt])
+}
+
+enum ServiceTicketType {
+  INSTALLATION
+  MAINTENANCE
+  REPAIR
+  COMPLAINT
+  CONSULTATION
+}
+
+enum ServiceTicketSource {
+  CUSTOMER
+  SALES
+  HOTLINE
+  ONLINE
+  WECHAT
+  EMAIL
+}
+
+enum ServiceTicketPriority {
+  URGENT
+  HIGH
+  NORMAL
+  LOW
+}
+
+enum TechnicalDifficulty {
+  SIMPLE
+  NORMAL
+  COMPLEX
+  EXPERT
+}
+
+enum ProductCondition {
+  GOOD
+  NORMAL
+  DAMAGED
+  UNKNOWN
+}
+
+enum ServiceType {
+  ONSITE
+  MAIL
+  REMOTE
+}
+
+enum ServiceTicketStatus {
+  PENDING_RECEPTION
+  PENDING_ASSESSMENT
+  ONSITE_SERVICE
+  MAIL_SERVICE
+  REMOTE_SUPPORT
+  WAITING_PARTS
+  WAITING_CUSTOMER
+  COMPLETED
+  CLOSED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PARTIAL
+  PAID
+}
+
+// ==================== 邮寄服务 ====================
+
+model MailService {
+  id                String           @id @default(uuid())
+  ticketId          String           @unique
+  ticket            ServiceTicket    @relation(fields: [ticketId], references: [id])
+  
+  parts             Json
+  courierCompany    String
+  trackingNumber    String?
+  shippingCost      Decimal? @db.Decimal(10, 2)
+  shippedAt         DateTime?
+  estimatedDelivery DateTime?
+  receivedAt        DateTime?
+  receivedBy        String?
+  
+  returnRequired    Boolean          @default(false)
+  returnTrackingNumber String?
+  returnShippedAt   DateTime?
+  returnReceivedAt  DateTime?
+  
+  status            MailServiceStatus @default(PREPARING)
+  
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  @@index([status])
+  @@index([trackingNumber])
+}
+
+enum MailServiceStatus {
+  PREPARING
+  PICKED
+  QUALITY_CHECKED
+  PACKED
+  SHIPPED
+  DELIVERED
+  COMPLETED
+  RETURNED
+}
+
+// ==================== 远程指导 ====================
+
+model RemoteSupport {
+  id                String           @id @default(uuid())
+  ticketId          String           @unique
+  ticket            ServiceTicket    @relation(fields: [ticketId], references: [id])
+  
+  engineerId        String
+  engineer          User             @relation(fields: [engineerId], references: [id])
+  engineerName      String
+  engineerPhone     String
+  
+  customerId        String
+  customerName      String
+  customerPhone     String
+  
+  status            RemoteSupportStatus @default(PENDING)
+  startedAt         DateTime         @default(now())
+  completedAt       DateTime?
+  
+  resolved          Boolean?
+  resolutionNotes   String? @db.Text
+  duration          Int?
+  
+  customerSatisfaction Int?
+  serviceAttitudeRating Int?
+  technicalSkillRating Int?
+  responseSpeedRating Int?
+  ratingComment     String? @db.Text
+  
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  messages          RemoteMessage[]
+
+  @@index([status])
+  @@index([engineerId])
+}
+
+enum RemoteSupportStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model RemoteMessage {
+  id          String   @id @default(uuid())
+  supportId   String
+  support     RemoteSupport @relation(fields: [supportId], references: [id])
+  ticketId    String
+  senderId    String
+  sender      User     @relation(fields: [senderId], references: [id])
+  senderName  String
+  senderType  MessageSender
+  type        MessageType
+  content     String   @db.Text
+  fileSize    Int?
+  fileName    String?
+  read        Boolean  @default(false)
+  readAt      DateTime?
+  createdAt   DateTime @default(now())
+
+  @@index([supportId])
+  @@index([ticketId])
+  @@index([createdAt])
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  FILE
+  VOICE
+}
+
+enum MessageSender {
+  ENGINEER
+  CUSTOMER
+}
+
+model PhoneCall {
+  id            String   @id @default(uuid())
+  ticketId      String
+  supportId     String?
+  engineerId    String
+  engineer      User     @relation(fields: [engineerId], references: [id])
+  engineerName  String
+  customerPhone String
+  startTime     DateTime
+  endTime       DateTime?
+  duration      Int?
+  notes         String   @db.Text
+  recordingUrl  String?
+  recordingDuration Int?
+  createdAt     DateTime @default(now())
+
+  @@index([ticketId])
+  @@index([engineerId])
+  @@index([startTime])
+}
+
+model PartUsed {
+  id          String   @id @default(uuid())
+  ticketId    String
+  ticket      ServiceTicket @relation(fields: [ticketId], references: [id])
+  partId      String
+  partName    String
+  partNumber  String
+  quantity    Int
+  unitPrice   Decimal  @db.Decimal(10, 2)
+  totalPrice  Decimal  @db.Decimal(10, 2)
+  used        Boolean  @default(false)
+  returned    Boolean  @default(false)
+  condition   PartCondition @default(NEW)
+  createdAt   DateTime @default(now())
+
+  @@index([ticketId])
+}
+
+enum PartCondition {
+  NEW
+  REFURBISHED
+  USED
+}
+
+model ServiceTicketLog {
+  id        String   @id @default(uuid())
+  ticketId  String
+  ticket    ServiceTicket @relation(fields: [ticketId], references: [id])
+  type      LogType
+  action    String
+  userId    String?
+  userName  String?
+  userType  UserType?
+  oldValue  Json?
+  newValue  Json?
+  message   String   @db.Text
+  createdAt DateTime @default(now())
+
+  @@index([ticketId])
+  @@index([type])
+  @@index([createdAt])
+}
+
+enum LogType {
+  SYSTEM
+  USER
+  CUSTOMER
+  ERROR
+}
+
+enum UserType {
+  CUSTOMER_SERVICE
+  SUPERVISOR
+  ENGINEER
+  CUSTOMER
+  WAREHOUSE
+}
+
+// ==================== CRM 客户管理 ====================
+
+model Customer {
+  id            String   @id @default(uuid())
+  name          String
+  type          CustomerType
+  industry      String?
+  level         CustomerLevel?
+  phone         String?
+  email         String?
+  address       String?
+  contactName   String?
+  contactPhone  String?
+  ownerId       String?
+  owner         User?    @relation(fields: [ownerId], references: [id])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  opportunities Opportunity[]
+  orders        Order[]
+
+  @@index([type])
+  @@index([level])
+  @@index([ownerId])
+}
+
+enum CustomerType {
+  ENTERPRISE
+  INDIVIDUAL
+  GOVERNMENT
+}
+
+enum CustomerLevel {
+  A
+  B
+  C
+}
+
+model Opportunity {
+  id          String   @id @default(uuid())
+  name        String
+  customerId  String
+  customer    Customer @relation(fields: [customerId], references: [id])
+  amount      Decimal  @db.Decimal(10, 2)
+  stage       OpportunityStage
+  probability Int
+  closeDate   DateTime?
+  ownerId     String?
+  owner       User?    @relation(fields: [ownerId], references: [id])
+  status      OpportunityStatus @default(OPEN)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([customerId])
+  @@index([stage])
+  @@index([ownerId])
+}
+
+enum OpportunityStage {
+  INITIAL_CONTACT
+  NEEDS_ANALYSIS
+  PROPOSAL
+  NEGOTIATION
+  CLOSED_WON
+  CLOSED_LOST
+}
+
+enum OpportunityStatus {
+  OPEN
+  WON
+  LOST
+}
+
+model Order {
+  id              String   @id @default(uuid())
+  orderNumber     String   @unique
+  customerId      String
+  customer        Customer @relation(fields: [customerId], references: [id])
+  amount          Decimal  @db.Decimal(10, 2)
+  status          OrderStatus
+  paymentStatus   PaymentStatus @default(UNPAID)
+  deliveryStatus  DeliveryStatus @default(PENDING)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([customerId])
+  @@index([status])
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PRODUCTION
+  SHIPPED
+  DELIVERED
+  COMPLETED
+  CANCELLED
+}
+
+enum DeliveryStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+}
+
+// ==================== ERP 生产管理 ====================
+
+model ProductionOrder {
+  id          String   @id @default(uuid())
+  orderNumber String   @unique
+  productId   String
+  productName String
+  quantity    Int
+  status      ProductionStatus @default(PENDING)
+  plannedStartDate DateTime?
+  plannedEndDate   DateTime?
+  actualStartDate  DateTime?
+  actualEndDate    DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status])
+}
+
+enum ProductionStatus {
+  PENDING
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+// ==================== ERP 采购管理 ====================
+
+model PurchaseOrder {
+  id          String   @id @default(uuid())
+  orderNumber String   @unique
+  supplierId  String
+  supplierName String
+  amount      Decimal  @db.Decimal(10, 2)
+  status      PurchaseStatus @default(PENDING)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status])
+}
+
+enum PurchaseStatus {
+  PENDING
+  APPROVED
+  ORDERED
+  RECEIVED
+  CANCELLED
+}
+
+// ==================== ERP 库存管理 ====================
+
+model Inventory {
+  id        String   @id @default(uuid())
+  productId String
+  productName String
+  quantity  Int
+  warehouse String
+  location  String?
+  minStock  Int      @default(0)
+  maxStock  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId])
+}
+
+// ==================== 财务管理 ====================
+
+model FinanceRecord {
+  id          String   @id @default(uuid())
+  type        FinanceType
+  amount      Decimal  @db.Decimal(10, 2)
+  status      FinanceStatus @default(PENDING)
+  description String?
+  relatedId   String?
+  relatedType String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([type])
+  @@index([status])
+}
+
+enum FinanceType {
+  RECEIVABLE
+  PAYABLE
+  EXPENSE
+  REVENUE
+}
+
+enum FinanceStatus {
+  PENDING
+  APPROVED
+  PAID
+  CANCELLED
+}
+
+// ==================== HR 管理 ====================
+
+model Employee {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  phone     String?
+  position  String?
+  departmentId String?
+  userId    String?
+  status    EmployeeStatus @default(ACTIVE)
+  hireDate  DateTime?
+  salary    Decimal? @db.Decimal(10, 2)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User?    @relation(fields: [userId], references: [id])
+
+  @@index([status])
+}
+
+enum EmployeeStatus {
+  ACTIVE
+  INACTIVE
+  TERMINATED
+}
+
+// ==================== CMS 内容管理 ====================
+
+model CmsArticle {
+  id        String   @id @default(uuid())
+  title     String
+  content   String   @db.Text
+  type      ArticleType
+  status    ArticleStatus @default(DRAFT)
+  authorId  String?
+  author    User?    @relation(fields: [authorId], references: [id])
+  publishedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([type])
+  @@index([status])
+}
+
+enum ArticleType {
+  NEWS
+  CASE
+  SOLUTION
+  PAGE
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+// ==================== 产品管理 ====================
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  model       String?
+  category    String?
+  price       Decimal  @db.Decimal(10, 2)
+  cost        Decimal  @db.Decimal(10, 2)
+  stock       Int      @default(0)
+  status      ProductStatus @default(ACTIVE)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([status])
+}
+
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+  DISCONTINUED
+}
+
+// ==================== 智能决策规则 ====================
+
+model DecisionRule {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  priority    Int      @default(0)
+  enabled     Boolean  @default(true)
+  conditions  Json
+  result      Json
+  usageCount  Int      @default(0)
+  successRate Decimal  @default(0) @db.Decimal(5, 4)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([enabled])
+  @@index([priority])
+}

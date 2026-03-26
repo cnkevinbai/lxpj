@@ -1,0 +1,821 @@
+/**
+ * 新闻中心页面样式
+ * 统一风格版本
+ */
+
+@import url('../styles/common.css');
+
+.news-page {
+  background: #0a0a0a;
+  color: #f1f5f9;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+/* ========== Header ========== */
+.daoda-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: 80px;
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(102, 0, 255, 0.1);
+}
+
+.daoda-header-inner {
+  max-width: 1280px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.daoda-header-left {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+
+.daoda-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #fff;
+}
+
+.daoda-brand-icon {
+  width: 32px;
+  height: 32px;
+  background: #6600ff;
+  padding: 6px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.daoda-brand-icon svg {
+  width: 20px;
+  height: 20px;
+  color: #fff;
+}
+
+.daoda-brand-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.daoda-brand-highlight {
+  color: #6600ff;
+  font-weight: 800;
+}
+
+.daoda-nav {
+  display: flex;
+  gap: 32px;
+}
+
+.daoda-nav a {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.daoda-nav a:hover,
+.daoda-nav a.active {
+  color: #6600ff;
+}
+
+.daoda-header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.daoda-lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  padding-left: 16px;
+}
+
+.daoda-lang-switch button {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.daoda-lang-switch button.active {
+  background: rgba(102, 0, 255, 0.2);
+  color: #6600ff;
+}
+
+.daoda-login-btn {
+  background: #6600ff;
+  color: #fff;
+  padding: 8px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.daoda-login-btn:hover {
+  background: #5900e6;
+}
+
+/* ========== Hero Section ========== */
+.daoda-hero {
+  position: relative;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  padding-top: 80px;
+  overflow: hidden;
+}
+
+.daoda-hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+}
+
+.daoda-hero-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to right, #0a0a0a, rgba(10, 10, 10, 0.8), transparent);
+  z-index: 1;
+}
+
+.daoda-hero-image.daoda-hero-news {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+
+.daoda-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  width: 100%;
+  text-align: center;
+}
+
+.daoda-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 9999px;
+  background: rgba(102, 0, 255, 0.2);
+  border: 1px solid rgba(102, 0, 255, 0.3);
+  color: #a78bfa;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 24px;
+}
+
+.daoda-pulse-dot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  background: #6600ff;
+  border-radius: 50%;
+}
+
+.daoda-pulse-dot::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background: #6600ff;
+  border-radius: 50%;
+  animation: daoda-ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes daoda-ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.daoda-hero-title {
+  font-size: 56px;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0 0 24px;
+}
+
+.daoda-hero-desc {
+  font-size: 18px;
+  color: #94a3b8;
+  max-width: 720px;
+  margin: 0 auto 32px;
+  line-height: 1.7;
+}
+
+/* ========== Section Container ========== */
+.daoda-section-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ========== News Filter Section ========== */
+.daoda-news-filter {
+  padding: 60px 0 80px;
+  background: rgba(102, 0, 255, 0.03);
+}
+
+.daoda-filter-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.daoda-category-select {
+  position: relative;
+  width: 200px;
+}
+
+.daoda-category-select select {
+  width: 100%;
+  padding: 12px 36px 12px 16px;
+  background: rgba(102, 0, 255, 0.1);
+  border: 1px solid rgba(102, 0, 255, 0.2);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  appearance: none;
+}
+
+.daoda-category-select select:focus {
+  border-color: rgba(102, 0, 255, 0.5);
+  outline: none;
+}
+
+.daoda-select-arrow {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #94a3b8;
+}
+
+.daoda-select-arrow svg {
+  width: 16px;
+  height: 16px;
+}
+
+.daoda-search-box {
+  position: relative;
+  width: 320px;
+}
+
+.daoda-search-box svg {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: #94a3b8;
+}
+
+.daoda-search-box input {
+  width: 100%;
+  padding: 12px 16px 12px 44px;
+  background: rgba(102, 0, 255, 0.1);
+  border: 1px solid rgba(102, 0, 255, 0.2);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+}
+
+.daoda-search-box input::placeholder {
+  color: #94a3b8;
+}
+
+.daoda-search-box input:focus {
+  border-color: rgba(102, 0, 255, 0.5);
+  outline: none;
+}
+
+.daoda-results-count {
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+/* ========== News Grid Section ========== */
+.daoda-news-grid-section {
+  padding: 80px 0;
+}
+
+.daoda-news-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+/* ========== News Card ========== */
+.daoda-news-card {
+  padding: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.daoda-news-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.daoda-news-image {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+}
+
+.daoda-news-img {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+}
+
+.daoda-news-img-1 {
+  background: linear-gradient(135deg, #1e3a5f, #2d5a87);
+}
+
+.daoda-news-img-2 {
+  background: linear-gradient(135deg, #1a4d2e, #2d7a4a);
+}
+
+.daoda-news-img-3 {
+  background: linear-gradient(135deg, #4a3728, #6b5344);
+}
+
+.daoda-news-img-4 {
+  background: linear-gradient(135deg, #3d2c5a, #5a4178);
+}
+
+.daoda-news-img-5 {
+  background: linear-gradient(135deg, #2d4a5e, #3d6a7e);
+}
+
+.daoda-news-img-6 {
+  background: linear-gradient(135deg, #1a2e4d, #2d4a6d);
+}
+
+.daoda-news-img-7 {
+  background: linear-gradient(135deg, #4d2e1a, #6d4a2d);
+}
+
+.daoda-news-img-8 {
+  background: linear-gradient(135deg, #4d1a2e, #6d2d4a);
+}
+
+.daoda-news-img-9 {
+  background: linear-gradient(135deg, #2e4d3a, #4a6d5a);
+}
+
+.daoda-category-tag {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: rgba(102, 0, 255, 0.9);
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  backdrop-filter: blur(4px);
+}
+
+.daoda-news-content {
+  padding: 24px;
+}
+
+.daoda-news-meta {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+
+.daoda-date,
+.daoda-views {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #94a3b8;
+}
+
+.daoda-date svg,
+.daoda-views svg {
+  width: 16px;
+  height: 16px;
+}
+
+.daoda-news-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  line-height: 1.4;
+}
+
+.daoda-news-summary {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.7;
+  margin: 0 0 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.daoda-news-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.daoda-tag {
+  background: rgba(102, 0, 255, 0.1);
+  color: #a78bfa;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+}
+
+.daoda-read-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6600ff;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.daoda-read-more:hover {
+  color: #a78bfa;
+}
+
+.daoda-read-more svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ========== Loading Spinner ========== */
+.daoda-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.daoda-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(102, 0, 255, 0.2);
+  border-top-color: #6600ff;
+  border-radius: 50%;
+  animation: daoda-spin 1s linear infinite;
+}
+
+@keyframes daoda-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ========== Empty State ========== */
+.daoda-empty {
+  text-align: center;
+  padding: 80px 24px;
+}
+
+.daoda-empty-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 24px;
+  color: #64748b;
+}
+
+.daoda-empty-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.daoda-empty p {
+  font-size: 16px;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* ========== Pagination ========== */
+.daoda-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 48px;
+}
+
+.daoda-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.daoda-btn-secondary:hover:not(:disabled) {
+  background: rgba(102, 0, 255, 0.2);
+  border-color: rgba(102, 0, 255, 0.3);
+}
+
+.daoda-btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.daoda-btn-secondary svg {
+  width: 18px;
+  height: 18px;
+}
+
+.daoda-pagination-info {
+  font-size: 14px;
+  color: #64748b;
+}
+
+/* ========== CTA Section ========== */
+.daoda-news-cta {
+  padding: 80px 0;
+  background: linear-gradient(135deg, rgba(102, 0, 255, 0.15), rgba(102, 0, 255, 0.05));
+}
+
+.daoda-cta-content {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.daoda-cta-content h2 {
+  font-size: 36px;
+  font-weight: 700;
+  margin: 0 0 16px;
+  background: linear-gradient(135deg, #fff, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.daoda-cta-content p {
+  font-size: 18px;
+  color: #94a3b8;
+  margin: 0 0 32px;
+  line-height: 1.7;
+}
+
+.daoda-cta-form {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.daoda-cta-form input {
+  flex: 1;
+  min-width: 280px;
+  padding: 14px 20px;
+  background: rgba(102, 0, 255, 0.1);
+  border: 1px solid rgba(102, 0, 255, 0.3);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+}
+
+.daoda-cta-form input::placeholder {
+  color: #64748b;
+}
+
+.daoda-cta-form input:focus {
+  border-color: rgba(102, 0, 255, 0.5);
+  outline: none;
+}
+
+.daoda-footer {
+  padding: 80px 24px 40px;
+  background: #0a0a0a;
+  border-top: 1px solid rgba(102, 0, 255, 0.1);
+}
+
+.daoda-footer-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.daoda-footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+
+.daoda-footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+.daoda-footer-brand .daoda-brand-icon {
+  width: 28px;
+  height: 28px;
+  padding: 4px;
+}
+
+.daoda-footer-brand .daoda-brand-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.daoda-footer-brand span {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.daoda-footer-desc {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.7;
+  margin: 0 0 24px;
+}
+
+.daoda-footer-col h5 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 24px;
+}
+
+.daoda-footer-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.daoda-footer-col li {
+  margin-bottom: 12px;
+}
+
+.daoda-footer-col a {
+  font-size: 14px;
+  color: #64748b;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.daoda-footer-col a:hover {
+  color: #6600ff;
+}
+
+.daoda-footer-bottom {
+  padding-top: 24px;
+  border-top: 1px solid rgba(102, 0, 255, 0.1);
+  text-align: center;
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 1024px) {
+  .daoda-news-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .daoda-footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .daoda-header-inner {
+    padding: 0 16px;
+  }
+  
+  .daoda-nav {
+    display: none;
+  }
+  
+  .daoda-hero-title {
+    font-size: 36px;
+  }
+  
+  .daoda-section-container {
+    padding: 0 16px;
+  }
+  
+  .daoda-filter-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .daoda-category-select,
+  .daoda-search-box {
+    width: 100%;
+  }
+  
+  .daoda-search-box {
+    order: -1;
+  }
+  
+  .daoda-news-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .daoda-cta-form {
+    flex-direction: column;
+  }
+  
+  .daoda-cta-form input {
+    width: 100%;
+  }
+  
+  .daoda-footer-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  
+  .daoda-footer-bottom {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .daoda-hero-title {
+    font-size: 28px;
+  }
+  
+  .daoda-category-tag {
+    font-size: 11px;
+    padding: 4px 10px;
+  }
+  
+  .daoda-read-more svg {
+    width: 14px;
+    height: 14px;
+  }
+}

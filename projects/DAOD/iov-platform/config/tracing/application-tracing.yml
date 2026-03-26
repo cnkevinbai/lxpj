@@ -1,0 +1,80 @@
+# 链路追踪配置 (Spring Cloud Sleuth + Jaeger)
+
+# ==================== Spring Cloud Sleuth 配置 ====================
+
+spring:
+  application:
+    name: ${spring.application.name:iov-platform}
+  
+  sleuth:
+    enabled: true
+    sampler:
+      probability: 1.0  # 采样率 100% (生产环境建议降低)
+    
+    # Web 配置
+    web:
+      skip-pattern: /actuator/.*,/health,/info,/metrics.*
+    
+    # 异步配置
+    async:
+      enabled: true
+    
+    # Feign 配置
+    feign:
+      enabled: true
+    
+    # 消息队列配置
+    messaging:
+      kafka:
+        enabled: true
+      mqtt:
+        enabled: true
+
+# ==================== OpenTelemetry 配置 ====================
+
+management:
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+    
+    # 导出配置
+    export:
+      otlp:
+        enabled: true
+        endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://jaeger:4317}
+    
+    # 传播格式
+    propagation:
+      type: b3,w3c
+
+  # 端点配置
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,httptrace
+
+# ==================== 日志配置 ====================
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+  level:
+    root: INFO
+    org.springframework.cloud.sleuth: DEBUG
+    io.opentelemetry: DEBUG
+
+# ==================== Micrometer 配置 ====================
+
+management:
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+      percentiles:
+        http.server.requests: 0.5,0.95,0.99
+    export:
+      prometheus:
+        enabled: true

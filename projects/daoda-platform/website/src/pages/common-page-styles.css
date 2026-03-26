@@ -1,0 +1,326 @@
+/**
+ * 通用页面样式 - 统一风格
+ * 使用 daoda- 前缀避免样式冲突
+ */
+
+/* ========== 页面容器 ========== */
+.daoda-page {
+  min-height: 100vh;
+  background: var(--daoda-bg);
+  color: var(--daoda-text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+/* ========== Header ========== */
+.daoda-page-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: var(--daoda-header-height);
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--daoda-border);
+}
+
+.daoda-page-header .daoda-header-inner {
+  max-width: 1280px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.daoda-page-header .daoda-brand-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: #fff;
+}
+
+.daoda-page-header .daoda-brand-text {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.daoda-page-header .daoda-main-nav {
+  display: flex;
+  gap: 32px;
+}
+
+.daoda-page-header .daoda-main-nav a {
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 28px 0;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.daoda-page-header .daoda-main-nav a:hover,
+.daoda-page-header .daoda-main-nav a.active {
+  color: #fff;
+  border-bottom-color: var(--daoda-primary);
+}
+
+.daoda-page-header .daoda-header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ========== Hero 区域 ========== */
+.daoda-page-hero {
+  position: relative;
+  padding: 120px 24px 80px;
+  overflow: hidden;
+}
+
+.daoda-page-hero::before {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: rgba(102, 0, 255, 0.1);
+  border-radius: 50%;
+  top: -100px;
+  right: 100px;
+  filter: blur(80px);
+}
+
+.daoda-page-hero .daoda-hero-content {
+  position: relative;
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.daoda-page-hero .daoda-hero-tag {
+  display: inline-block;
+  background: rgba(102, 0, 255, 0.2);
+  color: var(--daoda-primary-light);
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+.daoda-page-hero .daoda-hero-title {
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 24px;
+}
+
+.daoda-page-hero .daoda-hero-title span {
+  display: block;
+}
+
+.daoda-page-hero .daoda-gradient-text {
+  background: linear-gradient(to right, var(--daoda-primary), #c084fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.daoda-page-hero .daoda-hero-desc {
+  font-size: 18px;
+  color: var(--daoda-text-muted);
+  line-height: 1.7;
+  margin: 0 0 32px;
+}
+
+.daoda-page-hero .daoda-hero-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+/* ========== 内容区域 ========== */
+.daoda-page-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+/* ========== 卡片样式 ========== */
+.daoda-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(102, 0, 255, 0.1);
+  border-radius: 24px;
+  padding: 32px;
+  transition: border-color 0.2s;
+}
+
+.daoda-card:hover {
+  border-color: rgba(102, 0, 255, 0.3);
+}
+
+/* ========== 面包屑导航 ========== */
+.daoda-page-breadcrumb {
+  max-width: 1280px;
+  margin: 16px auto 24px;
+  font-size: 14px;
+  color: var(--daoda-text-muted);
+}
+
+.daoda-page-breadcrumb a {
+  color: var(--daoda-text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.daoda-page-breadcrumb a:hover {
+  color: var(--daoda-primary);
+}
+
+.daoda-page-breadcrumb span {
+  margin: 0 8px;
+}
+
+/* ========== 统计卡片 ========== */
+.daoda-stat-card {
+  background: rgba(102, 0, 255, 0.05);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(102, 0, 255, 0.1);
+  border-radius: 16px;
+  padding: 32px;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+
+.daoda-stat-card:hover {
+  border-color: rgba(102, 0, 255, 0.3);
+}
+
+.daoda-stat-number {
+  font-size: 42px;
+  font-weight: 900;
+  margin-bottom: 4px;
+}
+
+.daoda-stat-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--daoda-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ========== 页脚 ========== */
+.daoda-page-footer {
+  padding: 80px 24px 40px;
+  background: rgba(0, 0, 0, 0.3);
+  border-top: 1px solid var(--daoda-border);
+}
+
+.daoda-page-footer .daoda-footer-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.daoda-page-footer .daoda-footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+
+.daoda-page-footer .daoda-footer-col h5 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 24px;
+}
+
+.daoda-page-footer .daoda-footer-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.daoda-page-footer .daoda-footer-col li {
+  margin-bottom: 12px;
+}
+
+.daoda-page-footer .daoda-footer-col a {
+  font-size: 14px;
+  color: var(--daoda-text-dim);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.daoda-page-footer .daoda-footer-col a:hover {
+  color: var(--daoda-primary);
+}
+
+.daoda-page-footer .daoda-footer-bottom {
+  padding-top: 24px;
+  border-top: 1px solid var(--daoda-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--daoda-text-dim);
+}
+
+.daoda-page-footer .daoda-footer-legal {
+  display: flex;
+  gap: 24px;
+}
+
+.daoda-page-footer .daoda-footer-legal a {
+  color: var(--daoda-text-dim);
+  text-decoration: none;
+}
+
+.daoda-page-footer .daoda-footer-legal a:hover {
+  color: var(--daoda-primary);
+}
+
+/* ========== 响应式 ========== */
+@media (max-width: 1024px) {
+  .daoda-page-hero .daoda-hero-title {
+    font-size: 36px;
+  }
+  
+  .daoda-page-footer .daoda-footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .daoda-page-header .daoda-main-nav {
+    display: none;
+  }
+  
+  .daoda-page-hero {
+    padding: 80px 16px 60px;
+  }
+  
+  .daoda-page-hero .daoda-hero-title {
+    font-size: 28px;
+  }
+  
+  .daoda-page-footer .daoda-footer-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  
+  .daoda-page-footer .daoda-footer-bottom {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+  
+  .daoda-page-footer .daoda-footer-legal {
+    flex-direction: column;
+    gap: 12px;
+  }
+}

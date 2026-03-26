@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Table, Card, Button, Input, Space, Tag, Modal, Form, message, Popconfirm } from 'antd'
+import { Table, Card, Button, Input, Space, Tag, Modal, Form, message, Popconfirm, Select } from 'antd'
 import { PlusOutlined, SearchOutlined, EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons'
 import apiClient from '../services/api'
 
@@ -161,11 +161,11 @@ const CustomerList: React.FC = () => {
             <Input placeholder="请输入客户名称" />
           </Form.Item>
           <Form.Item name="type" label="客户类型" rules={[{ required: true }]}>
-            <Input.Select>
-              <Input.Select.Option value="company">企业</Input.Select.Option>
-              <Input.Select.Option value="individual">个人</Input.Select.Option>
-              <Input.Select.Option value="government">政府</Input.Select.Option>
-            </Input.Select>
+            <Select placeholder="请选择客户类型">
+              <Select.Option value="company">企业</Select.Option>
+              <Select.Option value="individual">个人</Select.Option>
+              <Select.Option value="government">政府</Select.Option>
+            </Select>
           </Form.Item>
           <Form.Item name="industry" label="行业">
             <Input placeholder="请输入行业" />
@@ -186,11 +186,11 @@ const CustomerList: React.FC = () => {
             <Input placeholder="请输入城市" />
           </Form.Item>
           <Form.Item name="level" label="客户等级" initialValue="C">
-            <Input.Select>
-              <Input.Select.Option value="A">A 级</Input.Select.Option>
-              <Input.Select.Option value="B">B 级</Input.Select.Option>
-              <Input.Select.Option value="C">C 级</Input.Select.Option>
-            </Input.Select>
+            <Select placeholder="请选择客户等级">
+              <Select.Option value="A">A 级</Select.Option>
+              <Select.Option value="B">B 级</Select.Option>
+              <Select.Option value="C">C 级</Select.Option>
+            </Select>
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" block>

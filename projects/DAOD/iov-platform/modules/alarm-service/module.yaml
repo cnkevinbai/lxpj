@@ -1,0 +1,64 @@
+# 告警服务模块配置
+
+apiVersion: iov.daod.com/v1
+kind: Module
+metadata:
+  name: alarm-service
+  version: 1.0.0
+  description: 告警服务模块 - 告警规则管理、实时告警处理、通知推送
+  author: daod-team
+  license: Apache-2.0
+
+spec:
+  type: business
+  priority: 70
+  mainClass: com.daod.iov.modules.alarm.AlarmServiceModule
+  
+  dependencies:
+    - name: plugin-framework
+      version: ">=1.0.0"
+      optional: false
+    - name: common-core
+      version: "^1.0.0"
+      optional: false
+    - name: event-bus
+      version: "^1.0.0"
+      optional: false
+  
+  provides:
+    - name: alarm-api
+      version: "1.0.0"
+      endpoints:
+        - path: /api/v1/alarms
+          method: GET
+          description: 获取告警列表
+        - path: /api/v1/alarms/{id}
+          method: GET
+          description: 获取告警详情
+        - path: /api/v1/alarms/{id}/handle
+          method: POST
+          description: 处理告警
+  
+  consumes:
+    - name: event-bus
+      version: "^1.0.0"
+      from: event-bus
+  
+  permissions:
+    - NETWORK_CONNECT
+    - FILE_READ
+    - FILE_WRITE
+  
+  resources:
+    cpu: "200m"
+    memory: "256Mi"
+    maxConnections: 500
+  
+  healthCheck:
+    liveness: /health/live
+    readiness: /health/ready
+  
+  hotReload:
+    enabled: true
+    strategy: rolling
+    rollbackOnFailure: true

@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Post, Body, UseGuards } from '@nestjs/common'
 import { ApiTags, ApiOperation } from '@nestjs/swagger'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
-import { CustomerProfileService } from './customer-profile.service'
+import { CustomerProfileService } from './services/customer-profile.service'
 
 @ApiTags('customer-profile')
 @Controller('customer-profile')

@@ -1,0 +1,64 @@
+apiVersion: iov.daod.com/v1
+kind: Module
+metadata:
+  name: vehicle-monitor-service
+  version: 1.0.0
+  description: 车辆监控服务模块
+  author: developer
+  license: proprietary
+
+spec:
+  # 模块类型
+  type: business
+  
+  # 模块优先级 (数字越小优先级越高)
+  priority: 80
+  
+  # 依赖模块
+  dependencies:
+    - name: common-core
+      version: ">=1.0.0"  # 支持语义化版本范围: >=, >, <=, <, =, ^
+    - name: plugin-framework
+      version: "^1.0.0"   # 使用caret语法兼容主版本
+
+  # 提供的扩展点
+  extensionPoints:
+    - name: vehicle-data-collector
+      interface: com.daod.iov.plugin.VehicleDataCollector
+      description: 车辆数据收集器扩展点
+
+  # 配置项定义
+  configSchema:
+    properties:
+      enabled:
+        type: boolean
+        default: true
+        description: 模块是否启用
+      maxConnections:
+        type: integer
+        default: 100
+        description: 最大连接数
+      threadPoolSize:
+        type: integer
+        default: 10
+        description: 线程池大小
+      cacheSize:
+        type: integer
+        default: 1000
+        description: 缓存大小
+      
+  # 资源需求
+  resources:
+    cpu: "300m"
+    memory: "512Mi"
+    
+  # 健康检查
+  healthCheck:
+    liveness: /health/live
+    readiness: /health/ready
+    
+  # 热更新策略
+  hotReload:
+    enabled: true
+    strategy: rolling            # 可选值: rolling, blue-green, canary
+    maxUnavailable: 1

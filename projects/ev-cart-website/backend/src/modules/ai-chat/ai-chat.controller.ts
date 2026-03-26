@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Query, UseGuards, Request } from '@nestjs/common'
 import { ApiTags, ApiOperation } from '@nestjs/swagger'
-import { AiChatService } from './ai-chat.service'
+import { AiChatService } from './services/ai-chat.service'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
 
 @ApiTags('ai-chat')

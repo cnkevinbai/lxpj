@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Query } from '@nestjs/common'
 import { ApiTags, ApiOperation } from '@nestjs/swagger'
-import { ServiceService } from './service.service'
+import { ServiceService } from '../services/service.service'
 
 @ApiTags('售后服务')
 @Controller('service')

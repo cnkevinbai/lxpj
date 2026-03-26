@@ -1,0 +1,69 @@
+apiVersion: iov.daod.com/v1
+kind: Module
+metadata:
+  name: hot-reload-engine
+  version: 1.0.0
+  description: 热更新引擎模块 - 支持模块动态加载/卸载/更新
+  author: daod-team
+  license: proprietary
+
+spec:
+  type: core
+  priority: 10
+  
+  dependencies:
+    - name: plugin-framework
+      version: "^1.0.0"
+    - name: common-core
+      version: ">=1.0.0"
+
+  extensionPoints:
+    - name: hot-reload-listener
+      interface: com.daod.iov.core.hotreload.HotReloadListener
+      description: 热更新事件监听器扩展点
+    - name: version-strategy
+      interface: com.daod.iov.core.hotreload.VersionStrategy
+      description: 版本管理策略扩展点
+
+  configSchema:
+    properties:
+      enabled:
+        type: boolean
+        default: true
+        description: 是否启用热更新功能
+      autoBackup:
+        type: boolean
+        default: true
+        description: 更新前是否自动备份
+      rollbackOnFailure:
+        type: boolean
+        default: true
+        description: 失败时是否自动回滚
+      maxBackupCount:
+        type: integer
+        default: 5
+        description: 最大备份保留数量
+      updateStrategy:
+        type: string
+        default: "rolling"
+        enum: ["rolling", "blue-green", "canary"]
+        description: 更新策略
+      healthCheckTimeout:
+        type: integer
+        default: 30000
+        description: 健康检查超时时间(毫秒)
+      gracefulShutdownTimeout:
+        type: integer
+        default: 60000
+        description: 优雅停机超时时间(毫秒)
+      
+  resources:
+    cpu: "500m"
+    memory: "512Mi"
+    
+  healthCheck:
+    liveness: /health/live
+    readiness: /health/ready
+    
+  hotReload:
+    enabled: false

@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Param, Query, Body } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger'
-import { MessageService } from './message.service'
+import { MessageService } from './services/message.service'
 
 @ApiTags('消息中心')
 @ApiBearerAuth()

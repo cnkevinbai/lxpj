@@ -1,0 +1,137 @@
+package com.daod.iov.modules.edgeproxy;
+
+import com.daod.iov.modules.edgeproxy.model.VehicleData;
+import com.daod.iov.modules.edgeproxy.model.CommandInfo;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * 边缘代理模块高级功能测试
+ */
+class EdgeProxyAdvancedTest {
+
+    @Test
+    void testDataEncryptionDecryption() {
+        String key = "1234567890abcdef";
+        DataEncryptor encryptor = new DataEncryptor(key);
+        
+        String originalData = "test data";
+        String encrypted = encryptor.encrypt(originalData);
+        String decrypted = encryptor.decrypt(encrypted);
+        
+        assertEquals(originalData, decrypted);
+    }
+
+    @Test
+    void testHeartbeatManager() {
+        HeartbeatManager manager = new HeartbeatManager();
+        
+        // 测试心跳
+        manager.receiveHeartbeat("test-node");
+        assertTrue(manager.isNodeOnline("test-node"));
+        
+        String heartbeat = manager.sendHeartbeat("test-node");
+        assertNotNull(heartbeat);
+    }
+
+    @Test
+    void testOfflineCache() {
+        // 创建数据同步管理器（启用压缩）
+        DataSyncManager syncManager = new DataSyncManager(60000, 1000, true);
+        
+        // 缓存数据
+        syncManager.cacheData("test data");
+        
+        // 获取缓存数据
+        String cachedData = syncManager.getCachedData();
+        assertNotNull(cachedData);
+    }
+
+    @Test
+    void testCommandDispatcher() {
+        CommandDispatcher dispatcher = new CommandDispatcher();
+        dispatcher.start();
+        
+        // 注册命令处理器
+        dispatcher.registerHandler("test-command", message -> {
+            System.out.println("处理命令: " + message);
+        });
+        
+        // 处理消息
+        String message = "{\"commandId\":\"123\",\"commandType\":\"test-command\",\"timestamp\":1234567890}";
+        dispatcher.handleMessage("edge/test-node/command", message.getBytes());
+        
+        dispatcher.stop();
+    }
+
+    @Test
+    void testVehicleDataSerialization() {
+        VehicleData data = new VehicleData();
+        data.setVehicleId(" vehicle-001");
+        data.setEdgeNodeId("edge-node-001");
+        data.setLatitude(39.9);
+        data.setLongitude(116.4);
+        data.setSpeed(60.0);
+        data.setBatteryLevel(85.5);
+        data.setDataType("location");
+        data.setData("location data");
+        
+        // 验证数据
+        assertEquals("vehicle-001", data.getVehicleId());
+        assertEquals("edge-node-001", data.getEdgeNodeId());
+        assertEquals(39.9, data.getLatitude(), 0.001);
+        assertEquals(116.4, data.getLongitude(), 0.001);
+        assertEquals(60.0, data.getSpeed(), 0.001);
+        assertEquals(85.5, data.getBatteryLevel(), 0.001);
+        assertEquals("location", data.getDataType());
+    }
+
+    @Test
+    void testCommandInfoSerialization() {
+        CommandInfo info = new CommandInfo();
+        info.setCommandId("cmd-001");
+        info.setEdgeNodeId("edge-node-001");
+        info.setCommandType("remote-control");
+        info.setCommandData("{\"action\":\"lock\"}");
+        info.setStatus("pending");
+        
+        // 验证数据
+        assertEquals("cmd-001", info.getCommandId());
+        assertEquals("edge-node-001", info.getEdgeNodeId());
+        assertEquals("remote-control", info.getCommandType());
+        assertEquals("{\"action\":\"lock\"}", info.getCommandData());
+        assertEquals("pending", info.getStatus());
+    }
+
+    @Test
+    void testHealthMonitor() throws Exception {
+        EdgeProxyService service = new EdgeProxyService();
+        NodeHealthMonitor monitor = new NodeHealthMonitor(service);
+        
+        monitor.start();
+        
+        Thread.sleep(1000);
+        
+        NodeHealthStatus status = monitor.getStatus();
+        assertNotNull(status);
+        
+        monitor.stop();
+    }
+
+    @Test
+    void testMultipleNodeManagement() {
+        EdgeProxyService service1 = new EdgeProxyService();
+        EdgeProxyService service2 = new EdgeProxyService();
+        
+        // 创建模拟上下文
+        ModuleContext context1 = new ModuleContext("edge-proxy-1:1.0.0", "edgeNodeId=edge-node-001", null);
+        ModuleContext context2 = new ModuleContext("edge-proxy-2:1.0.0", "edgeNodeId=edge-node-002", null);
+        
+        // 初始化两个服务
+        service1.initialize(context1);
+        service2.initialize(context2);
+        
+        // 验证边缘节点ID不同
+        assertNotEquals(service1.getEdgeNodeId(), service2.getEdgeNodeId());
+    }
+}

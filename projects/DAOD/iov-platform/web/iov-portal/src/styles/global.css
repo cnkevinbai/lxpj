@@ -1,0 +1,99 @@
+/* 全局样式 */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #f0f2f5;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* 通用卡片样式 */
+.daoda-card {
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 2px 4px rgba(0, 0, 0, 0.03);
+}
+
+.daoda-card:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* 统计卡片 */
+.stat-card {
+  text-align: center;
+}
+
+.stat-card .ant-statistic-title {
+  font-size: 14px;
+  color: #666;
+}
+
+.stat-card .ant-statistic-content {
+  font-size: 28px;
+  font-weight: 600;
+}
+
+/* Dashboard 页面 */
+.dashboard-page {
+  padding: 0;
+}
+
+/* 终端管理页面 */
+.terminal-page,
+.terminal-detail-page {
+  padding: 0;
+}
+
+/* 车辆管理页面 */
+.vehicle-page {
+  padding: 0;
+}
+
+/* 地图页面 */
+.map-page {
+  padding: 0;
+  height: calc(100vh - 64px - 48px);
+}
+
+/* 告警页面 */
+.alarm-page {
+  padding: 0;
+}
+
+/* 表格操作栏 */
+.table-toolbar {
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 状态标签 */
+.status-online {
+  color: #52c41a;
+}
+
+.status-offline {
+  color: #ff4d4f;
+}
+
+.status-warning {
+  color: #faad14;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .content {
+    margin: 16px !important;
+    padding: 16px !important;
+  }
+}

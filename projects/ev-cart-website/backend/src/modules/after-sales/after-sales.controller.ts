@@ -13,11 +13,11 @@ import {
   UseGuards,
 } from '@nestjs/common'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
-import { AfterSalesService } from './after-sales.service'
-import { AfterSalesCenterService } from './after-sales-center.service'
-import { AfterSalesContractService } from './after-sales-contract.service'
-import { AfterSalesPartService } from './after-sales-part.service'
-import { AfterSalesComplaintService } from './after-sales-complaint.service'
+import { AfterSalesService } from './services/after-sales.service'
+import { AfterSalesCenterService } from './services/after-sales-center.service'
+import { AfterSalesContractService } from './services/after-sales-contract.service'
+import { AfterSalesPartService } from './services/after-sales-part.service'
+import { AfterSalesComplaintService } from './services/after-sales-complaint.service'
 import { TicketType, TicketStatus } from './entities/service-ticket.entity'
 
 @Controller('after-sales')

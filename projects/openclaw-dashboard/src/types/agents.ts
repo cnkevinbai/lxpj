@@ -1,0 +1,1 @@
+export { agents, type Agent } from '../data/agents';

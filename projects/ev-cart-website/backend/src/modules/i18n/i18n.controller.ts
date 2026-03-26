@@ -1,6 +1,6 @@
 import { Controller, Get, Query, Param } from '@nestjs/common'
 import { ApiTags, ApiOperation } from '@nestjs/swagger'
-import { I18nService } from './i18n.service'
+import { I18nService } from './services/i18n.service'
 
 @ApiTags('i18n')
 @Controller('i18n')

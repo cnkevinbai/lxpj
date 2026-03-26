@@ -1,0 +1,73 @@
+# MQTT 适配器模块配置
+
+apiVersion: iov.daod.com/v1
+kind: Module
+metadata:
+  name: mqtt-adapter
+  version: 1.0.0
+  description: MQTT 协议适配器 - 支持 MQTT 3.1.1/5.0 协议终端接入
+  author: daod-team
+  license: Apache-2.0
+
+spec:
+  type: adapter
+  priority: 20
+  mainClass: com.daod.iov.modules.mqtt.MqttAdapterModule
+  
+  dependencies:
+    - name: plugin-framework
+      version: ">=1.0.0"
+      optional: false
+    - name: common-core
+      version: "^1.0.0"
+      optional: false
+    - name: event-bus
+      version: "^1.0.0"
+      optional: false
+    - name: vehicle-access
+      version: "^1.0.0"
+      optional: false
+  
+  provides:
+    - name: mqtt-adapter-api
+      version: "1.0.0"
+      endpoints:
+        - path: mqtt://*:1883
+          description: MQTT 服务端口
+  
+  consumes:
+    - name: vehicle-access-api
+      version: "^1.0.0"
+      from: vehicle-access
+    - name: event-bus
+      version: "^1.0.0"
+      from: event-bus
+  
+  extensionPoints:
+    - name: mqtt-message-handler
+      interface: com.daod.iov.modules.mqtt.api.MqttMessageHandler
+      description: MQTT 消息处理器扩展点
+      multiple: true
+    - name: mqtt-topic-matcher
+      interface: com.daod.iov.modules.mqtt.api.MqttTopicMatcher
+      description: 主题匹配器扩展点
+      multiple: false
+  
+  permissions:
+    - NETWORK_CONNECT
+    - FILE_READ
+    - FILE_WRITE
+  
+  resources:
+    cpu: "200m"
+    memory: "256Mi"
+    maxConnections: 10000
+  
+  healthCheck:
+    liveness: /health/live
+    readiness: /health/ready
+  
+  hotReload:
+    enabled: true
+    strategy: rolling
+    rollbackOnFailure: true

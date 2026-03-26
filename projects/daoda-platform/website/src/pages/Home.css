@@ -1,0 +1,858 @@
+/**
+ * 道达智能官网 - 统一样式入口
+ * 包含公共样式和定制样式
+ */
+
+@import url('../styles/common.css');
+
+/* ========== 首页定制样式 ========== */
+.daoda-home {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: #0A0A0A;
+  color: #f1f5f9;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+.daoda-home * {
+  box-sizing: border-box;
+}
+
+/* ========== 顶部导航栏 ========== */
+.daoda-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: 80px;
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(102, 0, 255, 0.1);
+}
+
+.daoda-header-inner {
+  max-width: 1280px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.daoda-header-left {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+
+.daoda-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #fff;
+}
+
+.daoda-brand-icon {
+  width: 32px;
+  height: 32px;
+  background: #6600ff;
+  padding: 6px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.daoda-brand-icon svg {
+  width: 20px;
+  height: 20px;
+  color: #fff;
+}
+
+.daoda-brand-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.daoda-brand-highlight {
+  color: #6600ff;
+  font-weight: 800;
+}
+
+.daoda-nav {
+  display: flex;
+  gap: 32px;
+}
+
+.daoda-nav a {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.daoda-nav a:hover {
+  color: #6600ff;
+}
+
+.daoda-header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.daoda-search {
+  position: relative;
+  display: none;
+}
+
+.daoda-search svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: #94a3b8;
+}
+
+.daoda-search input {
+  padding: 8px 16px 8px 40px;
+  background: rgba(102, 0, 255, 0.1);
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  width: 200px;
+  color: #fff;
+}
+
+.daoda-search input::placeholder {
+  color: #94a3b8;
+}
+
+.daoda-lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  padding-left: 16px;
+}
+
+.daoda-lang-switch button {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.daoda-lang-switch button.active {
+  background: rgba(102, 0, 255, 0.2);
+  color: #6600ff;
+}
+
+.daoda-login-btn {
+  background: #6600ff;
+  color: #fff;
+  padding: 8px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.daoda-login-btn:hover {
+  background: #5900e6;
+}
+
+/* ========== Hero 区域 ========== */
+.daoda-hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-top: 80px;
+  overflow: hidden;
+}
+
+.daoda-hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+}
+
+.daoda-hero-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to right, #0A0A0A, rgba(10, 10, 10, 0.8), transparent);
+  z-index: 1;
+}
+
+.daoda-hero-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+
+.daoda-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  width: 100%;
+}
+
+.daoda-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 9999px;
+  background: rgba(102, 0, 255, 0.2);
+  border: 1px solid rgba(102, 0, 255, 0.3);
+  color: #a78bfa;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 24px;
+}
+
+.daoda-pulse-dot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  background: #6600ff;
+  border-radius: 50%;
+}
+
+.daoda-pulse-dot::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background: #6600ff;
+  border-radius: 50%;
+  animation: daoda-ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes daoda-ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.daoda-hero-title {
+  font-size: 56px;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0 0 24px;
+}
+
+.daoda-hero-desc {
+  font-size: 18px;
+  color: #94a3b8;
+  max-width: 560px;
+  line-height: 1.7;
+  margin: 0 0 32px;
+}
+
+.daoda-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.daoda-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #6600ff;
+  color: #fff;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.daoda-btn-primary svg {
+  width: 20px;
+  height: 20px;
+}
+
+.daoda-btn-primary:hover {
+  transform: scale(1.05);
+}
+
+.daoda-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.daoda-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ========== 统计数据 ========== */
+.daoda-stats {
+  padding: 80px 24px;
+  background: #0A0A0A;
+}
+
+.daoda-stats-grid {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.daoda-glass-panel {
+  background: rgba(102, 0, 255, 0.05);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(102, 0, 255, 0.1);
+}
+
+.daoda-stat-card {
+  padding: 32px;
+  border-radius: 16px;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+
+.daoda-stat-card:hover {
+  border-color: rgba(102, 0, 255, 0.3);
+}
+
+.daoda-stat-icon {
+  width: 40px;
+  height: 40px;
+  color: #6600ff;
+  margin: 0 auto 16px;
+}
+
+.daoda-stat-number {
+  font-size: 42px;
+  font-weight: 900;
+  margin-bottom: 4px;
+}
+
+.daoda-stat-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ========== 产品区域 ========== */
+.daoda-products {
+  padding: 96px 24px;
+  background: rgba(102, 0, 255, 0.03);
+}
+
+.daoda-products-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.daoda-product-card {
+  cursor: pointer;
+}
+
+.daoda-product-image {
+  position: relative;
+  aspect-ratio: 4/5;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  transition: transform 0.3s;
+}
+
+.daoda-product-card:hover .daoda-product-image {
+  transform: scale(1.02);
+}
+
+.daoda-product-1 { background: linear-gradient(135deg, #1e3a5f, #2d5a87); }
+.daoda-product-2 { background: linear-gradient(135deg, #1a4d2e, #2d7a4a); }
+.daoda-product-3 { background: linear-gradient(135deg, #4a3728, #6b5344); }
+.daoda-product-4 { background: linear-gradient(135deg, #3d2c5a, #5a4178); }
+
+.daoda-product-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to top, rgba(10, 10, 10, 0.8), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.daoda-product-card:hover .daoda-product-overlay {
+  opacity: 1;
+}
+
+.daoda-product-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.daoda-product-desc {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ========== 数字化生态 ========== */
+.daoda-digital {
+  padding: 96px 24px;
+  background: #0A0A0A;
+  position: relative;
+  overflow: hidden;
+}
+
+.daoda-digital-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.daoda-digital-card {
+  padding: 40px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(102, 0, 255, 0.1);
+  transition: border-color 0.2s;
+}
+
+.daoda-digital-card:hover {
+  border-color: rgba(102, 0, 255, 0.3);
+}
+
+.daoda-digital-icon {
+  width: 64px;
+  height: 64px;
+  background: rgba(102, 0, 255, 0.2);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.daoda-digital-icon svg {
+  width: 32px;
+  height: 32px;
+  color: #a78bfa;
+}
+
+.daoda-digital-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 12px;
+}
+
+.daoda-digital-desc {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.daoda-digital-cta {
+  text-align: center;
+}
+
+.daoda-enter-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: #6600ff;
+  text-decoration: none;
+}
+
+.daoda-enter-link svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ========== 全球网络 ========== */
+.daoda-global {
+  padding: 96px 24px;
+  background: #0f172a;
+}
+
+.daoda-global-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.daoda-global-title {
+  font-size: 36px;
+  font-weight: 900;
+  margin: 0 0 24px;
+  line-height: 1.2;
+}
+
+.daoda-global-desc {
+  font-size: 16px;
+  color: #94a3b8;
+  margin: 0 0 48px;
+  line-height: 1.7;
+}
+
+.daoda-locations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.daoda-location-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.daoda-location-item svg {
+  width: 24px;
+  height: 24px;
+  color: #6600ff;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.daoda-location-item h4 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+
+.daoda-location-item p {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+}
+
+.daoda-global-map {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.daoda-map-bg {
+  position: absolute;
+  inset: 0;
+  background: rgba(102, 0, 255, 0.2);
+  filter: blur(100px);
+}
+
+.daoda-global-map::before {
+  content: '';
+  display: block;
+  width: 100%;
+  padding-bottom: 75%;
+  background: linear-gradient(135deg, #1e3a5f, #16213e);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.daoda-global-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #6600ff;
+  padding: 12px 24px;
+  border-radius: 9999px;
+  color: #fff;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.daoda-global-badge svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ========== 页脚 ========== */
+.daoda-footer {
+  padding: 80px 24px 40px;
+  background: #0A0A0A;
+  border-top: 1px solid rgba(102, 0, 255, 0.1);
+}
+
+.daoda-footer-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.daoda-footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+
+.daoda-footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+.daoda-footer-brand .daoda-brand-icon {
+  width: 28px;
+  height: 28px;
+  padding: 4px;
+}
+
+.daoda-footer-brand .daoda-brand-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.daoda-footer-brand span {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.daoda-footer-desc {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.7;
+  margin: 0 0 24px;
+}
+
+.daoda-social-links {
+  display: flex;
+  gap: 12px;
+}
+
+.daoda-social-link {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(102, 0, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.daoda-social-link:hover {
+  background: #6600ff;
+}
+
+.daoda-social-link svg {
+  width: 18px;
+  height: 18px;
+  color: #fff;
+}
+
+.daoda-footer-col h5 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 24px;
+}
+
+.daoda-footer-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.daoda-footer-col li {
+  margin-bottom: 12px;
+}
+
+.daoda-footer-col a {
+  font-size: 14px;
+  color: #64748b;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.daoda-footer-col a:hover {
+  color: #6600ff;
+}
+
+.daoda-footer-col p {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0 0 16px;
+}
+
+.daoda-newsletter-form {
+  display: flex;
+  gap: 8px;
+}
+
+.daoda-newsletter-form input {
+  flex: 1;
+  background: rgba(102, 0, 255, 0.1);
+  border: none;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #fff;
+  outline: none;
+}
+
+.daoda-newsletter-form input::placeholder {
+  color: #64748b;
+}
+
+.daoda-newsletter-form button {
+  background: #6600ff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.daoda-newsletter-form button svg {
+  width: 18px;
+  height: 18px;
+  color: #fff;
+}
+
+.daoda-footer-bottom {
+  padding-top: 24px;
+  border-top: 1px solid rgba(102, 0, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.daoda-footer-legal {
+  display: flex;
+  gap: 24px;
+}
+
+.daoda-footer-legal a {
+  color: #64748b;
+  text-decoration: none;
+}
+
+.daoda-footer-legal a:hover {
+  color: #6600ff;
+}
+
+/* ========== 响应式适配 ========== */
+@media (min-width: 768px) {
+  .daoda-search {
+    display: block;
+  }
+}
+
+@media (max-width: 1024px) {
+  .daoda-products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .daoda-digital-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .daoda-global-content {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  
+  .daoda-footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .daoda-nav {
+    display: none;
+  }
+  
+  .daoda-hero-title {
+    font-size: 36px;
+  }
+  
+  .daoda-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .daoda-products-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .daoda-digital-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .daoda-section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .daoda-footer-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  
+  .daoda-footer-bottom {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+}

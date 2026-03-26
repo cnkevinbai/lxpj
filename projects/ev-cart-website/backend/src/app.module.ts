@@ -1,117 +1,12 @@
-import { Module } from '@nestjs/common'
-import { ConfigModule } from '@nestjs/config'
-import { TypeOrmModule } from '@nestjs/typeorm'
-import { ThrottlerModule } from '@nestjs/throttler'
-import { RedisModule } from './database/redis.module'
-
-// 模块
-import { AuthModule } from './modules/auth/auth.module'
-import { UserModule } from './modules/user/user.module'
-import { RoleModule } from './modules/role/role.module'
-import { CustomerModule } from './modules/customer/customer.module'
-import { ProductModule } from './modules/product/product.module'
-import { LeadModule } from './modules/lead/lead.module'
-import { OpportunityModule } from './modules/opportunity/opportunity.module'
-import { OrderModule } from './modules/order/order.module'
-import { DealerModule } from './modules/dealer/dealer.module'
-import { JobModule } from './modules/job/job.module'
-import { CmsModule } from './modules/cms/cms.module'
-import { HealthModule } from './modules/health/health.module'
-import { SettingModule } from './modules/setting/setting.module'
-import { UploadModule } from './modules/upload/upload.module'
-import { IntegrationModule } from './modules/integration/integration.module'
-import { EmailModule } from './modules/email/email.module'
-import { SmsModule } from './modules/sms/sms.module'
-import { ExportModule } from './modules/export/export.module'
-import { PaymentModule } from './modules/payment/payment.module'
-import { AnalyticsModule } from './modules/analytics/analytics.module'
-import { OauthModule } from './modules/oauth/oauth.module'
-import { CdnModule } from './modules/cdn/cdn.module'
-import { AuditLogModule } from './modules/audit-log/audit-log.module'
-import { UserHandoverModule } from './modules/user-handover/user-handover.module'
-import { ForeignCurrencyModule } from './modules/foreign-currency/foreign-currency.module'
-import { WhatsAppModule } from './modules/whatsapp/whatsapp.module'
-import { I18nModule } from './modules/i18n/i18n.module'
-import { CrmPoolModule } from './modules/crm-pool/crm-pool.module'
-import { CustomerProfileModule } from './modules/customer-profile/customer-profile.module'
-import { SalesForecastModule } from './modules/sales-forecast/sales-forecast.module'
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    // 配置模块
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env', '.env.local'],
+      envFilePath: '.env',
     }),
-
-    // 数据库
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT || '5432'),
-      username: process.env.DB_USER || 'evcart',
-      password: process.env.DB_PASSWORD || 'evcart123',
-      database: process.env.DB_NAME || 'evcart',
-      autoLoadEntities: true,
-      synchronize: process.env.NODE_ENV === 'development',
-      logging: process.env.NODE_ENV === 'development',
-    }),
-
-    // Redis
-    RedisModule,
-
-    // 限流
-    ThrottlerModule.forRoot([
-      {
-        ttl: 60000,
-        limit: 100,
-      },
-    ]),
-
-    // 业务模块
-    AuthModule,
-    UserModule,
-    RoleModule,
-    CustomerModule,
-    ProductModule,
-    LeadModule,
-    OpportunityModule,
-    OrderModule,
-    DealerModule,
-    JobModule,
-    CmsModule,
-    HealthModule,
-    SettingModule,
-    UploadModule,
-    IntegrationModule,
-    EmailModule,
-    SmsModule,
-    ExportModule,
-    PaymentModule,
-    AnalyticsModule,
-    OauthModule,
-    CdnModule,
-    FollowUpModule,
-    ForeignLeadModule,
-    ForeignCustomerModule,
-    ForeignInquiryModule,
-    ForeignOrderModule,
-    PermissionModule,
-    NotificationModule,
-    ReportModule,
-    ImportModule,
-    PdfModule,
-    RecommendModule,
-    AiChatModule,
-    ComplianceModule,
-    AuditLogModule,
-    UserHandoverModule,
-    ForeignCurrencyModule,
-    WhatsAppModule,
-    I18nModule,
-    CrmPoolModule,
-    CustomerProfileModule,
-    SalesForecastModule,
   ],
 })
 export class AppModule {}

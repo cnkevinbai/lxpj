@@ -1,0 +1,86 @@
+# 道达智能数字化平台 - Docker Compose 配置
+# 使用: docker-compose up -d
+
+services:
+  # PostgreSQL 数据库
+  postgres:
+    image: postgres:15-alpine
+    container_name: daoda-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: daoda_platform
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis 缓存
+  redis:
+    image: redis:7-alpine
+    container_name: daoda-redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 后端服务
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: daoda-backend
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/daoda_platform?schema=public
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=${JWT_SECRET:-daoda-platform-jwt-secret-key-2026}
+      - PORT=3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+
+  # 前端 - 官网
+  website:
+    build:
+      context: ./website
+      dockerfile: Dockerfile
+    container_name: daoda-website
+    restart: unless-stopped
+    ports:
+      - "80:80"
+
+  # 前端 - 门户
+  portal:
+    build:
+      context: ./portal
+      dockerfile: Dockerfile
+    container_name: daoda-portal
+    restart: unless-stopped
+    ports:
+      - "81:80"
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  default:
+    name: daoda-network

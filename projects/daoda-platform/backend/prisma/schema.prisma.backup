@@ -1,0 +1,76 @@
+// ==================== 模块配置模型 ====================
+model ModuleConfig {
+  id          String   @id @default(uuid())
+  moduleCode  String   @unique @map("module_code")
+  moduleName  String   @map("module_name")
+  enabled     Boolean  @default(true)
+  description String?
+  config      Json?
+  sortOrder   Int      @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("module_configs")
+}
+
+// ==================== BOM 管理模型 ====================
+model Bom {
+  id          String    @id @default(uuid())
+  bomNo       String    @unique @map("bom_no")
+  productId   String    @map("product_id")
+  product     Product   @relation(fields: [productId], references: [id])
+  version     String    @default("1.0")
+  status      String    @default("ACTIVE")
+  items       BomItem[]
+  remark      String?
+  createdBy   String?   @map("created_by")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("boms")
+}
+
+model BomItem {
+  id          String   @id @default(uuid())
+  bomId       String   @map("bom_id")
+  bom         Bom      @relation(fields: [bomId], references: [id], onDelete: Cascade)
+  materialId  String   @map("material_id")
+  material    Product  @relation(fields: [materialId], references: [id])
+  quantity    Decimal  @db.Decimal(10, 4)
+  unit        String?
+  scrapRate   Decimal? @map("scrap_rate") @db.Decimal(5, 2)
+  remark      String?
+
+  @@map("bom_items")
+}
+
+// ==================== 生产计划模型 ====================
+model ProductionPlan {
+  id          String   @id @default(uuid())
+  planNo      String   @unique @map("plan_no")
+  name        String
+  status      String   @default("DRAFT")
+  startDate   DateTime @map("start_date")
+  endDate     DateTime @map("end_date")
+  items       ProductionPlanItem[]
+  remark      String?
+  createdBy   String?  @map("created_by")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("production_plans")
+}
+
+model ProductionPlanItem {
+  id          String           @id @default(uuid())
+  planId      String           @map("plan_id")
+  plan        ProductionPlan   @relation(fields: [planId], references: [id], onDelete: Cascade)
+  productId   String           @map("product_id")
+  product     Product          @relation(fields: [productId], references: [id])
+  quantity    Int
+  startDate   DateTime?        @map("start_date")
+  endDate     DateTime?        @map("end_date")
+  status      String           @default("pending")
+
+  @@map("production_plan_items")
+}

@@ -163,11 +163,11 @@ const DealerDetail: React.FC = () => {
       dataIndex: 'periodType',
       key: 'periodType',
       width: 100,
-      render: (type) => ({
+      render: (type: string) => ({
         monthly: '月度',
         quarterly: '季度',
         yearly: '年度',
-      }[type] || type),
+      }[type as 'monthly' | 'quarterly' | 'yearly'] || type),
     },
     {
       title: '总分',
@@ -203,12 +203,12 @@ const DealerDetail: React.FC = () => {
       dataIndex: 'status',
       key: 'status',
       width: 80,
-      render: (status) => ({
+      render: (status: string) => ({
         draft: '草稿',
         submitted: '已提交',
         approved: '已通过',
         rejected: '已拒绝',
-      }[status] || status),
+      }[status as 'draft' | 'submitted' | 'approved' | 'rejected'] || status),
     },
     {
       title: '考核日期',
@@ -226,12 +226,12 @@ const DealerDetail: React.FC = () => {
       dataIndex: 'rebateType',
       key: 'rebateType',
       width: 120,
-      render: (type) => ({
+      render: (type: string) => ({
         sales: '销售返利',
         growth: '增长返利',
         market: '市场返利',
         special: '专项返利',
-      }[type] || type),
+      }[type as 'sales' | 'growth' | 'market' | 'special'] || type),
     },
     {
       title: '期间',

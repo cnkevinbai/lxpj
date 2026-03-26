@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Query } from '@nestjs/common'
 import { ApiTags, ApiOperation } from '@nestjs/swagger'
-import { LeadService } from './lead.service'
+import { LeadService } from './services/lead.service'
 import { CreateLeadDto, UpdateLeadDto, ConvertLeadDto } from './dto/lead.dto'
 
 @ApiTags('leads')

@@ -9,7 +9,7 @@ import {
   Request,
 } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger'
-import { DealerLevelService } from './dealer-level.service'
+import { DealerLevelService } from '../services/dealer-level.service'
 
 @ApiTags('经销商等级')
 @ApiBearerAuth()

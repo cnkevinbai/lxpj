@@ -1,0 +1,59 @@
+# 租户服务模块配置
+
+apiVersion: iov.daod.com/v1
+kind: Module
+metadata:
+  name: tenant-service
+  version: 1.0.0
+  description: 租户服务模块 - 多租户管理、租户隔离、租户配置
+  author: daod-team
+  license: Apache-2.0
+
+spec:
+  type: core
+  priority: 15
+  mainClass: com.daod.iov.modules.tenant.TenantServiceModule
+  
+  dependencies:
+    - name: plugin-framework
+      version: ">=1.0.0"
+      optional: false
+    - name: common-core
+      version: "^1.0.0"
+      optional: false
+  
+  provides:
+    - name: tenant-api
+      version: "1.0.0"
+      endpoints:
+        - path: /api/v1/tenants
+          method: GET
+          description: 获取租户列表
+        - path: /api/v1/tenants/{id}
+          method: GET
+          description: 获取租户详情
+        - path: /api/v1/tenants/{id}/config
+          method: GET
+          description: 获取租户配置
+  
+  extensionPoints:
+    - name: tenant-resolver
+      interface: com.daod.iov.modules.tenant.api.TenantResolver
+      description: 租户解析器扩展点
+  
+  permissions:
+    - NETWORK_CONNECT
+    - FILE_READ
+    - FILE_WRITE
+  
+  resources:
+    cpu: "100m"
+    memory: "128Mi"
+    maxConnections: 500
+  
+  healthCheck:
+    liveness: /health/live
+    readiness: /health/ready
+  
+  hotReload:
+    enabled: false  # 核心模块不支持热更新

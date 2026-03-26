@@ -1,0 +1,498 @@
+package com.daod.iov.modules.role;
+
+import com.daod.iov.modules.role.entity.*;
+import com.daod.iov.modules.role.dto.*;
+import com.daod.iov.modules.role.event.*;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.*;
+import java.time.LocalDateTime;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+/**
+ * 角色服务单元测试
+ */
+@ExtendWith(MockitoExtension.class)
+public class RoleServiceTest {
+    
+    @Mock
+    private ModuleContext context;
+    
+    @Mock
+    private RoleService.RoleRepository roleRepository;
+    
+    @Mock
+    private RoleService.PermissionRepository permissionRepository;
+    
+    @Mock
+    private RoleService.EventBus eventBus;
+    
+    private RoleService roleService;
+    
+    @BeforeEach
+    void setUp() {
+        // 模拟模块上下文
+        Map<String, Object> config = new HashMap<>();
+        config.put("enabled", true);
+        config.put("maxRolesPerTenant", 100);
+        config.put("defaultRoles", Arrays.asList("admin", "operator", "viewer"));
+        config.put("cacheEnabled", false);
+        config.put("cacheTtl", 3600);
+        
+        when(context.getConfig()).thenReturn(config);
+        
+        // 初始化服务
+        roleService = new RoleService();
+        
+        // 设置私有字段（使用反射）
+        setField(roleService, "context", context);
+        setField(roleService, "roleRepository", roleRepository);
+        setField(roleService, "permissionRepository", permissionRepository);
+        setField(roleService, "eventBus", eventBus);
+    }
+    
+    /**
+     * 设置私有字段的工具方法
+     */
+    private void setField(Object target, String fieldName, Object value) {
+        try {
+            java.lang.reflect.Field field = RoleService.class.getDeclaredField(fieldName);
+            field.setAccessible(true);
+            field.set(target, value);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    // ==================== 创建角色测试 ====================
+    
+    @Test
+    void testCreateRole_Success() throws RoleService.RoleException {
+        // 准备数据
+        RoleCreateRequest request = RoleCreateRequest.builder()
+            .tenantId("tenant-001")
+            .name("测试角色")
+            .code("test_role")
+            .description("测试描述")
+            .build();
+        
+        Role role = Role.builder()
+            .id("role-001")
+            .tenantId("tenant-001")
+            .name("测试角色")
+            .code("test_role")
+            .description("测试描述")
+            .createdAt(LocalDateTime.now())
+            .build();
+        
+        when(roleRepository.existsByCode("tenant-001", "test_role")).thenReturn(false);
+        when(roleRepository.countByTenantId("tenant-001")).thenReturn(0);
+        doAnswer(invocation -> {
+            Role savedRole = invocation.getArgument(0);
+            savedRole.setId("role-001");
+            return null;
+        }).when(roleRepository).save(any(Role.class));
+        when(roleRepository.findById("role-001")).thenReturn(role);
+        
+        // 执行测试
+        RoleResponse response = roleService.createRole(request);
+        
+        // 断言结果
+        assertNotNull(response);
+        assertEquals("role-001", response.getId());
+        assertEquals("tenant-001", response.getTenantId());
+        assertEquals("测试角色", response.getName());
+        assertEquals("test_role", response.getCode());
+        
+        // 验证事件发布
+        verify(eventBus, times(1)).publish(any(RoleService.RoleCreatedEvent.class));
+    }
+    
+    @Test
+    void testCreateRole_MissingTenantId() {
+        RoleCreateRequest request = RoleCreateRequest.builder()
+            .name("测试角色")
+            .code("test_role")
+            .build();
+        
+        // 断言异常
+        RoleService.RoleException exception = assertThrows(
+            RoleService.RoleException.class,
+            () -> roleService.createRole(request)
+        );
+        
+        assertEquals("TENANT_ID_REQUIRED", exception.getCode());
+        assertEquals("租户ID不能为空", exception.getMessage());
+    }
+    
+    @Test
+    void testCreateRole_MissingName() {
+        RoleCreateRequest request = RoleCreateRequest.builder()
+            .tenantId("tenant-001")
+            .code("test_role")
+            .build();
+        
+        RoleService.RoleException exception = assertThrows(
+            RoleService.RoleException.class,
+            () -> roleService.createRole(request)
+        );
+        
+        assertEquals("ROLE_NAME_REQUIRED", exception.getCode());
+    }
+    
+    @Test
+    void testCreateRole_DuplicateCode() {
+        RoleCreateRequest request = RoleCreateRequest.builder()
+            .tenantId("tenant-001")
+            .name("测试角色")
+            .code("test_role")
+            .build();
+        
+        when(roleRepository.existsByCode("tenant-001", "test_role")).thenReturn(true);
+        
+        RoleService.RoleException exception = assertThrows(
+            RoleService.RoleException.class,
+            () -> roleService.createRole(request)
+        );
+        
+        assertEquals("ROLE_CODE_DUPLICATE", exception.getCode());
+    }
+    
+    @Test
+    void testCreateRole_MaxRolesReached() {
+        RoleCreateRequest request = RoleCreateRequest.builder()
+            .tenantId("tenant-001")
+            .name("测试角色")
+            .code("test_role")
+            .build();
+        
+        when(roleRepository.existsByCode("tenant-001", "test_role")).thenReturn(false);
+        when(roleRepository.countByTenantId("tenant-001")).thenReturn(100);
+        
+        RoleService.RoleException exception = assertThrows(
+            RoleService.RoleException.class,
+            () -> roleService.createRole(request)
+        );
+        
+        assertEquals("MAX_ROLES_REACHED", exception.getCode());
+    }
+    
+    // ==================== 查询角色测试 ====================
+    
+    @Test
+    void testGetRole_Success() throws RoleService.RoleException {
+        Role role = Role.builder()
+            .id("role-001")
+            .tenantId("tenant-001")
+            .name("测试角色")
+            .code("test_role")
+            .createdAt(LocalDateTime.now())
+            .build();
+        
+        when(roleRepository.findById("role-001")).thenReturn(role);
+        
+        RoleResponse response = roleService.getRole("role-001");
+        
+        assertNotNull(response);
+        assertEquals("role-001", response.getId());
+        assertEquals("测试角色", response.getName());
+    }
+    
+    @Test
+    void testGetRole_NotFound() {
+        when(roleRepository.findById("non-existent")).thenReturn(null);
+        
+        RoleService.RoleException exception = assertThrows(
+            RoleService.RoleException.class,
+            () -> roleService.getRole("non-existent")
+        );
+        
+        assertEquals("ROLE_NOT_FOUND", exception.getCode());
+    }
+    
+    @Test
+    void testListRoles() throws RoleService.RoleException {
+        List<Role> roles = Arrays.asList(
+            Role.builder().id("role-001").tenantId("tenant-001").name("角色1").build(),
+            Role.builder().id("role-002").tenantId("tenant-001").name("角色2").build()
+        );
+        
+        when(roleRepository.findByTenantId("tenant-001", null, null, null, null, null, null, 0, 10))
+            .thenReturn(roles);
+        when(roleRepository.countByTenantId("tenant-001", null, null, null, null, null, null))
+            .thenReturn(2L);
+        
+        RoleQueryRequest query = RoleQueryRequest.builder()
+            .tenantId("tenant-001")
+            .page(1)
+            .size(10)
+            .build();
+        
+        RoleService.PageResponse<RoleResponse> response = roleService.listRoles(query);
+        
+        assertNotNull(response);
+        assertEquals(2, response.getRecords().size());
+        assertEquals(2, response.getTotal());
+        assertEquals(1, response.getTotalPages());
+    }
+    
+    // ==================== 更新角色测试 ====================
+    
+    @Test
+    void testUpdateRole_Success() throws RoleService.RoleException {
+        Role existingRole = Role.builder()
+            .id("role-001")
+            .tenantId("tenant-001")
+            .name("原名称")
+            .code("test_role")
+            .defaultRole(false)
+            .createdAt(LocalDateTime.now())
+            .build();
+        
+        RoleUpdateRequest request = RoleUpdateRequest.builder()
+            .id("role-001")
+            .name("新名称")
+            .description("新描述")
+            .build();
+        
+        when(roleRepository.findById("role-001")).thenReturn(existingRole);
+        doAnswer(invocation -> {
+            Role updatedRole = invocation.getArgument(0);
+            updatedRole.setName("新名称");
+            updatedRole.setDescription("新描述");
+            updatedRole.setUpdatedAt(LocalDateTime.now());
+            return null;
+        }).when(roleRepository).save(any(Role.class));
+        when(roleRepository.findById("role-001")).thenAnswer(invocation -> invocation.getArgument(0));
+        
+        RoleResponse response = roleService.updateRole(request);
+        
+        assertNotNull(response);
+        assertEquals("新名称", response.getName());
+        assertEquals("新描述", response.getDescription());
+        
+        verify(eventBus, times(1)).publish(any(RoleService.RoleUpdatedEvent.class));
+    }
+    
+    @Test
+    void testUpdateRole_SystemRoleImmutable() {
+        Role existingRole = Role.builder()
+            .id("role-001")
+            .tenantId("tenant-001")
+            .name("管理员")
+            .code("admin")
+            .defaultRole(true)
+            .build();
+        
+        RoleUpdateRequest request = RoleUpdateRequest.builder()
+            .id("role-001")
+            .name("新名称")
+            .build();
+        
+        when(roleRepository.findById("role-001")).thenReturn(existingRole);
+        
+        RoleService.RoleException exception = assertThrows(
+            RoleService.RoleException.class,
+            () -> roleService.updateRole(request)
+        );
+        
+        assertEquals("SYSTEM_ROLE_IMMUTABLE", exception.getCode());
+    }
+    
+    // ==================== 删除角色测试 ====================
+    
+    @Test
+    void testDeleteRole_Success() throws RoleService.RoleException {
+        Role role = Role.builder()
+            .id("role-001")
+            .tenantId("tenant-001")
+            .name("测试角色")
+            .code("test_role")
+            .defaultRole(false)
+            .createdAt(LocalDateTime.now())
+            .build();
+        
+        when(roleRepository.findById("role-001")).thenReturn(role);
+        when(roleRepository.countByParentId("role-001")).thenReturn(0);
+        
+        roleService.deleteRole("role-001", "tenant-001");
+        
+        verify(roleRepository, times(1)).delete("role-001");
+        verify(eventBus, times(1)).publish(any(RoleService.RoleDeletedEvent.class));
+    }
+    
+    @Test
+    void testDeleteRole_SystemRole() {
+        Role role = Role.builder()
+            .id("role-001")
+            .tenantId("tenant-001")
+            .defaultRole(true)
+            .build();
+        
+        when(roleRepository.findById("role-001")).thenReturn(role);
+        
+        RoleService.RoleException exception = assertThrows(
+            RoleService.RoleException.class,
+            () -> roleService.deleteRole("role-001", "tenant-001")
+        );
+        
+        assertEquals("SYSTEM_ROLE_IMMUTABLE", exception.getCode());
+    }
+    
+    // ==================== 权限分配测试 ====================
+    
+    @Test
+    void testAssignPermissions_Success() throws RoleService.RoleException {
+        Role role = Role.builder()
+            .id("role-001")
+            .tenantId("tenant-001")
+            .menuPermissions(new ArrayList<>())
+            .operationPermissions(new ArrayList<>())
+            .build();
+        
+        RolePermissionAssignRequest request = RolePermissionAssignRequest.builder()
+            .roleId("role-001")
+            .tenantId("tenant-001")
+            .menuPermissionIds(Arrays.asList("menu-001", "menu-002"))
+            .operationPermissionIds(Arrays.asList("op-001"))
+            .build();
+        
+        when(roleRepository.findById("role-001")).thenReturn(role);
+        doAnswer(invocation -> {
+            Role updatedRole = invocation.getArgument(0);
+            updatedRole.setMenuPermissions(Arrays.asList("menu-001", "menu-002"));
+            updatedRole.setOperationPermissions(Arrays.asList("op-001"));
+            return null;
+        }).when(roleRepository).save(any(Role.class));
+        when(roleRepository.findById("role-001")).thenAnswer(invocation -> invocation.getArgument(0));
+        
+        RoleResponse response = roleService.assignPermissions("role-001", request);
+        
+        assertNotNull(response);
+        assertTrue(response.getMenuPermissions().contains("menu-001"));
+        assertTrue(response.getOperationPermissions().contains("op-001"));
+    }
+    
+    @Test
+    void testGetRolePermissions() throws RoleService.RoleException {
+        Role role = Role.builder()
+            .id("role-001")
+            .tenantId("tenant-001")
+            .menuPermissions(Arrays.asList("menu-001", "menu-002"))
+            .operationPermissions(Arrays.asList("op-001"))
+            .build();
+        
+        when(roleRepository.findById("role-001")).thenReturn(role);
+        
+        List<String> permissions = roleService.getRolePermissions("role-001", "tenant-001");
+        
+        assertNotNull(permissions);
+        assertEquals(3, permissions.size());
+        assertTrue(permissions.contains("menu-001"));
+        assertTrue(permissions.contains("menu-002"));
+        assertTrue(permissions.contains("op-001"));
+    }
+    
+    // ==================== 权限管理测试 ====================
+    
+    @Test
+    void testCreatePermission_Success() throws RoleService.RoleException {
+        PermissionCreateRequest request = PermissionCreateRequest.builder()
+            .tenantId("tenant-001")
+            .name("测试权限")
+            .code("test_permission")
+            .type("menu")
+            .path("/test")
+            .build();
+        
+        Permission permission = Permission.builder()
+            .id("permission-001")
+            .tenantId("tenant-001")
+            .name("测试权限")
+            .code("test_permission")
+            .type("menu")
+            .build();
+        
+        when(permissionRepository.existsByCode("tenant-001", "test_permission")).thenReturn(false);
+        doAnswer(invocation -> {
+            Permission savedPermission = invocation.getArgument(0);
+            savedPermission.setId("permission-001");
+            return null;
+        }).when(permissionRepository).save(any(Permission.class));
+        when(permissionRepository.findById("permission-001")).thenReturn(permission);
+        
+        PermissionResponse response = roleService.createPermission(request);
+        
+        assertNotNull(response);
+        assertEquals("permission-001", response.getId());
+        assertEquals("测试权限", response.getName());
+    }
+    
+    @Test
+    void testListPermissions() {
+        List<Permission> permissions = Arrays.asList(
+            Permission.builder().id("p-001").tenantId("tenant-001").name("权限1").build(),
+            Permission.builder().id("p-002").tenantId("tenant-001").name("权限2").build()
+        );
+        
+        when(permissionRepository.findByTenantId("tenant-001", null, null, null, 0, 10))
+            .thenReturn(permissions);
+        when(permissionRepository.countByTenantId("tenant-001", null, null, null))
+            .thenReturn(2L);
+        
+        PermissionQueryRequest query = PermissionQueryRequest.builder()
+            .tenantId("tenant-001")
+            .build();
+        
+        RoleService.PageResponse<PermissionResponse> response = roleService.listPermissions(query);
+        
+        assertNotNull(response);
+        assertEquals(2, response.getRecords().size());
+    }
+    
+    // ==================== 边界测试 ====================
+    
+    @Test
+    void testCalculateRoleLevel_NoParent() {
+        // 使用反射调用私有方法
+        try {
+            java.lang.reflect.Method method = RoleService.class.getDeclaredMethod(
+                "calculateRoleLevel", String.class);
+            method.setAccessible(true);
+            
+            Integer level = (Integer) method.invoke(roleService, null);
+            assertEquals(0, level);
+        } catch (Exception e) {
+            fail("反射调用失败: " + e.getMessage());
+        }
+    }
+    
+    @Test
+    void testConvertDataPermission() {
+        RoleDataPermissionRequest request = RoleDataPermissionRequest.builder()
+            .type("tenant")
+            .scopeIds(Arrays.asList("scope-001", "scope-002"))
+            .inheritParent(false)
+            .build();
+        
+        // 使用反射调用私有方法
+        try {
+            java.lang.reflect.Method method = RoleService.class.getDeclaredMethod(
+                "convertDataPermission", RoleDataPermissionRequest.class);
+            method.setAccessible(true);
+            
+            Role.DataPermissionConfig config = (Role.DataPermissionConfig) method.invoke(
+                roleService, request);
+            
+            assertEquals("tenant", config.getType());
+            assertEquals(2, config.getScopeIds().size());
+        } catch (Exception e) {
+            fail("反射调用失败: " + e.getMessage());
+        }
+    }
+}

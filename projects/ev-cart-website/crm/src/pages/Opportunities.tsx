@@ -3,6 +3,8 @@ import { Table, Card, Tag, Space, Button, Statistic, Row, Col, Progress } from '
 import { ShoppingCartOutlined, DollarOutlined, CheckCircleOutlined, ClockCircleOutlined } from '@ant-design/icons'
 import apiClient from '../services/api'
 
+// 模拟漏斗数据
+
 const Opportunities: React.FC = () => {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)

@@ -1,0 +1,68 @@
+apiVersion: iov.daod.com/v1
+kind: Module
+metadata:
+  name: ota-service
+  version: 1.0.0
+  description: OTA升级服务模块 - 车载终端远程固件升级管理
+  author: daod-team
+  license: proprietary
+
+spec:
+  type: business
+  priority: 30
+  
+  dependencies:
+    - name: plugin-framework
+      version: "^1.0.0"
+    - name: common-core
+      version: ">=1.0.0"
+
+  extensionPoints:
+    - name: ota-strategy
+      interface: com.daod.iov.modules.ota.OtaStrategy
+      description: OTA升级策略扩展点
+    - name: firmware-validator
+      interface: com.daod.iov.modules.ota.FirmwareValidator
+      description: 固件验证器扩展点
+
+  configSchema:
+    properties:
+      enabled:
+        type: boolean
+        default: true
+      maxConcurrentUpgrades:
+        type: integer
+        default: 100
+        description: 最大并发升级数
+      upgradeTimeout:
+        type: integer
+        default: 600000
+        description: 升级超时时间(毫秒)
+      retryCount:
+        type: integer
+        default: 3
+        description: 失败重试次数
+      firmwareStoragePath:
+        type: string
+        default: "/data/firmware"
+        description: 固件存储路径
+      maxFirmwareSize:
+        type: integer
+        default: 1073741824
+        description: 最大固件大小(字节)
+      autoBackup:
+        type: boolean
+        default: true
+        description: 升级前自动备份
+      
+  resources:
+    cpu: "300m"
+    memory: "512Mi"
+    
+  healthCheck:
+    liveness: /health/live
+    readiness: /health/ready
+    
+  hotReload:
+    enabled: true
+    strategy: rolling

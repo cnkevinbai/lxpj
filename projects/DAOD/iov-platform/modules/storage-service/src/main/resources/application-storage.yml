@@ -1,0 +1,30 @@
+# MinIO 配置
+
+# ==================== MinIO 连接配置 ====================
+
+minio:
+  endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
+  access-key: ${MINIO_ACCESS_KEY:minioadmin}
+  secret-key: ${MINIO_SECRET_KEY:minioadmin}
+  public-url: ${MINIO_PUBLIC_URL:http://localhost:9000}
+  
+  # 存储桶配置
+  buckets:
+    firmware: firmware        # OTA 固件包
+    images: images            # 图片文件
+    videos: videos            # 视频文件
+    documents: documents      # 文档文件
+    alarms: alarms            # 告警相关文件
+  
+  # 预签名URL配置
+  presigned:
+    expire-seconds: 3600      # 1小时
+    
+  # 上传限制
+  upload:
+    max-size: 104857600       # 100MB
+    allowed-types:
+      image: image/jpeg,image/png,image/gif,image/webp
+      video: video/mp4,video/webm
+      document: application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document
+      firmware: application/java-archive,application/octet-stream

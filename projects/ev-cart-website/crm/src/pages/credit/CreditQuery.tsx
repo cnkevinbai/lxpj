@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Card, Input, Button, Descriptions, Progress, Alert, Space } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
-import { creditApi } from '@/services/credit'
+import { getCustomerCredit, syncCustomerCredit } from '@/services/credit'
 
 const CreditQuery: React.FC = () => {
   const [customerId, setCustomerId] = useState('')
@@ -12,7 +12,7 @@ const CreditQuery: React.FC = () => {
     if (!customerId) return
     setLoading(true)
     try {
-      const result = await creditApi.getCustomerCredit(customerId)
+      const result = await getCustomerCredit(customerId)
       setCredit(result)
     } catch (error) {
       console.error('查询信用失败', error)

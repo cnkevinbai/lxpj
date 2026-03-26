@@ -1,6 +1,6 @@
 import { Controller, Post, Get, Body, Query } from '@nestjs/common'
 import { ApiTags, ApiOperation } from '@nestjs/swagger'
-import { AnalyticsService } from './analytics.service'
+import { AnalyticsService } from './services/analytics.service'
 
 @ApiTags('analytics')
 @Controller('analytics')

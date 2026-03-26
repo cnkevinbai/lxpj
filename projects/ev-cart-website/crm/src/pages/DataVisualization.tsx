@@ -20,9 +20,9 @@ const DataVisualization: React.FC = () => {
     totalAmount: 0,
     conversionRate: 0,
   })
-  const [trendData, setTrendData] = useState([])
-  const [sourceData, setSourceData] = useState([])
-  const [levelData, setLevelData] = useState([])
+  const [trendData, setTrendData] = useState<any[]>([])
+  const [sourceData, setSourceData] = useState<any[]>([])
+  const [levelData, setLevelData] = useState<any[]>([])
 
   useEffect(() => {
     loadStats()
@@ -54,7 +54,7 @@ const DataVisualization: React.FC = () => {
       const response = await apiClient.get('/leads/stats', {
         params: { groupBy: 'source' },
       })
-      setSourceData(Object.entries(response.data.bySource).map(([name, value]: [string, any]) => ({
+      setSourceData(Object.entries(response.data.bySource || {}).map(([name, value]: [string, any]) => ({
         type: name,
         value,
       })))
@@ -68,7 +68,7 @@ const DataVisualization: React.FC = () => {
       const response = await apiClient.get('/customers/stats', {
         params: { groupBy: 'level' },
       })
-      setLevelData(Object.entries(response.data.byLevel).map(([name, value]: [string, any]) => ({
+      setLevelData(Object.entries(response.data.byLevel || {}).map(([name, value]: [string, any]) => ({
         type: `${name}级`,
         value,
       })))

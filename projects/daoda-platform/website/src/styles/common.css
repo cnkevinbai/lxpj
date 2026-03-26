@@ -1,0 +1,384 @@
+/* 公共样式 - 统一页面风格 */
+
+/* ========== 页面 Hero 区 ========== */
+.page-hero {
+  background: linear-gradient(135deg, #1890ff 0%, #722ed1 100%);
+  color: white;
+  padding: 60px 0;
+  text-align: center;
+}
+
+.page-hero-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.page-hero h1 {
+  color: white;
+  font-size: 36px;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.page-hero p {
+  font-size: 18px;
+  opacity: 0.9;
+}
+
+/* ========== 面包屑导航 ========== */
+.page-breadcrumb {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  font-size: 14px;
+  color: #666;
+}
+
+.page-breadcrumb a {
+  color: #1890ff;
+  text-decoration: none;
+}
+
+.page-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+/* ========== 页面容器 ========== */
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+/* ========== 玻璃态卡片 ========== */
+.glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(10px);
+  padding: 24px;
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+/* ========== 卡片网格 ========== */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+/* ========== 页面标题 ========== */
+.page-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 24px;
+}
+
+.page-subtitle {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 32px;
+}
+
+/* ========== 筛选区 ========== */
+.filter-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.filter-left {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filter-right {
+  display: flex;
+  gap: 12px;
+}
+
+/* ========== 列表表格 ========== */
+.list-table {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+/* ========== 详情页布局 ========== */
+.detail-header {
+  margin-bottom: 32px;
+}
+
+.detail-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+.detail-main {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.detail-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ========== 统计卡片 ========== */
+.stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1890ff;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: #999;
+  margin-top: 4px;
+}
+
+/* ========== 标签 ========== */
+.tag {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-right: 8px;
+}
+
+.tag-blue {
+  background: #e6f7ff;
+  color: #1890ff;
+}
+
+.tag-green {
+  background: #f6ffed;
+  color: #52c41a;
+}
+
+.tag-orange {
+  background: #fff7e6;
+  color: #fa8c16;
+}
+
+.tag-purple {
+  background: #f9f0ff;
+  color: #722ed1;
+}
+
+/* ========== 按钮组 ========== */
+.btn-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* ========== 空状态 ========== */
+.empty-state {
+  text-align: center;
+  padding: 60px 24px;
+  color: #999;
+}
+
+.empty-state-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+/* ========== 加载状态 ========== */
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+/* ========== 响应式 ========== */
+@media (max-width: 992px) {
+  .detail-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .filter-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .filter-left,
+  .filter-right {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-hero {
+    padding: 40px 0;
+  }
+  
+  .page-hero h1 {
+    font-size: 28px;
+  }
+  
+  .page-hero p {
+    font-size: 16px;
+  }
+  
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .page-container {
+    padding: 16px;
+  }
+}
+
+/* ========== daoda 通用样式 ========== */
+.daoda-page {
+  min-height: 100vh;
+  background: var(--daoda-bg);
+  color: var(--daoda-text);
+}
+
+.daoda-glass-panel {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--daoda-border);
+  border-radius: var(--daoda-radius);
+}
+
+.daoda-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--daoda-border);
+  border-radius: var(--daoda-radius);
+  padding: 24px;
+  transition: border-color 0.2s;
+}
+
+.daoda-card:hover {
+  border-color: rgba(102, 0, 255, 0.3);
+}
+
+.daoda-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, var(--daoda-primary) 0%, #a855f7 100%);
+  border: none;
+  border-radius: var(--daoda-radius-sm);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.daoda-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(102, 0, 255, 0.4);
+}
+
+.daoda-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--daoda-border);
+  border-radius: var(--daoda-radius-sm);
+  color: var(--daoda-text);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.daoda-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--daoda-border-hover);
+}
+
+.daoda-brand-icon {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, var(--daoda-primary) 0%, #a855f7 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.daoda-brand-icon svg {
+  width: 16px;
+  height: 16px;
+  color: #fff;
+}
+
+.daoda-lang-switch {
+  display: flex;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--daoda-border);
+  border-radius: 17px;
+  padding: 4px;
+}
+
+.daoda-lang-switch button {
+  padding: 6px 12px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 13px;
+  transition: all 0.2s;
+}
+
+.daoda-lang-switch button.active {
+  background: rgba(102, 0, 255, 0.3);
+  color: #fff;
+}
+
+.daoda-login-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--daoda-border);
+  border-radius: var(--daoda-radius-sm);
+  color: var(--daoda-text);
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.daoda-login-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--daoda-primary);
+}

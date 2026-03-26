@@ -1,7 +1,7 @@
 import { Controller, Get, Query, Res } from '@nestjs/common'
 import { ApiTags, ApiOperation } from '@nestjs/swagger'
 import { Response } from 'express'
-import { ReportService } from './report.service'
+import { ReportService } from './services/report.service'
 
 @ApiTags('reports')
 @Controller('reports')

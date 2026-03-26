@@ -1,287 +1,250 @@
-# EV Cart 系统部署指南
+# 部署指南
 
-> 生产环境部署完整指南
+**版本**: 3.0.0  
+**更新时间**: 2026-03-14  
+**维护人**: 渔晓白 ⚙️
 
-## 📋 前置要求
+---
 
-- Node.js 18+
-- PostgreSQL 14+
-- Nginx（可选）
-- Docker（可选）
+## 📋 系统要求
 
-## 🚀 快速部署
+### 硬件要求
+- CPU: 4 核以上
+- 内存：8GB 以上
+- 硬盘：50GB 以上
+- 网络：100Mbps 以上
 
-### 1. 数据库初始化
+### 软件要求
+- Docker 20.10+
+- Docker Compose 2.0+
+- Node.js 18+ (开发用)
 
+---
+
+## 🚀 一键部署
+
+### Step 1: 克隆代码
 ```bash
-# 创建数据库
-sudo -u postgres psql -c "CREATE DATABASE evcart;"
-sudo -u postgres psql -c "CREATE USER evcart WITH PASSWORD 'evcart123';"
-sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE evcart TO evcart;"
-
-# 执行迁移脚本
-cd database/migrations
-for file in *.sql; do
-  sudo -u postgres psql -d evcart -f $file
-done
+git clone <repository-url> daoda-system
+cd daoda-system
 ```
 
-### 2. 后端部署
-
+### Step 2: 配置环境变量
 ```bash
-cd backend
-
-# 安装依赖
-npm install
-
-# 配置环境变量
 cp .env.example .env
-# 编辑 .env 文件，配置数据库连接等
-
-# 构建
-npm run build
-
-# 启动（开发环境）
-npm run start:dev
-
-# 启动（生产环境）
-npm run start:prod
-
-# 或使用 PM2
-pm2 start dist/main.js --name evcart-api
+vim .env  # 修改配置
 ```
 
-### 3. 前端部署
+**必要配置**:
+- `DB_PASSWORD` - 数据库密码
+- `REDIS_PASSWORD` - Redis 密码
+- `JWT_SECRET` - JWT 密钥
 
+### Step 3: 执行部署
 ```bash
-cd crm
-
-# 安装依赖
-npm install
-
-# 配置 API 地址
-# 编辑 .env 或 vite.config.ts
-
-# 构建
-npm run build
-
-# 部署到 Nginx
-# 将 dist/ 目录内容复制到 Nginx 网站根目录
+chmod +x deploy.sh
+./deploy.sh
 ```
 
-### 4. Nginx 配置
-
-```nginx
-server {
-    listen 80;
-    server_name crm.evcart.com;
-
-    # 前端静态文件
-    location / {
-        root /var/www/evcart-crm;
-        try_files $uri $uri/ /index.html;
-    }
-
-    # 后端 API 代理
-    location /api/ {
-        proxy_pass http://localhost:3001;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-```
-
-### 5. SSL 证书配置
-
+### Step 4: 验证部署
 ```bash
-# 使用 Let's Encrypt
-sudo certbot --nginx -d crm.evcart.com
+docker-compose ps
 ```
 
-## 🔧 环境变量配置
+所有服务状态应为 `Up`
 
-### 后端 .env
+---
 
-```env
-# 数据库
-DB_HOST=localhost
-DB_PORT=5432
-DB_USERNAME=evcart
-DB_PASSWORD=evcart123
-DB_DATABASE=evcart
+## 📱 访问地址
 
-# JWT
-JWT_SECRET=your-secret-key-change-in-production
-JWT_EXPIRES_IN=7d
+| 服务 | 地址 | 说明 |
+|------|------|------|
+| 官网 | http://localhost | 对外展示 |
+| 门户 | http://localhost/portal | 内部系统 |
+| API | http://localhost/api | 后端接口 |
 
-# 服务器
-PORT=3001
-NODE_ENV=production
+---
 
-# 邮件
-EMAIL_ENABLED=true
-EMAIL_SMTP_HOST=smtp.qq.com
-EMAIL_SMTP_PORT=587
-EMAIL_USERNAME=noreply@evcart.com
-EMAIL_PASSWORD=your-password
+## 🔧 常用命令
 
-# 短信
-SMS_ENABLED=false
-SMS_PROVIDER=aliyun
-```
-
-### 前端 .env
-
-```env
-# API 地址
-VITE_API_BASE_URL=https://api.evcart.com/api/v1
-
-# 应用配置
-VITE_APP_TITLE=EV Cart CRM
-VITE_APP_VERSION=1.0.0
-```
-
-## 🐳 Docker 部署
-
-### docker-compose.yml
-
-```yaml
-version: '3.8'
-
-services:
-  postgres:
-    image: postgres:15-alpine
-    environment:
-      POSTGRES_DB: evcart
-      POSTGRES_USER: evcart
-      POSTGRES_PASSWORD: evcart123
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./database/migrations:/docker-entrypoint-initdb.d
-
-  backend:
-    build: ./backend
-    environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USERNAME: evcart
-      DB_PASSWORD: evcart123
-      DB_DATABASE: evcart
-    ports:
-      - "3001:3001"
-    depends_on:
-      - postgres
-
-  frontend:
-    build: ./crm
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
-
-volumes:
-  postgres_data:
-```
-
-### 启动命令
-
+### 查看服务状态
 ```bash
+docker-compose ps
+```
+
+### 查看日志
+```bash
+# 所有服务
+docker-compose logs -f
+
+# 特定服务
+docker-compose logs -f api
+docker-compose logs -f nginx
+```
+
+### 重启服务
+```bash
+# 重启所有
+docker-compose restart
+
+# 重启特定服务
+docker-compose restart api
+```
+
+### 停止服务
+```bash
+docker-compose down
+```
+
+### 更新部署
+```bash
+# 拉取最新代码
+git pull
+
+# 重新构建
+docker-compose build
+
+# 重启服务
 docker-compose up -d
 ```
 
-## 📊 性能优化
+---
 
-### 1. 数据库优化
-- 创建索引
-- 配置连接池
-- 定期 VACUUM
+## 📊 服务架构
 
-### 2. 后端优化
-- 启用缓存（Redis）
-- 使用集群模式
-- 启用 Gzip 压缩
+```
+┌─────────────────────────────────────────────────────────┐
+│                      Nginx (80/443)                     │
+│                    反向代理 + SSL                       │
+└─────────────────────────────────────────────────────────┘
+                              │
+        ┌─────────────────────┼─────────────────────┐
+        │                     │                     │
+        ▼                     ▼                     ▼
+┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+│   Frontend   │    │     API      │    │   WebSocket  │
+│   React 18   │    │   NestJS     │    │              │
+│   (80)       │    │   (3001)     │    │              │
+└──────────────┘    └──────────────┘    └──────────────┘
+        │                     │
+        │                     │
+        ▼                     ▼
+┌──────────────┐    ┌──────────────┐
+│   PostgreSQL │    │    Redis     │
+│   (5432)     │    │    (6379)    │
+└──────────────┘    └──────────────┘
+```
 
-### 3. 前端优化
-- 代码分割
-- 图片压缩
-- CDN 加速
-- 启用缓存
+---
 
 ## 🔒 安全配置
 
-### 1. 防火墙
+### 1. 修改默认密码
+```bash
+# .env 文件
+DB_PASSWORD=强密码
+REDIS_PASSWORD=强密码
+JWT_SECRET=随机字符串
+```
+
+### 2. 配置 SSL（可选）
+```bash
+# 获取 SSL 证书
+certbot --nginx -d your-domain.com
+
+# 启用 nginx/conf.d/https.conf
+```
+
+### 3. 防火墙配置
 ```bash
 # 只开放必要端口
-sudo ufw allow 22
-sudo ufw allow 80
-sudo ufw allow 443
-sudo ufw enable
+ufw allow 80/tcp
+ufw allow 443/tcp
+ufw enable
 ```
 
-### 2. 数据库安全
-- 修改默认端口
-- 限制远程访问
-- 定期备份
+---
 
-### 3. 应用安全
-- 启用 HTTPS
-- 配置 CORS
-- 设置安全头
+## 📈 性能优化
 
-## 📝 运维监控
+### 1. 数据库优化
+```sql
+-- 创建索引
+CREATE INDEX idx_customers_name ON crm_customers(name);
+CREATE INDEX idx_orders_status ON crm_orders(status);
 
-### 1. 日志管理
+-- 定期清理
+VACUUM ANALYZE;
+```
+
+### 2. Redis 缓存
 ```bash
-# 查看后端日志
-pm2 logs evcart-api
-
-# 查看 Nginx 日志
-tail -f /var/log/nginx/access.log
-tail -f /var/log/nginx/error.log
+# 配置最大内存
+maxmemory 2gb
+maxmemory-policy allkeys-lru
 ```
 
-### 2. 性能监控
-- 使用 PM2 Monitor
-- 配置 Prometheus + Grafana
-- 设置告警通知
+### 3. Nginx 优化
+```nginx
+# 启用缓存
+proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=api_cache:10m;
 
-### 3. 备份策略
+# Gzip 压缩
+gzip on;
+gzip_min_length 1024;
+```
+
+---
+
+## 🐛 故障排查
+
+### 服务启动失败
 ```bash
-# 数据库备份
-pg_dump -U evcart evcart > backup_$(date +%Y%m%d).sql
+# 查看日志
+docker-compose logs [service]
 
-# 定期备份（crontab）
-0 2 * * * pg_dump -U evcart evcart > /backup/evcart_$(date +\%Y\%m\%d).sql
+# 检查配置
+docker-compose config
+
+# 重新构建
+docker-compose build --no-cache
 ```
 
-## 🆘 故障排查
+### 数据库连接失败
+```bash
+# 检查数据库状态
+docker-compose ps postgres
 
-### 常见问题
+# 查看数据库日志
+docker-compose logs postgres
 
-1. **数据库连接失败**
-   - 检查 PostgreSQL 服务状态
-   - 验证连接配置
-   - 检查防火墙规则
+# 测试连接
+docker-compose exec postgres psql -U daoda -d daoda
+```
 
-2. **前端页面空白**
-   - 检查浏览器控制台错误
-   - 验证 API 地址配置
-   - 清除浏览器缓存
+### API 无法访问
+```bash
+# 检查 API 状态
+curl http://localhost:3001/health
 
-3. **API 请求失败**
-   - 检查后端服务状态
-   - 验证 Token 是否过期
-   - 查看 Nginx 配置
+# 查看 API 日志
+docker-compose logs api
 
-## 📞 技术支持
+# 检查网络
+docker-compose exec api ping postgres
+```
 
-- 文档：https://docs.evcart.com
-- 邮箱：support@evcart.com
-- 电话：400-888-8888
+---
 
-## 📄 许可证
+## 📚 相关文档
 
-Copyright © 2026 EV Cart
+- [架构重构计划 v3.1](./ARCHITECTURE_REFACTOR_PLAN_v3.md)
+- [PHASE3_DEPLOYMENT_COMPLETE.md](./portal/PHASE3_DEPLOYMENT_COMPLETE.md)
+- [系统总览](./SYSTEM_OVERVIEW.md)
+
+---
+
+**部署完成！开始使用道达智能系统！** 🚀
+
+**维护人**: 渔晓白 ⚙️  
+**更新时间**: 2026-03-14

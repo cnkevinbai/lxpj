@@ -6,7 +6,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { ServiceContract, ContractType, ContractStatus } from './entities/service-contract.entity'
+import { ServiceContract } from './entities/service-contract.entity'
+
+// 类型定义
+type ContractType = 'warranty' | 'maintenance' | 'support' | 'training'
+type ContractStatus = 'active' | 'expired' | 'terminated' | 'suspended' | 'expiring'
 
 @Injectable()
 export class AfterSalesContractService {

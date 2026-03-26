@@ -1,155 +1,139 @@
-import React from 'react'
+import React, { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import Login from './pages/Login'
 import { ConfigProvider } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
-import Layout from './layout/Layout'
+import Login from './pages/Login'
 
-// 经销商管理页面
-import Dealers from './pages/dealers/Dealers'
-import DealerDetail from './pages/dealers/DealerDetail'
-import DealerAssessment from './pages/dealers/DealerAssessment'
-import DealerRebate from './pages/dealers/DealerRebate'
-import DealerLevel from './pages/dealers/DealerLevel'
-import DealerAnalytics from './pages/dealers/DealerAnalytics'
-import CreateDealer from './pages/dealers/CreateDealer'
-import EditDealer from './pages/dealers/EditDealer'
+// 官网路由 -WebsiteLayout（公开访问）
+const WebsiteLayout = lazy(() => import('./layouts/WebsiteLayout'))
 
-// 招聘管理页面
-import Jobs from './pages/jobs/Jobs'
-import CreateJob from './pages/jobs/CreateJob'
-import JobDetail from './pages/jobs/JobDetail'
-import Resumes from './pages/jobs/Resumes'
-import Interviews from './pages/jobs/Interviews'
-import RecruitmentAnalytics from './pages/jobs/RecruitmentAnalytics'
+// 门户路由 - PortalLayout（需登录）
+const PortalLayout = lazy(() => import('./layouts/PortalLayout'))
+const ProtectedRoute = lazy(() => import('./layouts/ProtectedRoute'))
 
-// 其他现有页面
-import Dashboard from './pages/Dashboard'
-import Customers from './pages/customers/Customers'
-import Orders from './pages/orders/Orders'
-import Products from './pages/products/Products'
-import Settings from './pages/Settings'
-import Reports from './pages/Reports'
-import MessageCenter from './pages/MessageCenter'
-import Finance from './pages/Finance'
-import Inventory from './pages/Inventory'
-import Orders from './pages/Orders'
-import ERP from './pages/ERP'
-import AfterSales from './pages/AfterSales'
-import Purchase from './pages/Purchase'
-import Production from './pages/Production'
-import Export from './pages/Export'
-import Payables from './pages/Payables'
-import Invoices from './pages/Invoices'
-import Expenses from './pages/Expenses'
-import FinanceDashboard from './pages/FinanceDashboard'
-import Suppliers from './pages/Suppliers'
-import StockCheck from './pages/StockCheck'
-import StockTransfer from './pages/StockTransfer'
-import Customers from './pages/customers/Customers'
-import CustomerDetail from './pages/customers/CustomerDetail'
-import Products from './pages/products/Products'
-import ProductDetail from './pages/products/ProductDetail'
-import CostAccounting from './pages/CostAccounting'
-import Assets from './pages/Assets'
-import ProductionPlan from './pages/ProductionPlan'
-import OrderDetail from './pages/orders/OrderDetail'
+// 页面组件
+const Dashboard = lazy(() => import('./pages/Dashboard'))
+const Settings = lazy(() => import('./pages/Settings'))
+const Reports = lazy(() => import('./pages/Reports'))
+const MessageCenter = lazy(() => import('./pages/MessageCenter'))
+const WorkflowApproval = lazy(() => import('./pages/workflow/WorkflowApproval'))
+
+// 官网页面组件
+const OfficialWebsite = lazy(() => import('./pages/website/OfficialWebsite'))
+const ProductCenter = lazy(() => import('./pages/website/ProductCenter'))
+const ProductDetail = lazy(() => import('./pages/website/ProductDetail'))
+const ProductCompare = lazy(() => import('./pages/website/ProductCompare'))
+const Solutions = lazy(() => import('./pages/website/Solutions'))
+const DealerFranchise = lazy(() => import('./pages/website/DealerFranchise'))
+const ServiceSupport = lazy(() => import('./pages/website/ServiceSupport'))
+const AboutUs = lazy(() => import('./pages/website/AboutUs'))
+const ContactUs = lazy(() => import('./pages/website/ContactUs'))
+
+// 门户子模块路由（按需加载）- 使用占位组件
+const CRMModule = lazy(() => import('./pages/Dashboard'))
+const ERPModule = lazy(() => import('./pages/Dashboard'))
+const FinanceModule = lazy(() => import('./pages/Dashboard'))
+const AfterSalesModule = lazy(() => import('./pages/Dashboard'))
+const HRModule = lazy(() => import('./pages/Dashboard'))
+const CMSModule = lazy(() => import('./pages/Dashboard'))
+const ReportsModule = lazy(() => import('./pages/Dashboard'))
+const ApprovalModule = lazy(() => import('./pages/Dashboard'))
+
+// 简单的加载占位组件
+const LoadingFallback = () => (
+  <div
+    style={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}
+  >
+    <div style={{ textAlign: 'center' }}>
+      <div
+        style={{
+          width: 48,
+          height: 48,
+          border: '4px solid #f0f0f0',
+          borderTop: '4px solid #667eea',
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite',
+          margin: '0 auto 16px',
+        }}
+      />
+      <p style={{ color: '#666', fontSize: 16 }}>加载中...</p>
+    </div>
+    <style>{`
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    `}</style>
+  </div>
+)
+
+// 鉴权路由包裹组件
+const AuthenticatedRoute = ({ children }: { children: React.ReactNode }) => (
+  <Suspense fallback={<LoadingFallback />}>
+    <ProtectedRoute>{children}</ProtectedRoute>
+  </Suspense>
+)
 
 const App: React.FC = () => {
   return (
     <ConfigProvider locale={zhCN}>
-      <BrowserRouter>
-        <Routes>
-          {/* 登录页面 */}
-          <Route path="/login" element={<Login />} />
-          
-          {/* 主布局路由 */}
-          <Route path="/" element={<Layout />}>
-            {/* 默认跳转 */}
-            <Route index element={<Navigate to="/dashboard" replace />} />
+      <Suspense fallback={<LoadingFallback />}>
+        <BrowserRouter>
+          <Routes>
+            {/* 登录页 */}
+            <Route path="/login" element={<Login />} />
             
-            {/* 仪表盘 */}
-            <Route path="dashboard" element={<Dashboard />} />
+            {/* 403 禁止访问 */}
+            <Route path="/403" element={<div style={{textAlign:'center',padding:'100px'}}>403 禁止访问</div>} />
             
-            {/* 客户管理 */}
-            <Route path="customers" element={<Customers />} />
-            <Route path="customers/:id" element={<CustomerDetail />} />
+            {/* 404 未找到 */}
+            <Route path="/404" element={<div style={{textAlign:'center',padding:'100px'}}>404 未找到</div>} />
             
-            {/* 订单管理 */}
-            <Route path="orders" element={<Orders />} />
-            <Route path="orders/:id" element={<OrderDetail />} />
+            {/* 重定向到 404 */}
+            <Route path="*" element={<Navigate to="/404" replace />} />
             
-            {/* 产品管理 */}
-            <Route path="products" element={<Products />} />
-            <Route path="products/:id" element={<ProductDetail />} />
-            
-            {/* 成本核算 */}
-            <Route path="cost-accounting" element={<CostAccounting />} />
-            
-            {/* 固定资产 */}
-            <Route path="assets" element={<Assets />} />
-            
-            {/* 生产计划 */}
-            <Route path="production-plan" element={<ProductionPlan />} />
-            
-            {/* 经销商管理 */}
-            <Route path="dealers" element={<Dealers />} />
-            <Route path="dealers/create" element={<CreateDealer />} />
-            <Route path="dealers/:id" element={<DealerDetail />} />
-            <Route path="dealers/:id/edit" element={<EditDealer />} />
-            <Route path="dealers/:id/assessments" element={<DealerAssessment />} />
-            <Route path="dealers/:id/rebates" element={<DealerRebate />} />
-            <Route path="dealers/:id/levels" element={<DealerLevel />} />
-            <Route path="dealers/analytics" element={<DealerAnalytics />} />
-            
-            {/* 招聘管理 */}
-            <Route path="jobs" element={<Jobs />} />
-            <Route path="jobs/create" element={<CreateJob />} />
-            <Route path="jobs/:id" element={<JobDetail />} />
-            <Route path="jobs/:id/edit" element={<EditDealer />} />
-            <Route path="resumes" element={<Resumes />} />
-            <Route path="interviews" element={<Interviews />} />
-            <Route path="recruitment/analytics" element={<RecruitmentAnalytics />} />
-            
-            {/* 系统设置 */}
-            <Route path="settings" element={<Settings />} />
-            
-            {/* 报表中心 */}
-            <Route path="reports" element={<Reports />} />
-            
-            {/* 消息中心 */}
-            <Route path="messages" element={<MessageCenter />} />
-            
-            {/* 财务管理 */}
-            <Route path="finance" element={<Finance />} />
-            <Route path="finance-dashboard" element={<FinanceDashboard />} />
-            <Route path="payables" element={<Payables />} />
-            <Route path="invoices" element={<Invoices />} />
-            <Route path="expenses" element={<Expenses />} />
-            
-            {/* 库存管理 */}
-            <Route path="inventory" element={<Inventory />} />
-            
-            {/* 订单管理 */}
-            <Route path="orders" element={<Orders />} />
-            
-            {/* ERP 系统 */}
-            <Route path="erp" element={<ERP />} />
-            <Route path="purchase" element={<Purchase />} />
-            <Route path="production" element={<Production />} />
-            <Route path="export" element={<Export />} />
-            <Route path="suppliers" element={<Suppliers />} />
-            <Route path="stock-check" element={<StockCheck />} />
-            <Route path="stock-transfer" element={<StockTransfer />} />
-            
-            {/* 售后服务 */}
-            <Route path="after-sales" element={<AfterSales />} />
-            
-            {/* 404 重定向 */}
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+            {/* 官网路由 -WebsiteLayout（公开访问） */}
+            <Route path="/" element={<WebsiteLayout />}>
+              <Route index element={<OfficialWebsite />} />
+              <Route path="products" element={<ProductCenter />} />
+              <Route path="products/:id" element={<ProductDetail />} />
+              <Route path="products/compare" element={<ProductCompare />} />
+              <Route path="solutions" element={<Solutions />} />
+              <Route path="dealer" element={<DealerFranchise />} />
+              <Route path="service" element={<ServiceSupport />} />
+              <Route path="about" element={<AboutUs />} />
+              <Route path="contact" element={<ContactUs />} />
+            </Route>
+
+            {/* 门户路由 - PortalLayout（需登录） */}
+            <Route
+              path="/portal/*"
+              element={
+                <AuthenticatedRoute>
+                  <PortalLayout />
+                </AuthenticatedRoute>
+              }
+            >
+              <Route index element={<Dashboard />} />
+              <Route path="crm/*" element={<CRMModule />} />
+              <Route path="erp/*" element={<ERPModule />} />
+              <Route path="finance/*" element={<FinanceModule />} />
+              <Route path="after-sales/*" element={<AfterSalesModule />} />
+              <Route path="hr/*" element={<HRModule />} />
+              <Route path="cms/*" element={<CMSModule />} />
+              <Route path="messages" element={<MessageCenter />} />
+              <Route path="approval/*" element={<ApprovalModule />} />
+              <Route path="reports/*" element={<ReportsModule />} />
+              <Route path="settings/*" element={<Settings />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </Suspense>
     </ConfigProvider>
   )
 }

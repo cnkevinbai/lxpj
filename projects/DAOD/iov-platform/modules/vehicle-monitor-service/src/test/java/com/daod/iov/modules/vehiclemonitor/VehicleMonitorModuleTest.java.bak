@@ -1,0 +1,62 @@
+package com.daod.iov.modules.vehiclemonitor;
+
+import com.daod.iov.plugin.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * 车辆监控模块测试类
+ */
+class VehicleMonitorModuleTest {
+
+    @Test
+    void testModuleLifecycle() throws ModuleException {
+        // 创建模块实例
+        VehicleMonitorModule module = new VehicleMonitorModule();
+        
+        // 验证初始状态
+        assertEquals("vehicle-monitor-service", module.getMetadata().getName());
+        assertEquals("1.0.0", module.getMetadata().getVersion());
+        assertEquals(ModuleState.UNINITIALIZED, module.getState());
+        assertEquals(HealthStatus.UNKNOWN, module.getHealthStatus());
+        
+        // 创建模拟上下文
+        ModuleContext context = new ModuleContext("vehicle-monitor-service:1.0.0", "", null);
+        
+        // 测试初始化
+        module.initialize(context);
+        assertEquals(ModuleState.INITIALIZED, module.getState());
+        assertEquals(HealthStatus.HEALTHY, module.getHealthStatus());
+        
+        // 测试启动
+        module.start();
+        assertEquals(ModuleState.RUNNING, module.getState());
+        assertEquals(HealthStatus.HEALTHY, module.getHealthStatus());
+        
+        // 测试停止
+        module.stop();
+        assertEquals(ModuleState.STOPPED, module.getState());
+        assertEquals(HealthStatus.OFFLINE, module.getHealthStatus());
+        
+        // 测试销毁
+        module.destroy();
+        assertEquals(ModuleState.DESTROYED, module.getState());
+    }
+    
+    @Test
+    void testModuleManagerIntegration() throws ModuleException {
+        // 获取模块管理器
+        ModuleManager manager = ModuleManagerFactory.getInstance();
+        manager.initialize();
+        
+        // 由于我们没有实际的JAR文件，我们只是验证模块类的基本功能
+        VehicleMonitorModule module = new VehicleMonitorModule();
+        
+        assertNotNull(module.getMetadata());
+        assertEquals("vehicle-monitor-service", module.getMetadata().getName());
+        assertEquals("business", module.getMetadata().getType());
+        assertEquals(80, module.getMetadata().getPriority());
+        
+        System.out.println("模块测试通过: " + module.getMetadata().getName());
+    }
+}

@@ -1,7 +1,7 @@
 import { Controller, Get, Query, Res } from '@nestjs/common'
 import { ApiTags, ApiOperation } from '@nestjs/swagger'
 import { Response } from 'express'
-import { PdfService } from './pdf.service'
+import { PdfService } from './services/pdf.service'
 
 @ApiTags('pdf')
 @Controller('pdf')

@@ -1,0 +1,72 @@
+apiVersion: iov.daod.com/v1
+kind: Module
+metadata:
+  name: config-center
+  version: 1.0.0
+  description: 配置中心模块 - 统一配置管理服务
+  author: daod-team
+  license: proprietary
+
+spec:
+  type: core
+  priority: 5
+  
+  dependencies:
+    - name: plugin-framework
+      version: "^1.0.0"
+    - name: common-core
+      version: ">=1.0.0"
+
+  extensionPoints:
+    - name: config-provider
+      interface: com.daod.iov.services.config.ConfigProvider
+      description: 配置提供者扩展点
+    - name: config-listener
+      interface: com.daod.iov.services.config.ConfigListener
+      description: 配置变更监听器
+
+  configSchema:
+    properties:
+      enabled:
+        type: boolean
+        default: true
+      storageType:
+        type: string
+        default: "file"
+        enum: ["file", "database", "nacos", "etcd"]
+        description: 配置存储类型
+      autoRefresh:
+        type: boolean
+        default: true
+        description: 是否自动刷新配置
+      refreshInterval:
+        type: integer
+        default: 30000
+        description: 配置刷新间隔(毫秒)
+      enableCache:
+        type: boolean
+        default: true
+        description: 是否启用缓存
+      cacheTtl:
+        type: integer
+        default: 300
+        description: 缓存过期时间(秒)
+      enableVersionHistory:
+        type: boolean
+        default: true
+        description: 是否启用版本历史
+      maxHistoryVersions:
+        type: integer
+        default: 10
+        description: 最大历史版本数
+      
+  resources:
+    cpu: "200m"
+    memory: "256Mi"
+    
+  healthCheck:
+    liveness: /health/live
+    readiness: /health/ready
+    
+  hotReload:
+    enabled: false

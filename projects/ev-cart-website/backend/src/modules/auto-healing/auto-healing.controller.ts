@@ -5,7 +5,7 @@
 
 import { Controller, Get, UseGuards } from '@nestjs/common'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
-import { AutoHealingService } from './auto-healing.service'
+import { AutoHealingService } from './services/auto-healing.service'
 
 @Controller('auto-healing')
 @UseGuards(JwtAuthGuard)

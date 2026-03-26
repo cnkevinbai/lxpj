@@ -1,0 +1,8 @@
+- Create API client configuration (axios/instance)
+- Create .env configuration file
+- Update vite.config.ts with API proxy
+- Install socket.io-client and create WebSocket service
+- Create API service files for chat and agents
+- Update stores (chatStore, agentStore) to integrate with API
+- Update ChatPage and AgentsPage to use real API calls
+- Create integration test script

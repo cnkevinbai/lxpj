@@ -1,0 +1,54 @@
+package com.daod.iov.modules.jtt808;
+
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * JT/T 808适配器单元测试
+ */
+class JTT808AdapterTest {
+    
+    private JTT808Adapter adapter;
+    
+    @BeforeEach
+    void setUp() {
+        adapter = new JTT808Adapter();
+    }
+    
+    @AfterEach
+    void tearDown() throws Exception {
+        if (adapter != null && adapter.getState() != ModuleState.DESTROYED) {
+            adapter.stop();
+            adapter.destroy();
+        }
+    }
+    
+    @Test
+    @DisplayName("测试模块元数据")
+    void testMetadata() {
+        assertNotNull(adapter.getMetadata());
+        assertEquals("jtt808-adapter", adapter.getMetadata().getName());
+        assertEquals("1.0.0", adapter.getMetadata().getVersion());
+        assertEquals("adapter", adapter.getMetadata().getType());
+    }
+    
+    @Test
+    @DisplayName("测试初始状态")
+    void testInitialState() {
+        assertEquals(ModuleState.UNINITIALIZED, adapter.getState());
+        assertEquals(HealthStatus.UNKNOWN, adapter.getHealthStatus());
+    }
+    
+    @Test
+    @DisplayName("测试初始化")
+    void testInitialize() throws ModuleException {
+        adapter.initialize(new ModuleContext());
+        assertEquals(ModuleState.INITIALIZED, adapter.getState());
+    }
+    
+    @Test
+    @DisplayName("测试终端会话管理")
+    void testTerminalSessionManagement() {
+        assertEquals(0, adapter.getOnlineCount());
+    }
+}

@@ -1,0 +1,51 @@
+# 事件总线模块配置
+
+apiVersion: iov.daod.com/v1
+kind: Module
+metadata:
+  name: event-bus
+  version: 1.0.0
+  description: 事件总线模块 - 模块间异步通信、事件发布订阅
+  author: daod-team
+  license: Apache-2.0
+
+spec:
+  type: core
+  priority: 5
+  mainClass: com.daod.iov.modules.eventbus.EventBusModule
+  
+  dependencies:
+    - name: plugin-framework
+      version: ">=1.0.0"
+      optional: false
+    - name: common-core
+      version: "^1.0.0"
+      optional: false
+  
+  provides:
+    - name: event-bus
+      version: "1.0.0"
+      description: 事件发布订阅服务
+  
+  extensionPoints:
+    - name: event-handler
+      interface: com.daod.iov.modules.eventbus.api.EventHandler
+      description: 事件处理器扩展点
+      multiple: true
+  
+  permissions:
+    - NETWORK_CONNECT
+    - FILE_READ
+    - FILE_WRITE
+  
+  resources:
+    cpu: "100m"
+    memory: "128Mi"
+    maxConnections: 500
+  
+  healthCheck:
+    liveness: /health/live
+    readiness: /health/ready
+  
+  hotReload:
+    enabled: false  # 核心模块不支持热更新

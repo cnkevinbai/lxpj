@@ -21,7 +21,7 @@ export class ServiceContract {
   contractType: 'warranty' | 'maintenance' | 'support' | 'training'; // 合同类型
 
   @Column({ length: 50, default: 'active' })
-  status: 'active' | 'expired' | 'terminated' | 'suspended';
+  status: 'active' | 'expired' | 'terminated' | 'suspended' | 'expiring';
 
   @Column({ nullable: true })
   startDate: Date; // 开始日期

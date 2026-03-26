@@ -1,0 +1,271 @@
+/**
+ * 道达智能官网 - NEXUS 终极版全局样式
+ * 设计风格：黑蓝科技风 + 未来感
+ */
+
+/* CSS Variables - 黑蓝科技配色 */
+:root {
+  /* 黑色系 */
+  --black-deep: #050505;
+  --black-primary: #0A0A0A;
+  --black-card: #121212;
+  --black-nav: #1A1A1A;
+  
+  /* 白色系 */
+  --white-primary: #FFFFFF;
+  --white-body: #E0E0E0;
+  --white-secondary: #A0A0A0;
+  --white-border: #606060;
+  
+  /* 蓝色系 */
+  --blue-primary: #0066FF;
+  --blue-hover: #0088FF;
+  --blue-light: #00AAFF;
+  --blue-tech: #00D4FF;
+  
+  /* 特殊色 */
+  --green-energy: #00FF88;
+  --red-alert: #FF3366;
+  
+  /* 渐变 */
+  --gradient-primary: linear-gradient(135deg, #0066FF 0%, #00D4FF 100%);
+  --glow-blue: radial-gradient(circle, rgba(0,102,255,0.2) 0%, transparent 70%);
+  --energy-line: linear-gradient(90deg, transparent 0%, #0066FF 25%, #00D4FF 50%, #0066FF 75%, transparent 100%);
+  
+  /* 间距 */
+  --spacing-section: 160px;
+  --spacing-card: 48px;
+}
+
+/* 全局重置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'PingFang SC', 'Microsoft YaHei', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--black-deep);
+  color: var(--white-body);
+  line-height: 1.8;
+  overflow-x: hidden;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--black-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--blue-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--blue-hover);
+}
+
+/* Hero 区域 */
+.hero-section {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.particle-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 1200px;
+  padding: 0 24px;
+}
+
+.hero-title {
+  margin-bottom: 24px !important;
+  letter-spacing: -1px;
+}
+
+.hero-subtitle {
+  margin-bottom: 48px !important;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cta-primary {
+  height: 54px;
+  padding: 0 40px;
+  font-size: 18px;
+  background: var(--gradient-primary);
+  border: none;
+}
+
+.cta-video {
+  height: 54px;
+  padding: 0 40px;
+  font-size: 18px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: var(--white-primary);
+}
+
+/* 轮播指示器 */
+.slide-indicators {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  z-index: 3;
+}
+
+.indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.indicator.active {
+  background: var(--blue-primary);
+  border-color: var(--blue-primary);
+  box-shadow: 0 0 10px rgba(0, 102, 255, 0.5);
+}
+
+.indicator:hover {
+  border-color: var(--blue-hover);
+}
+
+/* 向下滚动提示 */
+.scroll-indicator {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--white-primary);
+  font-size: 24px;
+  z-index: 3;
+  cursor: pointer;
+}
+
+/* 板块通用样式 */
+.products-section,
+.technology-section,
+.global-section {
+  padding: var(--spacing-section) 24px;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 48px !important;
+  font-weight: 600;
+  margin-bottom: 16px !important;
+  color: var(--white-primary);
+}
+
+.section-subtitle {
+  font-size: 20px !important;
+  color: var(--white-secondary);
+  max-width: 800px;
+  margin: 0 auto 64px !important;
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+  :root {
+    --spacing-section: 120px;
+  }
+  
+  .hero-title {
+    font-size: 48px !important;
+  }
+  
+  .hero-subtitle {
+    font-size: 18px !important;
+  }
+  
+  .section-title {
+    font-size: 36px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --spacing-section: 80px;
+  }
+  
+  .hero-title {
+    font-size: 36px !important;
+  }
+  
+  .hero-subtitle {
+    font-size: 16px !important;
+  }
+  
+  .hero-cta {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .cta-primary,
+  .cta-video {
+    width: 100%;
+    height: 50px;
+    font-size: 16px;
+  }
+  
+  .section-title {
+    font-size: 28px !important;
+  }
+  
+  .section-subtitle {
+    font-size: 16px !important;
+  }
+}
+
+/* 暗色主题适配 */
+@media (prefers-color-scheme: dark) {
+  body {
+    background: var(--black-deep);
+  }
+}
+
+/* 减少动效偏好 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

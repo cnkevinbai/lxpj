@@ -1,0 +1,40 @@
+{
+  "name": "OpenClaw 控制面板",
+  "short_name": "OpenClaw",
+  "description": "AI 驱动的智能控制面板",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a1a",
+  "theme_color": "#06B6D4",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icons/icon-144x144.svg",
+      "sizes": "144x144",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/vite.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "新对话",
+      "short_name": "对话",
+      "description": "开始新的 AI 对话",
+      "url": "/chat?new=true"
+    },
+    {
+      "name": "新建任务",
+      "short_name": "任务",
+      "description": "创建新任务",
+      "url": "/tasks?new=true"
+    }
+  ]
+}

@@ -1,0 +1,615 @@
+/**
+ * 联系我们页面样式
+ * 统一风格版本
+ */
+
+@import url('../styles/common.css');
+
+.contact-page {
+  background: #0a0a0a;
+  color: #f1f5f9;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+/* ========== Header ========== */
+.daoda-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: 80px;
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(102, 0, 255, 0.1);
+}
+
+.daoda-header-inner {
+  max-width: 1280px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.daoda-header-left {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+
+.daoda-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #fff;
+}
+
+.daoda-brand-icon {
+  width: 32px;
+  height: 32px;
+  background: #6600ff;
+  padding: 6px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.daoda-brand-icon svg {
+  width: 20px;
+  height: 20px;
+  color: #fff;
+}
+
+.daoda-brand-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.daoda-brand-highlight {
+  color: #6600ff;
+  font-weight: 800;
+}
+
+.daoda-nav {
+  display: flex;
+  gap: 32px;
+}
+
+.daoda-nav a {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.daoda-nav a:hover,
+.daoda-nav a.active {
+  color: #6600ff;
+}
+
+.daoda-header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.daoda-lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  padding-left: 16px;
+}
+
+.daoda-lang-switch button {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.daoda-lang-switch button.active {
+  background: rgba(102, 0, 255, 0.2);
+  color: #6600ff;
+}
+
+.daoda-login-btn {
+  background: #6600ff;
+  color: #fff;
+  padding: 8px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.daoda-login-btn:hover {
+  background: #5900e6;
+}
+
+/* ========== Hero Section ========== */
+.daoda-hero {
+  position: relative;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  padding-top: 80px;
+  overflow: hidden;
+}
+
+.daoda-hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+}
+
+.daoda-hero-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to right, #0a0a0a, rgba(10, 10, 10, 0.8), transparent);
+  z-index: 1;
+}
+
+.daoda-hero-image.daoda-hero-contact {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+
+.daoda-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  width: 100%;
+  text-align: center;
+}
+
+.daoda-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 9999px;
+  background: rgba(102, 0, 255, 0.2);
+  border: 1px solid rgba(102, 0, 255, 0.3);
+  color: #a78bfa;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 24px;
+}
+
+.daoda-pulse-dot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  background: #6600ff;
+  border-radius: 50%;
+}
+
+.daoda-pulse-dot::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background: #6600ff;
+  border-radius: 50%;
+  animation: daoda-ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes daoda-ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.daoda-hero-title {
+  font-size: 56px;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0 0 24px;
+}
+
+.daoda-hero-desc {
+  font-size: 18px;
+  color: #94a3b8;
+  max-width: 720px;
+  margin: 0 auto 32px;
+  line-height: 1.7;
+}
+
+/* ========== Section Container ========== */
+.daoda-section-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.daoda-section-title {
+  font-size: 36px;
+  font-weight: 700;
+  margin: 0 0 48px;
+  background: linear-gradient(135deg, #fff, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ========== Contact Content ========== */
+.daoda-contact-content {
+  padding: 80px 0;
+}
+
+.daoda-contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+}
+
+/* ========== Contact Form ========== */
+.daoda-contact-form {
+  padding: 48px 32px;
+  border-radius: 16px;
+}
+
+.daoda-contact-form-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.daoda-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.daoda-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.daoda-form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.daoda-form-group input,
+.daoda-form-group textarea,
+.daoda-form-group select {
+  background: rgba(102, 0, 255, 0.05);
+  border: 1px solid rgba(102, 0, 255, 0.2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #fff;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.daoda-form-group input::placeholder,
+.daoda-form-group textarea::placeholder {
+  color: #64748b;
+}
+
+.daoda-form-group input:focus,
+.daoda-form-group textarea:focus,
+.daoda-form-group select:focus {
+  border-color: rgba(102, 0, 255, 0.5);
+}
+
+.daoda-select-wrapper {
+  position: relative;
+}
+
+.daoda-select-wrapper select {
+  appearance: none;
+  background: rgba(102, 0, 255, 0.05);
+  border: 1px solid rgba(102, 0, 255, 0.2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  padding-right: 40px;
+  font-size: 14px;
+  color: #fff;
+  outline: none;
+  cursor: pointer;
+}
+
+.daoda-select-arrow {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #64748b;
+}
+
+.daoda-select-arrow svg {
+  width: 16px;
+  height: 16px;
+}
+
+.daoda-btn-block {
+  width: 100%;
+}
+
+/* ========== Contact Info ========== */
+.daoda-contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.daoda-contact-details {
+  padding: 40px 32px;
+  border-radius: 16px;
+}
+
+.daoda-contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.daoda-contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.daoda-contact-icon {
+  width: 56px;
+  height: 56px;
+  background: rgba(102, 0, 255, 0.2);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.daoda-contact-icon svg {
+  width: 28px;
+  height: 28px;
+  color: #a78bfa;
+}
+
+.daoda-contact-text h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 4px;
+  color: #fff;
+}
+
+.daoda-contact-text p {
+  font-size: 14px;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* ========== Working Hours ========== */
+.daoda-working-hours {
+  padding: 40px 32px;
+  border-radius: 16px;
+}
+
+.daoda-hours-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.daoda-hours-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.daoda-hours-item svg {
+  width: 24px;
+  height: 24px;
+  color: #a78bfa;
+}
+
+.daoda-hours-item span {
+  font-size: 14px;
+  color: #94a3b8;
+  line-height: 1.6;
+}
+
+/* ========== Map Section ========== */
+.daoda-map-section {
+  padding: 80px 0;
+  background: rgba(102, 0, 255, 0.03);
+}
+
+.daoda-map-container {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+}
+
+.daoda-map-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M0 50h100M50 0v100" stroke="rgba(102, 0, 255, 0.1)" stroke-width="0.5"/></svg>');
+  background-size: 40px 40px;
+}
+
+.daoda-map-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(102, 0, 255, 0.2), rgba(102, 0, 255, 0.1));
+  backdrop-filter: blur(2px);
+}
+
+.daoda-map-marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
+  background: #6600ff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 30px rgba(102, 0, 255, 0.6);
+  animation: daoda-bounce 2s infinite;
+}
+
+.daoda-map-marker svg {
+  width: 28px;
+  height: 28px;
+  color: #fff;
+}
+
+@keyframes daoda-bounce {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+/* ========== Footer ========== */
+.daoda-footer {
+  padding: 60px 24px 40px;
+  background: #0a0a0a;
+  border-top: 1px solid rgba(102, 0, 255, 0.1);
+}
+
+.daoda-footer-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.daoda-footer-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.daoda-footer-brand .daoda-brand-icon {
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+}
+
+.daoda-footer-brand .daoda-brand-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.daoda-footer-brand span {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.daoda-footer-desc {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0 0 32px;
+}
+
+.daoda-footer-bottom {
+  padding-top: 24px;
+  border-top: 1px solid rgba(102, 0, 255, 0.1);
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 1024px) {
+  .daoda-contact-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .daoda-form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .daoda-map-container {
+    height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .daoda-header-inner {
+    padding: 0 16px;
+  }
+  
+  .daoda-nav {
+    display: none;
+  }
+  
+  .daoda-hero-title {
+    font-size: 36px;
+  }
+  
+  .daoda-section-title {
+    font-size: 32px;
+  }
+  
+  .daoda-section-container {
+    padding: 0 16px;
+  }
+  
+  .daoda-contact-form {
+    padding: 32px 24px;
+  }
+  
+  .daoda-contact-details,
+  .daoda-working-hours {
+    padding: 32px 24px;
+  }
+  
+  .daoda-map-container {
+    height: 300px;
+  }
+  
+  .daoda-footer-container {
+    text-align: center;
+  }
+  
+  .daoda-footer-bottom {
+    text-align: center;
+  }
+}

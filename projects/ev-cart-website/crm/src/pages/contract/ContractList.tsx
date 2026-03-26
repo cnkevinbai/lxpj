@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Table, Card, Button, Tag, Space, Modal, Form, Input, InputNumber, Select, message } from 'antd'
 import { PlusOutlined, EyeOutlined } from '@ant-design/icons'
-import { contractApi } from '@/services/contract'
+import { getList, getDetail, create } from '@/services/contract'
 
 interface Contract {
   id: string
@@ -27,7 +27,7 @@ const ContractList: React.FC = () => {
   const loadContracts = async () => {
     setLoading(true)
     try {
-      const result = await contractApi.getList()
+      const result = await getList()
       setData(result)
     } catch (error) {
       console.error('加载合同失败', error)
@@ -38,7 +38,7 @@ const ContractList: React.FC = () => {
 
   const handleCreate = async (values: any) => {
     try {
-      await contractApi.create(values)
+      await create(values)
       message.success('创建合同成功')
       setModalVisible(false)
       form.resetFields()

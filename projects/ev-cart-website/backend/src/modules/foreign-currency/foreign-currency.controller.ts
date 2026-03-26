@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common'
 import { ApiTags, ApiOperation } from '@nestjs/swagger'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
-import { ForeignCurrencyService } from './foreign-currency.service'
+import { ForeignCurrencyService } from './services/foreign-currency.service'
 
 @ApiTags('foreign-currency')
 @Controller('foreign-currency')

@@ -13,7 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
-import { ApprovalFlowService } from './approval-flow.service'
+import { ApprovalFlowService } from './services/approval-flow.service'
 
 @Controller('approval-flows')
 @UseGuards(JwtAuthGuard)

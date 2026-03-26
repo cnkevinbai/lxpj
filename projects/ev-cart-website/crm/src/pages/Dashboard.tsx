@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Card, Row, Col, Statistic, Progress, Table, DatePicker, Select, message } from 'antd'
+import { Card, Row, Col, Statistic, Progress, Table, DatePicker, Select, message, Space } from 'antd'
 import {
-  TrendUpOutlined,
-  TrendDownOutlined,
+  RiseOutlined,
+  FallOutlined,
   DollarOutlined,
   TeamOutlined,
   ShoppingCartOutlined,
@@ -161,9 +161,8 @@ const Dashboard: React.FC = () => {
               title="今日销售额"
               value={data.salesToday || 0}
               precision={2}
-              prefix="¥"
-              valueStyle={{ color: '#1890ff' }}
               prefix={<DollarOutlined />}
+              valueStyle={{ color: '#1890ff' }}
             />
           </Card>
         </Col>
@@ -173,9 +172,8 @@ const Dashboard: React.FC = () => {
               title="本月销售额"
               value={data.salesMonth || 0}
               precision={2}
-              prefix="¥"
-              valueStyle={{ color: '#52c41a' }}
               prefix={<DollarOutlined />}
+              valueStyle={{ color: '#52c41a' }}
             />
           </Card>
         </Col>

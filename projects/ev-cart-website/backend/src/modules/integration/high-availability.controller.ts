@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { HighAvailabilityService } from './high-availability.service';
+import { HighAvailabilityService } from './services/high-availability.service';
 
 /**
  * 高可用控制器

@@ -1,7 +1,7 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common'
 import { ApiTags, ApiOperation } from '@nestjs/swagger'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
-import { SalesForecastService } from './sales-forecast.service'
+import { SalesForecastService } from './services/sales-forecast.service'
 
 @ApiTags('sales-forecast')
 @Controller('sales-forecast')

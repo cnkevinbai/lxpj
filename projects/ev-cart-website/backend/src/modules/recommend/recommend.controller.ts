@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Query } from '@nestjs/common'
 import { ApiTags, ApiOperation } from '@nestjs/swagger'
-import { RecommendService } from './recommend.service'
+import { RecommendService } from './services/recommend.service'
 
 @ApiTags('recommend')
 @Controller('recommend')

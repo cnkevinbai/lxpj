@@ -1,6 +1,6 @@
 import { Controller, Post, Get, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { IntegrationService } from './integration.service';
+import { IntegrationService } from './services/integration.service';
 
 /**
  * 集成控制器

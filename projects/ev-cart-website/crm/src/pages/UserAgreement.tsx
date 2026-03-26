@@ -91,7 +91,7 @@ const UserAgreement: React.FC = () => {
       >
         <Alert
           message="重要提示"
-          description="请仔细阅读用户协议，点击"同意"表示您接受协议的所有条款。"
+          description="请仔细阅读用户协议，点击「同意」表示您接受协议的所有条款。"
           type="warning"
           showIcon
           className="mb-6"

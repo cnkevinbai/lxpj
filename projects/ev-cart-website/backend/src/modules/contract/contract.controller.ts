@@ -13,7 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
-import { ContractService } from './contract.service'
+import { ContractService } from './services/contract.service'
 import { ContractSignature } from './entities/contract.entity'
 
 @Controller('contracts')

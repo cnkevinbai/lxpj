@@ -1,0 +1,152 @@
+{
+  "meta": {
+    "title": "道达智能车辆制造创新平台",
+    "description": "四川道达智能车辆制造有限公司 - 专业新能源观光车、电动巡逻车、高尔夫球车、无人驾驶观光车制造商"
+  },
+  "nav": {
+    "products": "产品中心",
+    "solutions": "解决方案",
+    "technology": "技术创新",
+    "about": "关于我们",
+    "contact": "联系我们",
+    "platform": "数字化平台",
+    "login": "登录",
+    "digital_platform_full": "四川道达智能数字化平台"
+  },
+  "hero": {
+    "product1": {
+      "title": "境·界全开",
+      "subtitle": "L4 级自动驾驶观光车，定义未来出行",
+      "cta_primary": "探索未来出行",
+      "cta_video": "观看影片"
+    },
+    "product2": {
+      "title": "驭·风而行",
+      "subtitle": "800km 超长续航，绿色零排放",
+      "cta_primary": "了解产品",
+      "cta_video": "观看影片"
+    },
+    "product3": {
+      "title": "守·护者",
+      "subtitle": "静默巡逻，迅捷响应",
+      "cta_primary": "了解产品",
+      "cta_video": "观看影片"
+    },
+    "product4": {
+      "title": "尊·享行",
+      "subtitle": "奢华舒适，球场风尚",
+      "cta_primary": "了解产品",
+      "cta_video": "观看影片"
+    },
+    "product5": {
+      "title": "智·享游",
+      "subtitle": "扫码即走，智慧景区",
+      "cta_primary": "了解产品",
+      "cta_video": "观看影片"
+    }
+  },
+  "products": {
+    "title": "全系列产品",
+    "subtitle": "探索道达智能出行解决方案",
+    "categories": {
+      "sightseeing": "新能源观光车",
+      "patrol": "电动巡逻车",
+      "golf": "高尔夫球车",
+      "autonomous": "无人驾驶观光车",
+      "sharing": "景区共享漫游车"
+    },
+    "learn_more": "了解详情"
+  },
+  "technology": {
+    "title": "技术，无界",
+    "subtitle": "创新科技，驱动未来出行",
+    "battery": {
+      "title": "远，不止",
+      "value": "800",
+      "unit": "km",
+      "desc": "超长续航"
+    },
+    "autonomous": {
+      "title": "智，无界",
+      "value": "L4",
+      "unit": "",
+      "desc": "自动驾驶"
+    },
+    "connected": {
+      "title": "瞬，互联",
+      "value": "5G",
+      "unit": "",
+      "desc": "智能网联"
+    },
+    "charging": {
+      "title": "快，极速",
+      "value": "2",
+      "unit": "h",
+      "desc": "快速充电"
+    }
+  },
+  "global": {
+    "title": "足迹，遍布全球",
+    "subtitle": "服务全球 500+ 客户",
+    "cases": "全球案例",
+    "markets": "覆盖市场"
+  },
+  "footer": {
+    "products": "产品",
+    "solutions": "解决方案",
+    "service": "服务支持",
+    "about": "关于道达",
+    "sitemap": "网站地图",
+    "privacy": "隐私政策",
+    "terms": "使用条款",
+    "copyright": "© 2026 四川道达智能车辆制造有限公司。All rights reserved.",
+    "icp": "蜀 ICP 备 XXXX 号",
+    "subscribe_title": "订阅我们",
+    "subscribe_desc": "获取最新资讯和产品动态",
+    "subscribe_placeholder": "输入邮箱地址",
+    "subscribe_btn": "订阅"
+  },
+  "common": {
+    "learn_more": "了解更多",
+    "contact_us": "联系我们",
+    "get_quote": "获取报价",
+    "test_drive": "预约试驾",
+    "download": "下载",
+    "watch_video": "观看视频",
+    "previous": "上一页",
+    "next": "下一页",
+    "loading": "加载中...",
+    "error": "加载失败",
+    "retry": "重试"
+  },
+  "lang": {
+    "zh": "中文",
+    "en": "English",
+    "de": "Deutsch",
+    "fr": "Français",
+    "es": "Español",
+    "ar": "العربية",
+    "th": "ไทย"
+  },
+  "Solutions": {
+    "scenic": "景区出行方案",
+    "park": "园区通勤方案",
+    "smart-city": "智慧城市方案",
+    "golf": "高尔夫球场方案",
+    "custom": "定制解决方案"
+  },
+  "Service": {
+    "after-sales": "售后服务",
+    "parts": "配件供应",
+    "support": "技术支持",
+    "download": "下载中心",
+    "faq": "常见问题"
+  },
+  "About": {
+    "company": "公司简介",
+    "history": "发展历程",
+    "honors": "荣誉资质",
+    "news": "新闻中心",
+    "careers": "加入我们"
+  }
+}

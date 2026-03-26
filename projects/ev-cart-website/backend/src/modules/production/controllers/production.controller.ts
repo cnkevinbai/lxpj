@@ -1,6 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common'
 import { ApiTags, ApiOperation } from '@nestjs/swagger'
-import { ProductionService } from './production.service'
+import { ProductionService } from '../services/production.service'
 
 @ApiTags('生产管理')
 @Controller('production')

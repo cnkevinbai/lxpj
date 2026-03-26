@@ -1,6 +1,6 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common'
 import { Request, Response } from 'express'
-import logger from '../lib/logger'
+import logger from '../../lib/logger'
 
 /**
  * HTTP 异常过滤器
@@ -28,7 +28,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       path: request.url,
       method: request.method,
       message,
-      error: exception instanceof HttpException ? exception.getName() : 'Internal Server Error',
+      error: exception instanceof HttpException ? exception.constructor.name : 'Internal Server Error',
     }
 
     logger.error(`[${request.method}] ${request.url}`, {

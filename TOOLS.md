@@ -37,4 +37,33 @@ Skills are shared. Your setup is yours. Keeping them apart means you can update 
 
 ---
 
+## 📊 Polymarket Odds Skill
+
+**路径**: `~/.openclaw/skills/polymaketodds/`
+
+**功能**: Polymarket 预测市场赔率查询
+
+**命令**:
+```bash
+# 搜索市场
+~/.openclaw/skills/polymaketodds/tools/query.sh search "trump election"
+
+# 获取赔率
+~/.claw/skills/polymaketodds/tools/query.sh odds <market_id>
+
+# 热门市场
+~/.openclaw/skills/polymaketodds/tools/query.sh trending
+
+# 监控赔率
+~/.openclaw/skills/polymaketodds/tools/query.sh monitor <market_id> 10
+```
+
+**API 端点**:
+- Gamma API: `https://gamma-api.polymarket.com`
+- CLOB API: `https://clob.polymarket.com`
+
+**⚠️ 网络限制**: 服务器可能无法直接访问 Polymarket API，需要代理或 VPN。
+
+---
+
 Add whatever helps you do your job. This is your cheat sheet.

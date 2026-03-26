@@ -1,0 +1,215 @@
+/* 道达智能官网 - 全局样式 */
+
+:root {
+  /* 浅色主题 */
+  --color-primary: #0066FF;
+  --color-black: #0A0A0A;
+  --color-gray-50: #F9FAFB;
+  --color-gray-100: #F3F4F6;
+  --color-gray-200: #E5E7EB;
+  --color-gray-500: #6B7280;
+  --color-gray-900: #111827;
+  
+  /* 深色主题 */
+  --color-dark-bg: #0a0a0f;
+  --color-dark-surface: #0f0f1a;
+  --color-dark-border: rgba(255, 255, 255, 0.08);
+  --color-dark-text: #ffffff;
+  --color-dark-text-muted: rgba(255, 255, 255, 0.5);
+  --color-primary-purple: #6b4cff;
+  --color-primary-gradient: linear-gradient(135deg, #6b4cff 0%, #a855f7 100%);
+  
+  /* daoda- 前缀变量（统一风格） */
+  --daoda-bg: #0a0a0a;
+  --daoda-surface: #111111;
+  --daoda-border: rgba(255, 255, 255, 0.08);
+  --daoda-border-hover: rgba(102, 0, 255, 0.3);
+  --daoda-text: #ffffff;
+  --daoda-text-muted: rgba(255, 255, 255, 0.7);
+  --daoda-text-dim: rgba(255, 255, 255, 0.4);
+  --daoda-primary: #6600ff;
+  --daoda-primary-light: #a855f7;
+  --daoda-header-height: 72px;
+  --daoda-radius: 16px;
+  --daoda-radius-sm: 12px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  color: var(--color-gray-900);
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 深色主题页面 */
+.home {
+  background: var(--color-dark-bg);
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Header */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 48px;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--color-gray-100);
+}
+
+.logo a {
+  display: flex;
+  align-items: baseline;
+  text-decoration: none;
+}
+
+.logo-text {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.logo-sub {
+  margin-left: 8px;
+  font-size: 12px;
+  color: var(--color-gray-500);
+}
+
+.nav-menu {
+  border-bottom: none;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Hero */
+.hero {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+}
+
+.hero-content {
+  text-align: center;
+}
+
+.hero-title {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.hero-subtitle {
+  font-size: 20px;
+  color: var(--color-gray-500);
+  margin-bottom: 48px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+/* Sections */
+.section-title {
+  text-align: center;
+  font-size: 36px;
+  margin-bottom: 16px;
+}
+
+.section-subtitle {
+  text-align: center;
+  color: var(--color-gray-500);
+  margin-bottom: 48px;
+}
+
+/* Footer */
+.footer {
+  background: var(--color-gray-900);
+  color: #fff;
+  padding: 64px 48px 24px;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-section h4 {
+  margin-bottom: 24px;
+  color: #fff;
+}
+
+.footer-section a {
+  display: block;
+  color: var(--color-gray-500);
+  margin-bottom: 12px;
+  text-decoration: none;
+}
+
+.footer-section a:hover {
+  color: #fff;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-gray-500);
+  color: var(--color-gray-500);
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 32px;
+  }
+
+  .footer-content {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  .nav-menu,
+  .header-right {
+    display: none;
+  }
+}

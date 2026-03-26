@@ -1,0 +1,490 @@
+package com.daod.iov.modules.subaccount;
+
+import com.daod.iov.plugin.ModuleContext;
+import com.daod.iov.plugin.ModuleException;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.time.LocalDateTime;
+import java.util.*;
+
+/**
+ * 子账户服务测试类
+ */
+class SubAccountServiceTest {
+    
+    private SubAccountService service;
+    private AutoCloseable closeable;
+    
+    @Mock
+    private ModuleContext context;
+    
+    @BeforeEach
+    void setUp() {
+        closeable = MockitoAnnotations.openMocks(this);
+        service = new SubAccountService();
+    }
+    
+    @AfterEach
+    void tearDown() throws Exception {
+        if (closeable != null) {
+            closeable.close();
+        }
+    }
+    
+    @Test
+    void testModuleMetadata() {
+        assertNotNull(service.getMetadata());
+        assertEquals("sub-account-service", service.getMetadata().getName());
+        assertEquals("1.0.0", service.getMetadata().getVersion());
+        assertEquals("business", service.getMetadata().getType());
+        assertEquals(55, service.getMetadata().getPriority());
+    }
+    
+    @Test
+    void testModuleLifecycle() throws ModuleException {
+        // 创建模拟上下文
+        ModuleContext context = new ModuleContext("sub-account-service:1.0.0", "", null);
+        
+        // 测试初始状态
+        assertEquals(ModuleState.UNINITIALIZED, service.getState());
+        assertEquals(HealthStatus.UNKNOWN, service.getHealthStatus());
+        
+        // 测试初始化
+        service.initialize(context);
+        assertEquals(ModuleState.INITIALIZED, service.getState());
+        assertEquals(HealthStatus.HEALTHY, service.getHealthStatus());
+        
+        // 测试启动
+        service.start();
+        assertEquals(ModuleState.RUNNING, service.getState());
+        assertEquals(HealthStatus.HEALTHY, service.getHealthStatus());
+        
+        // 测试停止
+        service.stop();
+        assertEquals(ModuleState.STOPPED, service.getState());
+        assertEquals(HealthStatus.OFFLINE, service.getHealthStatus());
+        
+        // 测试销毁
+        service.destroy();
+        assertEquals(ModuleState.DESTROYED, service.getState());
+    }
+    
+    @Test
+    void testCreateSubAccount() throws ModuleException {
+        // 初始化服务
+        ModuleContext context = new ModuleContext("sub-account-service:1.0.0", "", null);
+        service.initialize(context);
+        service.start();
+        
+        // 创建创建请求
+        SubAccountCreateRequest request = new SubAccountCreateRequest();
+        request.setParentAccountId("parent-001");
+        request.setUsername("subuser001");
+        request.setDisplayName("子用户001");
+        request.setEmail("subuser001@example.com");
+        request.setPassword("Password123!");
+        request.setMaxDevices(10);
+        request.setMaxLocations(50);
+        
+        // 调用创建方法
+        var result = service.createSubAccount(request);
+        
+        assertTrue(result.isSuccess());
+        assertNotNull(result.getData());
+        
+        // 验证创建的子账户
+        SubAccountEntity subAccount = result.getData();
+        assertEquals("parent-001", subAccount.getParentAccountId());
+        assertEquals("subuser001", subAccount.getUsername());
+        assertEquals("子用户001", subAccount.getDisplayName());
+        assertEquals("subuser001@example.com", subAccount.getEmail());
+        assertEquals(AccountStatus.ACTIVE, subAccount.getStatus());
+        assertTrue(subAccount.getPasswordHash().startsWith("ENC:"));
+        assertNotNull(subAccount.getCreatedAt());
+        assertNotNull(subAccount.getExpiresAt());
+        
+        service.stop();
+    }
+    
+    @Test
+    void testCreateSubAccountWithMissingParentId() throws ModuleException {
+        ModuleContext context = new ModuleContext("sub-account-service:1.0.0", "", null);
+        service.initialize(context);
+        service.start();
+        
+        SubAccountCreateRequest request = new SubAccountCreateRequest();
+        request.setUsername("subuser001");
+        request.setPassword("Password123!");
+        
+        var result = service.createSubAccount(request);
+        
+        assertFalse(result.isSuccess());
+        assertTrue(result.getMessage().contains("父账号ID"));
+        
+        service.stop();
+    }
+    
+    @Test
+    void testCreateSubAccountWithShortPassword() throws ModuleException {
+        ModuleContext context = new ModuleContext("sub-account-service:1.0.0", "", null);
+        service.initialize(context);
+        service.start();
+        
+        SubAccountCreateRequest request = new SubAccountCreateRequest();
+        request.setParentAccountId("parent-001");
+        request.setUsername("subuser001");
+        request.setPassword("123"); // 太短的密码
+        
+        var result = service.createSubAccount(request);
+        
+        assertFalse(result.isSuccess());
+        assertTrue(result.getMessage().contains("密码"));
+        
+        service.stop();
+    }
+    
+    @Test
+    void testCreateSubAccountWithInvalidEmail() throws ModuleException {
+        ModuleContext context = new ModuleContext("sub-account-service:1.0.0", "", null);
+        service.initialize(context);
+        service.start();
+        
+        SubAccountCreateRequest request = new SubAccountCreateRequest();
+        request.setParentAccountId("parent-001");
+        request.setUsername("subuser001");
+        request.setPassword("Password123!");
+        request.setEmail("invalid-email");
+        
+        var result = service.createSubAccount(request);
+        
+        assertFalse(result.isSuccess());
+        assertTrue(result.getMessage().contains("邮件格式"));
+        
+        service.stop();
+    }
+    
+    @Test
+    void testGetSubAccount() throws ModuleException {
+        ModuleContext context = new ModuleContext("sub-account-service:1.0.0", "", null);
+        service.initialize(context);
+        service.start();
+        
+        // 先创建一个子账户
+        SubAccountCreateRequest createRequest = new SubAccountCreateRequest();
+        createRequest.setParentAccountId("parent-001");
+        createRequest.setUsername("subuser001");
+        createRequest.setPassword("Password123!");
+        
+        var createResult = service.createSubAccount(createRequest);
+        assertTrue(createResult.isSuccess());
+        
+        String subAccountId = createResult.getData().getId();
+        
+        // 测试获取子账户
+        var getResult = service.getSubAccount(subAccountId);
+        assertTrue(getResult.isSuccess());
+        assertEquals(subAccountId, getResult.getData().getId());
+        
+        service.stop();
+    }
+    
+    @Test
+    void testGetNonExistentSubAccount() throws ModuleException {
+        ModuleContext context = new ModuleContext("sub-account-service:1.0.0", "", null);
+        service.initialize(context);
+        service.start();
+        
+        var result = service.getSubAccount("non-existent-id");
+        
+        assertFalse(result.isSuccess());
+        assertTrue(result.getMessage().contains("子账户不存在"));
+        
+        service.stop();
+    }
+    
+    @Test
+    void testUpdateSubAccount() throws ModuleException {
+        ModuleContext context = new ModuleContext("sub-account-service:1.0.0", "", null);
+        service.initialize(context);
+        service.start();
+        
+        // 创建子账户
+        SubAccountCreateRequest createRequest = new SubAccountCreateRequest();
+        createRequest.setParentAccountId("parent-001");
+        createRequest.setUsername("subuser001");
+        createRequest.setPassword("Password123!");
+        createRequest.setDisplayName("原始名称");
+        
+        var createResult = service.createSubAccount(createRequest);
+        String subAccountId = createResult.getData().getId();
+        
+        // 更新子账户
+        SubAccountUpdateRequest updateRequest = new SubAccountUpdateRequest();
+        updateRequest.setDisplayName("更新后的名称");
+        updateRequest.setEmail("updated@example.com");
+        updateRequest.setMaxDevices(20);
+        
+        var updateResult = service.updateSubAccount(subAccountId, updateRequest);
+        assertTrue(updateResult.isSuccess());
+        
+        // 验证更新
+        SubAccountEntity updated = updateResult.getData();
+        assertEquals("更新后的名称", updated.getDisplayName());
+        assertEquals("updated@example.com", updated.getEmail());
+        assertEquals(20, updated.getMaxDevices());
+        
+        service.stop();
+    }
+    
+    @Test
+    void testDeleteSubAccount() throws ModuleException {
+        ModuleContext context = new ModuleContext("sub-account-service:1.0.0", "", null);
+        service.initialize(context);
+        service.start();
+        
+        // 创建子账户
+        SubAccountCreateRequest createRequest = new SubAccountCreateRequest();
+        createRequest.setParentAccountId("parent-001");
+        createRequest.setUsername("subuser001");
+        createRequest.setPassword("Password123!");
+        
+        var createResult = service.createSubAccount(createRequest);
+        String subAccountId = createResult.getData().getId();
+        
+        // 删除子账户
+        var deleteResult = service.deleteSubAccount(subAccountId);
+        assertTrue(deleteResult.isSuccess());
+        
+        // 验证已删除
+        var getResult = service.getSubAccount(subAccountId);
+        assertFalse(getResult.isSuccess());
+        
+        service.stop();
+    }
+    
+    @Test
+    void testEnableDisableSubAccount() throws ModuleException {
+        ModuleContext context = new ModuleContext("sub-account-service:1.0.0", "", null);
+        service.initialize(context);
+        service.start();
+        
+        // 创建子账户
+        SubAccountCreateRequest createRequest = new SubAccountCreateRequest();
+        createRequest.setParentAccountId("parent-001");
+        createRequest.setUsername("subuser001");
+        createRequest.setPassword("Password123!");
+        
+        var createResult = service.createSubAccount(createRequest);
+        String subAccountId = createResult.getData().getId();
+        
+        // 禁用账户
+        var disableResult = service.disableSubAccount(subAccountId);
+        assertTrue(disableResult.isSuccess());
+        
+        // 验证已禁用
+        var getDisabledResult = service.getSubAccount(subAccountId);
+        assertTrue(getDisabledResult.isSuccess());
+        assertEquals(AccountStatus.DISABLED, getDisabledResult.getData().getStatus());
+        
+        // 启用账户
+        var enableResult = service.enableSubAccount(subAccountId);
+        assertTrue(enableResult.isSuccess());
+        
+        // 验证已启用
+        var getEnabledResult = service.getSubAccount(subAccountId);
+        assertTrue(getEnabledResult.isSuccess());
+        assertEquals(AccountStatus.ACTIVE, getEnabledResult.getData().getStatus());
+        
+        service.stop();
+    }
+    
+    @Test
+    void testResetPassword() throws ModuleException {
+        ModuleContext context = new ModuleContext("sub-account-service:1.0.0", "", null);
+        service.initialize(context);
+        service.start();
+        
+        // 创建子账户
+        SubAccountCreateRequest createRequest = new SubAccountCreateRequest();
+        createRequest.setParentAccountId("parent-001");
+        createRequest.setUsername("subuser001");
+        createRequest.setPassword("OldPassword123!");
+        
+        var createResult = service.createSubAccount(createRequest);
+        String subAccountId = createResult.getData().getId();
+        
+        String oldPasswordHash = createResult.getData().getPasswordHash();
+        
+        // 重置密码
+        var resetResult = service.resetPassword(subAccountId, "NewPassword456!");
+        assertTrue(resetResult.isSuccess());
+        
+        // 验证密码已更新
+        var getResult = service.getSubAccount(subAccountId);
+        assertNotEquals(oldPasswordHash, getResult.getData().getPasswordHash());
+        assertNotNull(getResult.getData().getPasswordResetAt());
+        
+        service.stop();
+    }
+    
+    @Test
+    void testResetPasswordWithInvalidPolicy() throws ModuleException {
+        ModuleContext context = new ModuleContext("sub-account-service:1.0.0", "", null);
+        service.initialize(context);
+        service.start();
+        
+        // 创建子账户
+        SubAccountCreateRequest createRequest = new SubAccountCreateRequest();
+        createRequest.setParentAccountId("parent-001");
+        createRequest.setUsername("subuser001");
+        createRequest.setPassword("Password123!");
+        
+        var createResult = service.createSubAccount(createRequest);
+        String subAccountId = createResult.getData().getId();
+        
+        // 尝试使用不符合策略的密码
+        var resetResult = service.resetPassword(subAccountId, "short");
+        assertFalse(result.isSuccess());
+        assertTrue(resetResult.getMessage().contains("密码策略"));
+        
+        service.stop();
+    }
+    
+    @Test
+    void testListSubAccounts() throws ModuleException {
+        ModuleContext context = new ModuleContext("sub-account-service:1.0.0", "", null);
+        service.initialize(context);
+        service.start();
+        
+        // 创建多个子账户
+        for (int i = 0; i < 5; i++) {
+            SubAccountCreateRequest request = new SubAccountCreateRequest();
+            request.setParentAccountId("parent-001");
+            request.setUsername("subuser" + i);
+            request.setPassword("Password123!");
+            service.createSubAccount(request);
+        }
+        
+        // 分页查询
+        var result = service.listSubAccounts("parent-001", 1, 3);
+        assertTrue(result.isSuccess());
+        
+        var pageResult = result.getData();
+        assertNotNull(pageResult);
+        assertEquals(5, pageResult.getTotal());
+        assertEquals(3, pageResult.getSize());
+        assertEquals(1, pageResult.getPage());
+        assertEquals(3, pageResult.getRecords().size());
+        
+        service.stop();
+    }
+    
+    @Test
+    void testCheckAccountExpired() throws ModuleException {
+        ModuleContext context = new ModuleContext("sub-account-service:1.0.0", "", null);
+        service.initialize(context);
+        service.start();
+        
+        // 创建子账户（设置过期时间）
+        SubAccountCreateRequest createRequest = new SubAccountCreateRequest();
+        createRequest.setParentAccountId("parent-001");
+        createRequest.setUsername("subuser001");
+        createRequest.setPassword("Password123!");
+        
+        var createResult = service.createSubAccount(createRequest);
+        String subAccountId = createResult.getData().getId();
+        
+        // 检查是否过期（应该未过期）
+        var checkResult = service.checkAccountExpired(subAccountId);
+        assertTrue(checkResult.isSuccess());
+        assertFalse(checkResult.getData());
+        
+        service.stop();
+    }
+    
+    @Test
+    void testGetQuotaInfo() throws ModuleException {
+        ModuleContext context = new ModuleContext("sub-account-service:1.0.0", "", null);
+        service.initialize(context);
+        service.start();
+        
+        // 创建子账户
+        SubAccountCreateRequest createRequest = new SubAccountCreateRequest();
+        createRequest.setParentAccountId("parent-001");
+        createRequest.setUsername("subuser001");
+        createRequest.setPassword("Password123!");
+        createRequest.setMaxDevices(10);
+        createRequest.setMaxLocations(50);
+        
+        var createResult = service.createSubAccount(createRequest);
+        String subAccountId = createResult.getData().getId();
+        
+        // 查询配额
+        var result = service.getQuotaInfo(subAccountId);
+        assertTrue(result.isSuccess());
+        
+        QuotaInfo quotaInfo = result.getData();
+        assertEquals(10, quotaInfo.getMaxDevices());
+        assertEquals(50, quotaInfo.getMaxLocations());
+        assertEquals(0, quotaInfo.getDevicesUsed());
+        assertEquals(0, quotaInfo.getLocationsUsed());
+        
+        service.stop();
+    }
+    
+    @Test
+    void testGetLoginLogs() throws ModuleException {
+        ModuleContext context = new ModuleContext("sub-account-service:1.0.0", "", null);
+        service.initialize(context);
+        service.start();
+        
+        // 创建子账户
+        SubAccountCreateRequest createRequest = new SubAccountCreateRequest();
+        createRequest.setParentAccountId("parent-001");
+        createRequest.setUsername("subuser001");
+        createRequest.setPassword("Password123!");
+        
+        var createResult = service.createSubAccount(createRequest);
+        String subAccountId = createResult.getData().getId();
+        
+        // 获取登录日志
+        var result = service.getLoginLogs(subAccountId, 1, 10);
+        assertTrue(result.isSuccess());
+        
+        var pageResult = result.getData();
+        assertNotNull(pageResult);
+        assertEquals(0, pageResult.getTotal()); // 初始没有日志
+        assertEquals(10, pageResult.getSize());
+        
+        service.stop();
+    }
+    
+    @Test
+    void testGetSubAccountOfDisabled() throws ModuleException {
+        ModuleContext context = new ModuleContext("sub-account-service:1.0.0", "", null);
+        service.initialize(context);
+        service.start();
+        
+        // 创建子账户
+        SubAccountCreateRequest createRequest = new SubAccountCreateRequest();
+        createRequest.setParentAccountId("parent-001");
+        createRequest.setUsername("subuser001");
+        createRequest.setPassword("Password123!");
+        
+        var createResult = service.createSubAccount(createRequest);
+        String subAccountId = createResult.getData().getId();
+        
+        // 禁用账户
+        service.disableSubAccount(subAccountId);
+        
+        // 获取禁用的账户
+        var result = service.getSubAccount(subAccountId);
+        assertFalse(result.isSuccess());
+        assertTrue(result.getMessage().contains("账户状态异常"));
+        
+        service.stop();
+    }
+}

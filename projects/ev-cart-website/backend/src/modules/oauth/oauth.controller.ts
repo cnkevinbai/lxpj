@@ -1,6 +1,6 @@
 import { Controller, Get, Query, Post, Body } from '@nestjs/common'
 import { ApiTags, ApiOperation } from '@nestjs/swagger'
-import { OauthService } from './oauth.service'
+import { OauthService } from './services/oauth.service'
 
 @ApiTags('oauth')
 @Controller('oauth')

@@ -1,0 +1,369 @@
+/**
+ * 登录页面样式
+ * 统一风格版本
+ */
+
+/* 页面容器 */
+.login-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 背景装饰 */
+.login-bg-elements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.login-bg-circle {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+}
+
+.login-bg-circle-1 {
+  width: 512px;
+  height: 410px;
+  background: rgba(102, 0, 255, 0.1);
+  top: -102px;
+  left: -128px;
+}
+
+.login-bg-circle-2 {
+  width: 512px;
+  height: 410px;
+  background: rgba(102, 0, 255, 0.05);
+  bottom: -100px;
+  right: -128px;
+}
+
+/* 语言切换 */
+.login-lang-switch {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  display: flex;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--daoda-border);
+  border-radius: 17px;
+  padding: 4px;
+}
+
+.login-lang-switch button {
+  padding: 6px 12px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 13px;
+}
+
+.login-lang-switch button.active {
+  background: rgba(102, 0, 255, 0.3);
+  color: #fff;
+}
+
+/* 登录卡片 */
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
+  position: relative;
+  z-index: 1;
+}
+
+/* 品牌区域 */
+.login-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.login-logo {
+  margin-bottom: 16px;
+}
+
+.login-logo .daoda-brand-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto;
+  border-radius: 12px;
+}
+
+.login-logo .daoda-brand-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.login-brand {
+  font-size: 28px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 8px;
+  letter-spacing: 2px;
+}
+
+.login-subtitle {
+  font-size: 14px;
+  color: var(--daoda-text-muted);
+  margin: 0;
+}
+
+/* 表单 */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.login-field-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.login-field label {
+  font-size: 14px;
+  color: var(--daoda-text);
+  font-weight: 500;
+}
+
+.login-forgot {
+  font-size: 12px;
+  color: var(--daoda-primary-light);
+  text-decoration: none;
+}
+
+.login-forgot:hover {
+  color: #fff;
+}
+
+.login-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.login-input-icon {
+  position: absolute;
+  left: 16px;
+  width: 18px;
+  height: 18px;
+  color: var(--daoda-text-dim);
+  pointer-events: none;
+}
+
+.login-input-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.login-input {
+  width: 100%;
+  height: 50px;
+  padding: 0 48px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--daoda-border);
+  border-radius: var(--daoda-radius-sm);
+  color: #fff;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.login-input::placeholder {
+  color: var(--daoda-text-dim);
+}
+
+.login-input:focus {
+  border-color: var(--daoda-primary);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(102, 0, 255, 0.2);
+}
+
+.login-toggle-pw {
+  position: absolute;
+  right: 16px;
+  width: 34px;
+  height: 34px;
+  background: rgba(255, 255, 255, 0.05);
+  border: none;
+  border-radius: var(--daoda-radius-sm);
+  color: var(--daoda-text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-toggle-pw svg {
+  width: 18px;
+  height: 18px;
+}
+
+.login-toggle-pw:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* 验证码 */
+.login-captcha-row {
+  display: flex;
+  gap: 12px;
+}
+
+.login-captcha-input {
+  flex: 1;
+}
+
+.login-captcha-box {
+  width: 121px;
+  height: 50px;
+  background: linear-gradient(135deg, rgba(102, 0, 255, 0.2), rgba(139, 92, 246, 0.2));
+  border: 1px solid var(--daoda-border);
+  border-radius: var(--daoda-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.login-captcha-text {
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 4px;
+  font-family: 'Courier New', monospace;
+}
+
+/* 提交按钮 */
+.login-submit {
+  width: 100%;
+  height: 52px;
+  justify-content: center;
+  font-size: 16px;
+  border-radius: var(--daoda-radius-sm);
+}
+
+/* 企业标识 */
+.login-enterprise {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--daoda-radius-sm);
+  font-size: 13px;
+  color: var(--daoda-text-muted);
+}
+
+.login-enterprise svg {
+  width: 16px;
+  height: 16px;
+  color: var(--daoda-primary);
+}
+
+/* 备选登录 */
+.login-alt-methods {
+  display: flex;
+  gap: 12px;
+}
+
+.login-alt-btn {
+  flex: 1;
+  height: 42px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--daoda-border);
+  border-radius: 10px;
+  color: var(--daoda-text);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.login-alt-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.login-alt-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--daoda-border-hover);
+}
+
+/* 页脚 */
+.login-footer {
+  position: absolute;
+  bottom: 24px;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.login-footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 12px;
+}
+
+.login-footer-links a {
+  font-size: 12px;
+  color: var(--daoda-text-dim);
+  text-decoration: none;
+}
+
+.login-footer-links a:hover {
+  color: #fff;
+}
+
+.login-copyright {
+  font-size: 12px;
+  color: var(--daoda-text-dim);
+  margin: 0;
+  opacity: 0.6;
+}
+
+/* 响应式 */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 32px 24px;
+  }
+  
+  .login-brand {
+    font-size: 24px;
+  }
+  
+  .login-captcha-row {
+    flex-direction: column;
+  }
+  
+  .login-captcha-box {
+    width: 100%;
+  }
+  
+  .login-alt-methods {
+    flex-direction: column;
+  }
+}

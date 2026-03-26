@@ -1,0 +1,118 @@
+version: '3.8'
+
+services:
+  # PostgreSQL 数据库
+  postgres:
+    image: postgres:15-alpine
+    container_name: iov-postgres
+    environment:
+      POSTGRES_DB: iov_platform
+      POSTGRES_USER: iov
+      POSTGRES_PASSWORD: iov123456
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U iov"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - iov-network
+
+  # Redis 缓存
+  redis:
+    image: redis:7-alpine
+    container_name: iov-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - iov-network
+
+  # EMQX 消息服务器
+  emqx:
+    image: emqx/emqx:5.1.0
+    container_name: iov-emqx
+    environment:
+      - EMQX_NAME=iov_emqx
+      - EMQX_HOST=0.0.0.0
+    ports:
+      - "1883:1883"
+      - "8083:8083"
+      - "18083:18083"
+    volumes:
+      - emqx_data:/opt/emqx/data
+    networks:
+      - iov-network
+
+  # 后端服务
+  backend:
+    build:
+      context: .
+      dockerfile: backend/docker/Dockerfile
+    container_name: iov-backend
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=iov_platform
+      - DB_USER=iov
+      - DB_PASSWORD=iov123456
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - EMQX_HOST=emqx
+      - EMQX_PORT=1883
+      - JWT_SECRET=dev-jwt-secret-key
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - iov-network
+    restart: unless-stopped
+
+  # 前端服务
+  frontend:
+    build:
+      context: ./web/iov-portal
+      dockerfile: docker/Dockerfile
+    container_name: iov-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - iov-network
+    restart: unless-stopped
+
+  # Nginx 反向代理
+  nginx:
+    image: nginx:1.24-alpine
+    container_name: iov-nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - iov-network
+    restart: unless-stopped
+
+networks:
+  iov-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  emqx_data:

@@ -1,7 +1,7 @@
 import { Controller, Get, Query, Res, UseGuards, Request } from '@nestjs/common'
 import { ApiTags, ApiOperation } from '@nestjs/swagger'
 import { Response } from 'express'
-import { ExportService, ExportOptions } from './export.service'
+import { ExportService, ExportOptions } from './services/export.service'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
 import { getClientIp } from '../../common/utils/get-client-ip.util'
 

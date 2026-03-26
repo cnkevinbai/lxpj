@@ -1,0 +1,68 @@
+# 用户服务模块配置
+
+apiVersion: iov.daod.com/v1
+kind: Module
+metadata:
+  name: user-service
+  version: 1.0.0
+  description: 用户服务模块 - 用户管理、个人信息、偏好设置
+  author: daod-team
+  license: Apache-2.0
+
+spec:
+  type: core
+  priority: 20
+  mainClass: com.daod.iov.modules.user.UserServiceModule
+  
+  dependencies:
+    - name: plugin-framework
+      version: ">=1.0.0"
+      optional: false
+    - name: common-core
+      version: "^1.0.0"
+      optional: false
+    - name: auth-service
+      version: "^1.0.0"
+      optional: false
+    - name: tenant-service
+      version: "^1.0.0"
+      optional: false
+  
+  provides:
+    - name: user-api
+      version: "1.0.0"
+      endpoints:
+        - path: /api/v1/users
+          method: GET
+          description: 获取用户列表
+        - path: /api/v1/users/{id}
+          method: GET
+          description: 获取用户详情
+        - path: /api/v1/users/me
+          method: GET
+          description: 获取当前用户信息
+  
+  consumes:
+    - name: auth-api
+      version: "^1.0.0"
+      from: auth-service
+    - name: tenant-api
+      version: "^1.0.0"
+      from: tenant-service
+  
+  permissions:
+    - NETWORK_CONNECT
+    - FILE_READ
+    - FILE_WRITE
+  
+  resources:
+    cpu: "100m"
+    memory: "128Mi"
+    maxConnections: 500
+  
+  healthCheck:
+    liveness: /health/live
+    readiness: /health/ready
+  
+  hotReload:
+    enabled: false  # 核心模块不支持热更新

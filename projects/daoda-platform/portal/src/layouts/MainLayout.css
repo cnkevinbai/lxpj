@@ -1,0 +1,138 @@
+/* 主布局样式 */
+
+.main-layout {
+  min-height: 100vh;
+  background: #f5f5f7;
+}
+
+/* 侧边栏 */
+.sider {
+  background: #fff !important;
+  border-right: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+}
+
+.sider .logo {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #0066ff;
+  border-bottom: 1px solid #e5e7eb;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition: all 0.3s;
+}
+
+.sider .logo:hover {
+  background: #fafafa;
+}
+
+.sider .ant-menu {
+  border-right: none;
+  flex: 1;
+}
+
+.sider .ant-menu-item {
+  margin: 4px 8px;
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.sider .ant-menu-item:hover {
+  background: #e6f4ff;
+}
+
+.sider .ant-menu-item-selected {
+  background: #e6f4ff;
+  color: #0066ff;
+  font-weight: 500;
+}
+
+.sider .ant-menu-item-selected::after {
+  border-right: 3px solid #0066ff;
+}
+
+/* 头部 */
+.header {
+  background: #fff;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  min-height: 64px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* 左侧搜索区域 */
+.header .ant-space {
+  display: flex;
+  align-items: center;
+}
+
+.header .ant-input {
+  transition: all 0.3s;
+}
+
+.header .ant-input:hover {
+  border-color: #0066ff;
+}
+
+/* 内容区 */
+.content {
+  margin: 16px;
+  padding: 0;
+  min-height: calc(100vh - 64px - 32px);
+  background: transparent;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .header {
+    padding: 0 12px;
+  }
+
+  .content {
+    margin: 12px;
+  }
+
+  .header .ant-input {
+    width: 120px;
+  }
+
+  .sider .logo {
+    font-size: 14px;
+  }
+}
+
+/* 通知弹窗 */
+.header .ant-btn-icon {
+  transition: all 0.3s;
+}
+
+.header .ant-btn-icon:hover {
+  color: #0066ff;
+  background: #e6f4ff;
+}
+
+.ant-modal-notification .ant-modal-body {
+  padding: 0;
+}
+
+.ant-modal-notification .ant-list-item {
+  transition: background 0.3s;
+}
+
+.ant-modal-notification .ant-list-item:hover {
+  background: #fafafa;
+}

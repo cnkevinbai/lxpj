@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, Query, Request } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger'
-import { FinanceService } from './finance.service'
+import { FinanceService } from '../services/finance.service'
 
 @ApiTags('财务管理')
 @ApiBearerAuth()

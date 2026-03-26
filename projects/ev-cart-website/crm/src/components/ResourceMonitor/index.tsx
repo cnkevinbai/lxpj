@@ -6,10 +6,10 @@
 import { useState, useEffect } from 'react'
 import { Card, Progress, Space, Tag, Tooltip } from 'antd'
 import {
-  MemoryOutlined,
-  CpuOutlined,
   WifiOutlined,
   DashboardOutlined,
+  CloudServerOutlined,
+  ThunderboltOutlined,
 } from '@ant-design/icons'
 import { useNetworkStatus, getNetworkQuality, getNetworkLevel } from '@/hooks/useNetworkStatus'
 
@@ -75,7 +75,7 @@ export default function ResourceMonitor() {
         {/* 内存使用 */}
         <div>
           <Space style={{ marginBottom: 4 }}>
-            <MemoryOutlined />
+            <CloudServerOutlined />
             <span>内存使用</span>
             <Tag color={memoryLevel.color}>{memoryLevel.text}</Tag>
           </Space>

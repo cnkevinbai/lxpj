@@ -167,7 +167,7 @@ const Dealers: React.FC = () => {
           <Card>
             <Statistic
               title="销售目标"
-              value={`¥${(stats.sales?.target || 0) / 10000}万`}
+              value={`${(stats.sales as any)?.target || 0}万`}
               valueStyle={{ color: '#722ed1' }}
             />
           </Card>
@@ -176,7 +176,7 @@ const Dealers: React.FC = () => {
           <Card>
             <Statistic
               title="实际销售"
-              value={`¥${(stats.sales?.actual || 0) / 10000}万`}
+              value={`${(stats.sales as any)?.actual || 0}万`}
               valueStyle={{ color: '#faad14' }}
             />
           </Card>

@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Query } from '@nestjs/common'
 import { ApiTags, ApiOperation } from '@nestjs/swagger'
-import { OrderService } from './order.service'
+import { OrderService } from './services/order.service'
 import { CreateOrderDto, UpdateOrderDto } from './dto/order.dto'
 
 @ApiTags('orders')

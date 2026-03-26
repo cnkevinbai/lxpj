@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Delete, Param, Query, UseGuards } from '@nestjs/common'
 import { ApiTags, ApiOperation } from '@nestjs/swagger'
-import { NotificationService } from './notification.service'
+import { NotificationService } from './services/notification.service'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
 
 @ApiTags('notifications')

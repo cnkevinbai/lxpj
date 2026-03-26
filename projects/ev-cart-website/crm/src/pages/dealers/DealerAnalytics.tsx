@@ -320,9 +320,9 @@ const DealerAnalytics: React.FC = () => {
             <Statistic
               title="累计发放返利"
               value={dealers.reduce((sum, d) => sum + (d.totalRebate || 0), 0).toLocaleString()}
-              prefix="¥"
-              valueStyle={{ color: '#722ed1' }}
               prefix={<DollarOutlined />}
+              suffix="¥"
+              valueStyle={{ color: '#722ed1' }}
             />
           </Card>
         </Col>

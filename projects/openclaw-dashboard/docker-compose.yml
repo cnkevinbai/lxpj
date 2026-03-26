@@ -1,0 +1,75 @@
+# OpenClaw 控制面板 - Docker Compose 生产部署
+# 使用: docker-compose up -d
+
+version: '3.8'
+
+services:
+  # PostgreSQL 数据库
+  postgres:
+    image: postgres:15-alpine
+    container_name: openclaw-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-openclaw}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-openclaw_secret}
+      POSTGRES_DB: ${DB_NAME:-openclaw_dashboard}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-openclaw}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 后端 API 服务
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: openclaw-backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      DATABASE_URL: postgresql://${DB_USER:-openclaw}:${DB_PASSWORD:-openclaw_secret}@postgres:5432/${DB_NAME:-openclaw_dashboard}
+      OPENCLAW_GATEWAY_URL: ${OPENCLAW_GATEWAY_URL:-http://host.docker.internal:18789}
+      OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN}
+      JWT_SECRET: ${JWT_SECRET:-your_jwt_secret_here}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "3001:3001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/system/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # 前端 Web 服务
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: openclaw-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  default:
+    name: openclaw-network

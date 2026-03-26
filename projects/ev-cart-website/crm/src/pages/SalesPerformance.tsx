@@ -28,8 +28,8 @@ const SalesPerformance: React.FC = () => {
   const loadTeamStats = async () => {
     setLoading(true)
     try {
-      const startDate = dayjs(dateRange[0]).format('YYYY-MM-DD')
-      const endDate = dayjs(dateRange[1]).format('YYYY-MM-DD')
+      const startDate = dayjs(dateRange?.[0]).format('YYYY-MM-DD')
+      const endDate = dayjs(dateRange?.[1]).format('YYYY-MM-DD')
       const response = await apiClient.get('/follow-up/team-stats', {
         params: { startDate, endDate },
       })

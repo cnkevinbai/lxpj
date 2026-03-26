@@ -1,0 +1,1082 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== 枚举类型 ====================
+
+enum TenantStatus {
+  ACTIVE
+  SUSPENDED
+  EXPIRED
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  LOCKED
+}
+
+enum VideoStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum VideoSource {
+  LOCAL
+  EXTERNAL
+  YOUTUBE
+  VIMEO
+}
+
+enum TicketStatus {
+  PENDING
+  ASSIGNED
+  PROCESSING
+  COMPLETED
+  CLOSED
+}
+
+enum Priority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum ConfigType {
+  TEXT
+  NUMBER
+  BOOLEAN
+  JSON
+}
+
+enum SalaryStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  LEAVE
+}
+
+enum CustomerLevel {
+  A
+  B
+  C
+  D
+}
+
+enum ContractStatus {
+  DRAFT
+  ACTIVE
+  EXPIRED
+  PENDING_RENEWAL
+  TERMINATED
+}
+
+enum PartStatus {
+  ACTIVE
+  INACTIVE
+  OUT_OF_STOCK
+}
+
+enum PartLogType {
+  IN
+  OUT
+  ADJUSTMENT
+}
+
+enum CustomerStatus {
+  ACTIVE
+  INACTIVE
+  POTENTIAL
+  LOST
+}
+
+enum EmployeeStatus {
+  ACTIVE
+  PROBATION
+  RESIGNED
+  TERMINATED
+  ON_LEAVE
+}
+
+enum InventoryLogType {
+  IN
+  OUT
+  ADJUSTMENT
+  TRANSFER
+}
+
+enum InvoiceType {
+  SALES
+  PURCHASE
+  CREDIT_NOTE
+  DEBIT_NOTE
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  UNQUALIFIED
+  CONVERTED
+}
+
+enum LogStatus {
+  SUCCESS
+  FAILED
+  PENDING
+}
+
+enum MenuStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum MenuType {
+  MENU
+  BUTTON
+  LINK
+}
+
+enum NewsStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum OpportunityStage {
+  LEAD
+  CONTACTED
+  PROPOSAL
+  NEGOTIATION
+  WON
+  LOST
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PARTIAL
+  PAID
+  REFUNDED
+}
+
+enum PayableStatus {
+  PENDING
+  APPROVED
+  PAID
+  CANCELLED
+}
+
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+  DISCONTINUED
+}
+
+enum ProductionStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum PurchaseStatus {
+  DRAFT
+  PENDING
+  APPROVED
+  RECEIVED
+  CANCELLED
+}
+
+enum QuotationStatus {
+  DRAFT
+  SENT
+  VIEWED
+  ACCEPTED
+  REJECTED
+  EXPIRED
+}
+
+enum ReceivableStatus {
+  PENDING
+  PARTIAL
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum RoleStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum CaseStatus {
+  DRAFT
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+  PUBLISHED
+  ARCHIVED
+}
+
+// ==================== 租户模型 ====================
+model Tenant {
+  id        String       @id @default(uuid())
+  code      String       @unique
+  name      String
+  logo      String?
+  status    TenantStatus @default(ACTIVE)
+  plan      String?
+  maxUsers  Int          @default(100) @map("max_users")
+  expireAt  DateTime?    @map("expire_at")
+  config    Json?
+  createdAt DateTime     @default(now()) @map("created_at")
+  updatedAt DateTime     @updatedAt @map("updated_at")
+
+  users     User[]
+  customers Customer[]
+  ApiKey    ApiKey[]
+  Webhook   Webhook[]
+
+  @@map("tenants")
+}
+
+// ==================== 用户模型 ====================
+model User {
+  id        String    @id @default(uuid())
+  username  String?   @unique
+  email     String    @unique
+  password  String
+  name      String
+  firstName String?   @map("first_name")
+  lastName  String?   @map("last_name")
+  phone     String?   @unique
+  avatar    String?
+  role      String    @default("USER")
+  roleId    String?   @map("role_id")
+  status    UserStatus @default(ACTIVE)
+  lastLogin DateTime? @map("last_login")
+  deletedAt DateTime? @map("deleted_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  tenantId String? @map("tenant_id")
+  tenant   Tenant? @relation(fields: [tenantId], references: [id])
+  roleRel  Role?   @relation(fields: [roleId], references: [id])
+
+  customers      Customer[]
+  employees      Employee[]
+  serviceTickets ServiceTicket[]
+
+  @@index([tenantId])
+  @@index([tenantId, createdAt])
+  @@index([roleId])
+  @@map("users")
+}
+
+// ==================== 角色模型 ====================
+model Role {
+  id          String    @id @default(uuid())
+  name        String
+  code        String    @unique
+  description String?
+  status      RoleStatus @default(ACTIVE)
+  permissions String[]
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  users User[]
+
+  @@map("roles")
+}
+
+// ==================== 客户模型 ====================
+model Customer {
+  id          String   @id @default(uuid())
+  customerNo  String   @unique @map("customer_no")
+  name        String
+  contactName String   @map("contact_name")
+  contact     String?
+  phone       String?
+  email       String?
+  address     String?
+  source      String?
+  industry    String?
+  province    String?
+  city        String?
+  level       CustomerLevel @default(B)
+  status      CustomerStatus @default(ACTIVE)
+  remark      String?
+  userId      String?  @map("user_id")
+  deletedAt   DateTime? @map("deleted_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  tenantId String @map("tenant_id")
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+  user     User?  @relation(fields: [userId], references: [id])
+
+  serviceTickets ServiceTicket[]
+  opportunities  Opportunity[]
+  orders         Order[]
+  quotations     Quotation[]
+  receivables    Receivable[]
+  followUps      FollowUp[]
+  contracts      Contract[]
+
+  @@index([tenantId])
+  @@index([tenantId, createdAt])
+  @@map("customers")
+}
+
+// ==================== 合同模型 ====================
+model Contract {
+  id           String         @id @default(uuid())
+  contractNo   String         @unique @map("contract_no")
+  customerId   String         @map("customer_id")
+  customer     Customer       @relation(fields: [customerId], references: [id])
+  title        String
+  amount       Decimal
+  startDate    DateTime       @map("start_date")
+  endDate      DateTime       @map("end_date")
+  signDate     DateTime?      @map("sign_date")
+  status       ContractStatus @default(DRAFT)
+  attachments  String[]
+  remark       String?
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+
+  @@index([customerId])
+  @@index([status])
+  @@map("contracts")
+}
+
+// ==================== 员工模型 ====================
+model Employee {
+  id         String         @id @default(uuid())
+  employeeNo String         @unique @map("employee_no")
+  userId     String?        @unique @map("user_id")
+  name       String?
+  phone      String?
+  department String?
+  position   String?
+  status     EmployeeStatus @default(ACTIVE)
+  entryDate  DateTime?      @map("entry_date")
+  leaveDate  DateTime?      @map("leave_date")
+  hireDate   DateTime?      @map("hire_date")
+  resignDate DateTime?      @map("resign_date")
+  baseSalary Decimal?       @map("base_salary")
+  createdAt  DateTime       @default(now()) @map("created_at")
+  updatedAt  DateTime       @updatedAt @map("updated_at")
+
+  user        User?         @relation(fields: [userId], references: [id])
+  salaries    Salary[]
+  attendances Attendance[]
+
+  @@index([userId])
+  @@map("employees")
+}
+
+// ==================== API Key 模型 ====================
+model ApiKey {
+  id          String    @id @default(uuid())
+  name        String
+  key         String    @unique
+  keyPrefix   String    @map("key_prefix")
+  permissions String[]
+  rateLimit   Int       @default(1000) @map("rate_limit")
+  enabled     Boolean   @default(true)
+  expireAt    DateTime? @map("expire_at")
+  lastUsedAt  DateTime? @map("last_used_at")
+  tenantId    String    @map("tenant_id")
+  tenant      Tenant    @relation(fields: [tenantId], references: [id])
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@index([keyPrefix])
+  @@map("api_keys")
+}
+
+// ==================== Webhook 模型 ====================
+model Webhook {
+  id              String    @id @default(uuid())
+  name            String
+  url             String
+  secret          String?
+  events          String[]
+  enabled         Boolean   @default(true)
+  lastTriggeredAt DateTime? @map("last_triggered_at")
+  failureCount    Int       @default(0) @map("failure_count")
+  tenantId        String    @map("tenant_id")
+  tenant          Tenant    @relation(fields: [tenantId], references: [id])
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  webhookLogs WebhookLog[]
+
+  @@index([tenantId])
+  @@map("webhooks")
+}
+
+model WebhookLog {
+  id         String   @id @default(uuid())
+  webhookId  String   @map("webhook_id")
+  webhook    Webhook  @relation(fields: [webhookId], references: [id], onDelete: Cascade)
+  event      String
+  payload    Json
+  response   Json?
+  statusCode Int?     @map("status_code")
+  success    Boolean
+  duration   Int?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([webhookId, createdAt])
+  @@map("webhook_logs")
+}
+
+// ==================== 模块配置模型 ====================
+model ModuleConfig {
+  moduleCode   String   @id @map("module_code")
+  moduleName   String   @map("module_name")
+  enabled      Boolean  @default(true)
+  description  String?
+  config       Json?
+  sortOrder    Int      @default(0) @map("sort_order")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("module_configs")
+}
+
+// ==================== 系统配置模型 ====================
+model SystemConfig {
+  id        String    @id @default(uuid())
+  key       String    @unique
+  value     String
+  type      ConfigType @default(TEXT)
+  group     String?
+  label     String?
+  desc      String?
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  @@index([group])
+  @@map("system_configs")
+}
+
+// ==================== 视频模型 ====================
+model Video {
+  id        String      @id @default(uuid())
+  title     String
+  summary   String?
+  url       String
+  cover     String?
+  duration  Int?
+  source    VideoSource @default(LOCAL)
+  status    VideoStatus @default(DRAFT)
+  views     Int         @default(0)
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([source])
+  @@index([createdAt])
+  @@map("videos")
+}
+
+// ==================== 服务工单模型 ====================
+model ServiceTicket {
+  id          String       @id @default(uuid())
+  ticketNo    String       @unique @map("ticket_no")
+  customerId  String       @map("customer_id")
+  customer    Customer     @relation(fields: [customerId], references: [id])
+  type        String
+  priority    Priority     @default(NORMAL)
+  status      TicketStatus @default(PENDING)
+  description String
+  solution    String?
+  images      String?
+  assigneeId  String?      @map("assignee_id")
+  assignee    User?        @relation(fields: [assigneeId], references: [id])
+  closedAt    DateTime?    @map("closed_at")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  @@index([customerId])
+  @@index([assigneeId])
+  @@index([status])
+  @@index([priority])
+  @@index([createdAt])
+  @@map("service_tickets")
+}
+
+// ==================== 工资模型 ====================
+model Salary {
+  id         String      @id @default(uuid())
+  employeeId String      @map("employee_id")
+  employee   Employee    @relation(fields: [employeeId], references: [id])
+  month      String
+  baseSalary Decimal     @map("base_salary")
+  bonus      Decimal     @default(0)
+  deduction  Decimal     @default(0)
+  total      Decimal
+  status     SalaryStatus @default(PENDING)
+  paidDate   DateTime?   @map("paid_date")
+  remark     String?
+  userId     String?     @map("user_id")
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @updatedAt @map("updated_at")
+
+  @@unique([employeeId, month])
+  @@index([employeeId])
+  @@index([month])
+  @@index([status])
+  @@map("salaries")
+}
+
+// ==================== 考勤模型 ====================
+model Attendance {
+  id         String           @id @default(uuid())
+  employeeId String           @map("employee_id")
+  employee   Employee         @relation(fields: [employeeId], references: [id])
+  date       DateTime
+  status     AttendanceStatus
+  checkIn    DateTime?        @map("check_in")
+  checkOut   DateTime?        @map("check_out")
+  remark     String?
+  createdAt  DateTime         @default(now()) @map("created_at")
+  updatedAt  DateTime         @updatedAt @map("updated_at")
+
+  @@unique([employeeId, date])
+  @@index([employeeId])
+  @@index([date])
+  @@map("attendances")
+}
+
+// ==================== 线索模型 ====================
+model Lead {
+  id        String     @id @default(uuid())
+  name      String
+  phone     String?
+  email     String?
+  company   String?
+  source    String?
+  status    LeadStatus @default(NEW)
+  contact   String?
+  assignedTo String?   @map("assigned_to")
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@map("leads")
+}
+
+// ==================== 商机模型 ====================
+model Opportunity {
+  id         String              @id @default(uuid())
+  name       String
+  customerId String              @map("customer_id")
+  customer   Customer            @relation(fields: [customerId], references: [id])
+  amount     Decimal?
+  stage      OpportunityStage    @default(LEAD)
+  probability Int?
+  closeDate  DateTime?           @map("close_date")
+  assignedTo String?             @map("assigned_to")
+  createdAt  DateTime            @default(now()) @map("created_at")
+  updatedAt  DateTime            @updatedAt @map("updated_at")
+
+  @@index([customerId])
+  @@index([stage])
+  @@map("opportunities")
+}
+
+// ==================== 报价模型 ====================
+model Quotation {
+  id         String          @id @default(uuid())
+  quotationNo String         @unique @map("quotation_no")
+  customerId String          @map("customer_id")
+  customer   Customer        @relation(fields: [customerId], references: [id])
+  opportunityId String?      @map("opportunity_id")
+  amount     Decimal
+  status     QuotationStatus @default(DRAFT)
+  validUntil DateTime?       @map("valid_until")
+  remark     String?
+  createdAt  DateTime        @default(now()) @map("created_at")
+  updatedAt  DateTime        @updatedAt @map("updated_at")
+
+  items QuotationItem[]
+
+  @@index([customerId])
+  @@index([status])
+  @@map("quotations")
+}
+
+model QuotationItem {
+  id          String   @id @default(uuid())
+  quotationId String   @map("quotation_id")
+  quotation   Quotation @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+  productId   String   @map("product_id")
+  productName String   @map("product_name")
+  quantity    Decimal
+  unitPrice   Decimal  @map("unit_price")
+  discount    Decimal  @default(0)
+  amount      Decimal
+  remark      String?
+
+  @@index([quotationId])
+  @@map("quotation_items")
+}
+
+// ==================== 订单模型 ====================
+model Order {
+  id         String        @id @default(uuid())
+  orderNo    String        @unique @map("order_no")
+  customerId String        @map("customer_id")
+  customer   Customer      @relation(fields: [customerId], references: [id])
+  quotationId String?      @map("quotation_id")
+  amount     Decimal
+  status     OrderStatus   @default(PENDING)
+  paymentStatus PaymentStatus @default(UNPAID)
+  paidAmount Decimal       @default(0) @map("paid_amount")
+  shipAddress String?      @map("ship_address")
+  remark     String?
+  createdAt  DateTime      @default(now()) @map("created_at")
+  updatedAt  DateTime      @updatedAt @map("updated_at")
+
+  items OrderItem[]
+
+  @@index([customerId])
+  @@index([status])
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  orderId   String   @map("order_id")
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String   @map("product_id")
+  productName String @map("product_name")
+  quantity  Decimal
+  unitPrice Decimal  @map("unit_price")
+  discount  Decimal  @default(0)
+  amount    Decimal
+  remark    String?
+
+  @@index([orderId])
+  @@map("order_items")
+}
+
+// ==================== 产品模型 ====================
+model Product {
+  id          String        @id @default(uuid())
+  code        String        @unique
+  name        String
+  category    String?
+  series      String?
+  model       String?
+  unit        String?
+  price       Decimal?
+  cost        Decimal?
+  status      ProductStatus @default(ACTIVE)
+  description String?
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+
+  inventories Inventory[]
+
+  @@index([category])
+  @@index([series])
+  @@index([status])
+  @@map("products")
+}
+
+// ==================== 库存模型 ====================
+model Inventory {
+  id         String   @id @default(uuid())
+  productId  String   @map("product_id")
+  product    Product  @relation(fields: [productId], references: [id])
+  warehouse  String?
+  qty        Decimal  @default(0)
+  quantity   Decimal  @default(0)
+  warningQty Decimal? @map("warning_qty")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  logs InventoryLog[]
+
+  @@unique([productId, warehouse])
+  @@index([productId])
+  @@map("inventories")
+}
+
+model InventoryLog {
+  id         String           @id @default(uuid())
+  inventoryId String         @map("inventory_id")
+  inventory  Inventory        @relation(fields: [inventoryId], references: [id])
+  type       InventoryLogType
+  qty        Decimal
+  beforeQty  Decimal         @map("before_qty")
+  afterQty   Decimal         @map("after_qty")
+  reason     String?
+  refType    String?         @map("ref_type")
+  refId      String?         @map("ref_id")
+  createdAt  DateTime        @default(now()) @map("created_at")
+
+  @@index([inventoryId])
+  @@index([createdAt])
+  @@map("inventory_logs")
+}
+
+// ==================== 采购模型 ====================
+model Purchase {
+  id          String         @id @default(uuid())
+  purchaseNo  String         @unique @map("purchase_no")
+  supplierId  String?        @map("supplier_id")
+  supplierName String        @map("supplier_name")
+  amount      Decimal
+  status      PurchaseStatus @default(DRAFT)
+  paymentStatus PaymentStatus @default(UNPAID)
+  paidAmount  Decimal        @default(0) @map("paid_amount")
+  remark      String?
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+
+  items PurchaseItem[]
+
+  @@index([status])
+  @@map("purchases")
+}
+
+model PurchaseItem {
+  id         String   @id @default(uuid())
+  purchaseId String   @map("purchase_id")
+  purchase   Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  productId  String   @map("product_id")
+  productName String @map("product_name")
+  quantity   Decimal
+  unitPrice  Decimal  @map("unit_price")
+  amount     Decimal
+  remark     String?
+
+  @@index([purchaseId])
+  @@map("purchase_items")
+}
+
+// ==================== 应付模型 ====================
+model Payable {
+  id         String        @id @default(uuid())
+  payableNo  String        @unique @map("payable_no")
+  purchaseId String?       @map("purchase_id")
+  supplierId String?       @map("supplier_id")
+  supplierName String      @map("supplier_name")
+  amount     Decimal
+  paidAmount Decimal       @default(0) @map("paid_amount")
+  dueDate    DateTime?     @map("due_date")
+  status     PayableStatus @default(PENDING)
+  remark     String?
+  createdAt  DateTime      @default(now()) @map("created_at")
+  updatedAt  DateTime      @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([dueDate])
+  @@map("payables")
+}
+
+// ==================== 应收模型 ====================
+model Receivable {
+  id          String         @id @default(uuid())
+  receivableNo String        @unique @map("receivable_no")
+  orderId     String?        @map("order_id")
+  customerId  String         @map("customer_id")
+  customer    Customer       @relation(fields: [customerId], references: [id])
+  amount      Decimal
+  paidAmount  Decimal        @default(0) @map("paid_amount")
+  dueDate     DateTime?      @map("due_date")
+  status      ReceivableStatus @default(PENDING)
+  remark      String?
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([dueDate])
+  @@map("receivables")
+}
+
+// ==================== 发票模型 ====================
+model Invoice {
+  id         String        @id @default(uuid())
+  invoiceNo  String        @unique @map("invoice_no")
+  type       InvoiceType
+  orderId    String?       @map("order_id")
+  purchaseId String?       @map("purchase_id")
+  customerId String?       @map("customer_id")
+  supplierId String?       @map("supplier_id")
+  amount     Decimal
+  taxAmount  Decimal       @default(0) @map("tax_amount")
+  totalAmount Decimal      @map("total_amount")
+  status     InvoiceStatus @default(DRAFT)
+  issueDate  DateTime?     @map("issue_date")
+  dueDate    DateTime?     @map("due_date")
+  remark     String?
+  createdAt  DateTime      @default(now()) @map("created_at")
+  updatedAt  DateTime      @updatedAt @map("updated_at")
+
+  @@index([type])
+  @@index([status])
+  @@map("invoices")
+}
+
+// ==================== 生产计划模型 ====================
+model ProductionPlan {
+  id        String   @id @default(uuid())
+  planNo    String   @unique @map("plan_no")
+  productId String   @map("product_id")
+  quantity  Decimal
+  startDate DateTime @map("start_date")
+  endDate   DateTime @map("end_date")
+  status    String   @default("PLANNED")
+  remark    String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  items ProductionPlanItem[]
+
+  @@index([status])
+  @@map("production_plans")
+}
+
+model ProductionPlanItem {
+  id       String   @id @default(uuid())
+  planId   String   @map("plan_id")
+  plan     ProductionPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  productId String  @map("product_id")
+  quantity  Decimal
+  remark    String?
+
+  @@index([planId])
+  @@map("production_plan_items")
+}
+
+// ==================== 生产模型 ====================
+model Production {
+  id        String           @id @default(uuid())
+  planId    String?          @map("plan_id")
+  productId String           @map("product_id")
+  quantity  Decimal
+  status    ProductionStatus @default(PLANNED)
+  startDate DateTime?        @map("start_date")
+  endDate   DateTime?        @map("end_date")
+  remark    String?
+  createdAt DateTime         @default(now()) @map("created_at")
+  updatedAt DateTime         @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@map("productions")
+}
+
+// ==================== BOM 模型 ====================
+model Bom {
+  id        String   @id @default(uuid())
+  bomNo     String   @unique @map("bom_no")
+  productId String   @map("product_id")
+  version   String   @default("1.0")
+  status    String   @default("ACTIVE")
+  remark    String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  items BomItem[]
+
+  @@index([productId])
+  @@map("boms")
+}
+
+model BomItem {
+  id         String   @id @default(uuid())
+  bomId      String   @map("bom_id")
+  bom        Bom      @relation(fields: [bomId], references: [id], onDelete: Cascade)
+  productId  String   @map("product_id")
+  materialId String?  @map("material_id")
+  quantity   Decimal
+  unit       String?
+  scrapRate  Decimal? @map("scrap_rate")
+  remark     String?
+
+  @@index([bomId])
+  @@map("bom_items")
+}
+
+// ==================== 案例模型 ====================
+model Case {
+  id        String     @id @default(uuid())
+  caseNo    String     @unique @map("case_no")
+  title     String
+  summary   String?
+  content   String?
+  cover     String?
+  images    String?
+  type      String?
+  status    CaseStatus @default(DRAFT)
+  priority  String?
+  assigneeId String?   @map("assignee_id")
+  dueDate   DateTime?  @map("due_date")
+  resolvedAt DateTime? @map("resolved_at")
+  views     Int        @default(0)
+  remark    String?
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@map("cases")
+}
+
+// ==================== 菜单模型 ====================
+model Menu {
+  id        String     @id @default(uuid())
+  name      String
+  code      String     @unique
+  parentId  String?    @map("parent_id")
+  parent    Menu?      @relation("MenuToMenu", fields: [parentId], references: [id])
+  children  Menu[]     @relation("MenuToMenu")
+  path      String?
+  icon      String?
+  type      MenuType   @default(MENU)
+  status    MenuStatus @default(ACTIVE)
+  sortOrder Int        @default(0) @map("sort_order")
+  permission String?
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+
+  @@index([parentId])
+  @@index([status])
+  @@map("menus")
+}
+
+// ==================== 新闻模型 ====================
+model News {
+  id        String     @id @default(uuid())
+  title     String
+  summary   String?
+  content   String?
+  cover     String?
+  authorId  String?    @map("author_id")
+  status    NewsStatus @default(DRAFT)
+  publishedAt DateTime? @map("published_at")
+  views     Int        @default(0)
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([publishedAt])
+  @@map("news")
+}
+
+// ==================== 日志模型 ====================
+model OperationLog {
+  id        String   @id @default(uuid())
+  userId    String?  @map("user_id")
+  action    String
+  module    String?
+  status    LogStatus @default(SUCCESS)
+  ip        String?
+  userAgent String?  @map("user_agent")
+  params    Json?
+  duration  Int?
+  error     String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("operation_logs")
+}
+
+// ==================== 跟进记录模型 ====================
+model FollowUp {
+  id         String   @id @default(uuid())
+  customerId String   @map("customer_id")
+  customer   Customer @relation(fields: [customerId], references: [id])
+  content    String
+  type       String?
+  nextTime   DateTime? @map("next_time")
+  nextDate   DateTime? @map("next_date")
+  userId     String?  @map("user_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([customerId])
+  @@map("follow_ups")
+}
+
+// ==================== 配件模型 ====================
+model Part {
+  id            String           @id @default(uuid())
+  partNo        String           @unique @map("part_no")
+  name          String
+  category      String?
+  specification String?          @map("specification")
+  unit          String?
+  price         Decimal?
+  cost          Decimal?
+  stock         Decimal          @default(0)
+  minStock      Decimal?         @map("min_stock")
+  status        PartStatus       @default(ACTIVE)
+  supplier      String?
+  remark        String?
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @updatedAt @map("updated_at")
+
+  logs PartLog[]
+
+  @@index([partNo])
+  @@index([category])
+  @@index([status])
+  @@map("parts")
+}
+
+model PartLog {
+  id        String        @id @default(uuid())
+  partId    String        @map("part_id")
+  part      Part          @relation(fields: [partId], references: [id])
+  type      PartLogType
+  qty       Decimal
+  beforeQty Decimal       @map("before_qty")
+  afterQty  Decimal       @map("after_qty")
+  reason    String?
+  refType   String?       @map("ref_type")
+  refId     String?       @map("ref_id")
+  createdAt DateTime      @default(now()) @map("created_at")
+
+  @@index([partId])
+  @@index([createdAt])
+  @@map("part_logs")
+}

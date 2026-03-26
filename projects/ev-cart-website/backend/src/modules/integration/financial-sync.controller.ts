@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { FinancialSyncService } from './financial-sync.service';
+import { FinancialSyncService } from './services/financial-sync.service';
 
 /**
  * 财务同步控制器

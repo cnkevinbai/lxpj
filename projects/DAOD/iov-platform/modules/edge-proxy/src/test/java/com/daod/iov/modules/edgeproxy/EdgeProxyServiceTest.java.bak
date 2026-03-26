@@ -1,0 +1,126 @@
+package com.daod.iov.modules.edgeproxy;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+/**
+ * 边缘代理模块测试类
+ */
+class EdgeProxyServiceTest {
+
+    private EdgeProxyService service;
+    
+    @BeforeEach
+    void setUp() {
+        service = new EdgeProxyService();
+    }
+
+    @Test
+    void testModuleConstruction() {
+        // 验证模块基本信息
+        assertEquals("edge-proxy", service.getMetadata().getName());
+        assertEquals("1.0.0", service.getMetadata().getVersion());
+        assertEquals("边缘代理服务模块 - 云边协同通信", service.getMetadata().getDescription());
+        assertEquals("extension", service.getMetadata().getType());
+        assertEquals(60, service.getMetadata().getPriority());
+        
+        // 验证初始状态
+        assertEquals(ModuleState.UNINITIALIZED, service.getState());
+        assertEquals(HealthStatus.UNKNOWN, service.getHealthStatus());
+    }
+
+    @Test
+    void testModuleLifecycle() throws ModuleException {
+        // 创建模拟上下文
+        ModuleContext context = new ModuleContext("edge-proxy:1.0.0", "", null);
+        
+        // 测试初始化
+        service.initialize(context);
+        assertEquals(ModuleState.INITIALIZED, service.getState());
+        assertEquals(HealthStatus.HEALTHY, service.getHealthStatus());
+        
+        // 测试启动
+        service.start();
+        assertEquals(ModuleState.RUNNING, service.getState());
+        assertEquals(HealthStatus.HEALTHY, service.getHealthStatus());
+        
+        // 测试停止
+        service.stop();
+        assertEquals(ModuleState.STOPPED, service.getState());
+        assertEquals(HealthStatus.OFFLINE, service.getHealthStatus());
+        
+        // 测试销毁
+        service.destroy();
+        assertEquals(ModuleState.DESTROYED, service.getState());
+    }
+
+    @Test
+    void testEdgeNodeId() {
+        ModuleContext context = new ModuleContext("edge-proxy:1.0.0", "", null);
+        
+        // 初始化后应能获取边缘节点ID
+        service.initialize(context);
+        
+        String edgeNodeId = service.getEdgeNodeId();
+        assertNotNull(edgeNodeId);
+        assertEquals("edge-node-default", edgeNodeId);
+    }
+
+    @Test
+    void testHealthStatusUpdates() throws ModuleException {
+        ModuleContext context = new ModuleContext("edge-proxy:1.0.0", "", null);
+        
+        // 初始状态
+        assertEquals(HealthStatus.UNKNOWN, service.getHealthStatus());
+        
+        // 初始化后
+        service.initialize(context);
+        assertEquals(HealthStatus.HEALTHY, service.getHealthStatus());
+        
+        // 停止后
+        service.stop();
+        assertEquals(HealthStatus.OFFLINE, service.getHealthStatus());
+    }
+
+    @Test
+    void testRestartAfterStop() throws ModuleException {
+        ModuleContext context = new ModuleContext("edge-proxy:1.0.0", "", null);
+        
+        // 完整生命周期
+        service.initialize(context);
+        service.start();
+        service.stop();
+        
+        // 重新初始化和启动
+        service.initialize(context);
+        service.start();
+        
+        assertEquals(ModuleState.RUNNING, service.getState());
+        assertEquals(HealthStatus.HEALTHY, service.getHealthStatus());
+    }
+
+    @Test
+    void testStartWithoutInitialization() {
+        // 直接启动应抛出异常
+        assertThrows(ModuleException.class, () -> {
+            service.start();
+        });
+    }
+
+    @Test
+    void testDestroy() throws ModuleException {
+        ModuleContext context = new ModuleContext("edge-proxy:1.0.0", "", null);
+        
+        service.initialize(context);
+        service.start();
+        service.destroy();
+        
+        // 验证销毁后状态
+        assertEquals(ModuleState.DESTROYED, service.getState());
+        assertNull(service.getEdgeNodeId());
+    }
+}

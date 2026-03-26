@@ -1,0 +1,67 @@
+# module.yaml - 模块描述文件示例
+apiVersion: iov.daod.com/v1
+kind: Module
+metadata:
+  name: plugin-framework          # 模块名称
+  version: 1.0.0                  # 模块版本
+  description: 模块化框架核心模块   # 模块描述
+  author: daod-team               # 作者
+  license: proprietary            # 许可证
+  
+spec:
+  # 模块类型
+  type: core                      # core|business|extension|adapter
+  
+  # 模块优先级 (数字越小优先级越高)
+  priority: 10
+  
+  # 依赖模块
+  dependencies:
+    - name: common-core
+      version: ">=1.0.0"
+  
+  # 提供的扩展点
+  extensionPoints:
+    - name: module-manager
+      interface: com.daod.iov.plugin.ModuleManager
+      description: 模块管理器接口
+    - name: module-lifecycle-listener
+      interface: com.daod.iov.plugin.ModuleListener
+      description: 模块生命周期监听器接口
+  
+  # 使用的扩展点
+  uses:
+    - extensionPoint: event-bus
+      handler: moduleEventHandler
+  
+  # 配置项定义
+  configSchema:
+    properties:
+      maxModules:
+        type: integer
+        default: 100
+        description: 最大模块数量
+      hotReloadEnabled:
+        type: boolean
+        default: true
+        description: 是否启用热更新
+      scanInterval:
+        type: integer
+        default: 5000
+        description: 模块扫描间隔(ms)
+        
+  # 资源需求
+  resources:
+    cpu: "200m"
+    memory: "256Mi"
+    
+  # 健康检查
+  healthCheck:
+    liveness: /health/live
+    readiness: /health/ready
+    
+  # 热更新策略
+  hotReload:
+    enabled: true
+    strategy: rolling            # 可选值: rolling, blue-green, canary
+    maxUnavailable: 1

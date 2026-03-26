@@ -1,0 +1,11 @@
+# 后端 Docker 忽略文件
+node_modules
+dist
+.git
+*.md
+.env
+.env.*
+!.env.production
+coverage
+*.log
+.DS_Store

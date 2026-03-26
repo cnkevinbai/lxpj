@@ -13,7 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
-import { ComplianceService } from './compliance.service'
+import { ComplianceService } from './services/compliance.service'
 import { ComplianceType } from './entities/compliance-check.entity'
 
 @Controller('compliance')

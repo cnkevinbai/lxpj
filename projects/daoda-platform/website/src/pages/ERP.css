@@ -1,0 +1,524 @@
+/**
+ * ERP 库存管理样式
+ * 统一风格版本
+ */
+
+.erp-page {
+  display: flex;
+  min-height: 100vh;
+  background: var(--daoda-bg);
+  color: var(--daoda-text);
+}
+
+/* 侧边栏 */
+.erp-sidebar {
+  width: 256px;
+  background: rgba(255, 255, 255, 0.02);
+  border-right: 1px solid var(--daoda-border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 24px;
+  border-bottom: 1px solid var(--daoda-border);
+}
+
+.sidebar-brand .brand-logo {
+  width: 32px;
+  height: 32px;
+  background: var(--daoda-primary);
+  border-radius: var(--daoda-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-brand .brand-logo svg {
+  width: 20px;
+  height: 20px;
+  color: #fff;
+}
+
+.sidebar-brand .brand-name {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.erp-sidebar .sidebar-nav {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.erp-sidebar .nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  color: var(--daoda-text-muted);
+  text-decoration: none;
+  border-radius: var(--daoda-radius-sm);
+  font-size: 14px;
+}
+
+.erp-sidebar .nav-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.erp-sidebar .nav-item.active {
+  background: rgba(102, 0, 255, 0.2);
+  color: #fff;
+}
+
+.erp-sidebar .nav-item svg {
+  width: 20px;
+  height: 20px;
+}
+
+.erp-sidebar .sidebar-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--daoda-border);
+}
+
+.erp-sidebar .user-avatar {
+  width: 40px;
+  height: 40px;
+  background: rgba(102, 0, 255, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.erp-sidebar .user-name {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.erp-sidebar .user-role {
+  font-size: 12px;
+  color: var(--daoda-text-dim);
+}
+
+/* 主内容 */
+.erp-main {
+  flex: 1;
+  margin-left: 256px;
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* 头部 */
+.erp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.erp-header .page-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.erp-header .page-desc {
+  font-size: 14px;
+  color: var(--daoda-text-dim);
+  margin: 0;
+}
+
+/* 筛选 */
+.erp-main .filter-bar {
+  display: flex;
+  gap: 24px;
+  padding: 16px 24px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--daoda-border);
+  border-radius: var(--daoda-radius);
+}
+
+.erp-main .filter-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.erp-main .filter-group label {
+  font-size: 14px;
+  color: var(--daoda-text-muted);
+}
+
+.erp-main .filter-group select {
+  appearance: none;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--daoda-border);
+  border-radius: var(--daoda-radius-sm);
+  padding: 10px 32px 10px 16px;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* 统计卡片 */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--daoda-border);
+  border-radius: var(--daoda-radius);
+  padding: 24px;
+}
+
+.stat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.stat-icon.blue {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+.stat-icon.green {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+}
+
+.stat-icon.purple {
+  background: rgba(168, 85, 247, 0.2);
+  color: #c084fc;
+}
+
+.stat-icon.red {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+.stat-change {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.stat-change.positive {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+}
+
+.stat-change.negative {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: var(--daoda-text-dim);
+}
+
+/* 图表区 */
+.charts-section {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+.chart-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--daoda-border);
+  border-radius: var(--daoda-radius);
+  padding: 24px;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.chart-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.chart-legend {
+  display: flex;
+  gap: 20px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--daoda-text-muted);
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.legend-item.inbound .legend-dot {
+  background: var(--daoda-primary);
+}
+
+.legend-item.outbound .legend-dot {
+  background: #8b5cf6;
+}
+
+/* 柱状图 */
+.bar-chart {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 200px;
+  padding-top: 20px;
+}
+
+.bar-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.bars {
+  display: flex;
+  gap: 4px;
+  align-items: flex-end;
+  height: 160px;
+}
+
+.bar {
+  width: 24px;
+  border-radius: 4px 4px 0 0;
+}
+
+.bar.inbound {
+  background: var(--daoda-primary);
+}
+
+.bar.outbound {
+  background: #8b5cf6;
+}
+
+.bar-label {
+  font-size: 12px;
+  color: var(--daoda-text-dim);
+}
+
+/* 仪表盘 */
+.gauge-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.gauge {
+  position: relative;
+  width: 192px;
+  height: 192px;
+}
+
+.gauge svg {
+  transform: rotate(-90deg);
+}
+
+.gauge-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 16;
+}
+
+.gauge-fill {
+  fill: none;
+  stroke: var(--daoda-primary);
+  stroke-width: 16;
+  stroke-linecap: round;
+}
+
+.gauge-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.gauge-value {
+  display: block;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.gauge-label {
+  font-size: 12px;
+  color: var(--daoda-text-dim);
+}
+
+.info-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: #60a5fa;
+}
+
+.info-label {
+  font-size: 13px;
+  color: var(--daoda-text-dim);
+}
+
+/* 警报表格 */
+.alerts-section {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--daoda-border);
+  border-radius: var(--daoda-radius);
+  padding: 24px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.view-all-link {
+  font-size: 14px;
+  color: #60a5fa;
+  text-decoration: none;
+}
+
+.data-table th,
+.data-table td {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.stock-value {
+  color: #f87171;
+  font-weight: 600;
+}
+
+.status-critical {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+.status-warning {
+  background: rgba(234, 179, 8, 0.2);
+  color: #fbbf24;
+}
+
+.reorder-btn {
+  background: rgba(102, 0, 255, 0.2);
+  border: none;
+  color: var(--daoda-primary-light);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* 页脚 */
+.erp-footer {
+  padding-top: 24px;
+  border-top: 1px solid var(--daoda-border);
+  text-align: center;
+  font-size: 13px;
+  color: var(--daoda-text-dim);
+}
+
+/* 响应式 */
+@media (max-width: 1200px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .charts-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1024px) {
+  .erp-sidebar {
+    width: 60px;
+  }
+  
+  .erp-sidebar .brand-name,
+  .erp-sidebar .nav-item span,
+  .erp-sidebar .user-info {
+    display: none;
+  }
+  
+  .erp-main {
+    margin-left: 60px;
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .erp-main .filter-bar {
+    flex-wrap: wrap;
+  }
+}

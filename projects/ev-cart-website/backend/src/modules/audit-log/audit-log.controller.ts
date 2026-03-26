@@ -9,9 +9,9 @@ import {
   Request,
 } from '@nestjs/common'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
-import { RolesGuard } from '../auth/guards/roles.guard'
-import { Roles } from '../auth/decorators/roles.decorator'
-import { AuditLogService } from './audit-log.service'
+import { RolesGuard } from '../../common/guards/roles.guard'
+import { Roles } from '../../common/decorators/roles.decorator'
+import { AuditLogService } from './services/audit-log.service'
 import { ActionType, EntityType } from './entities/audit-log.entity'
 
 @Controller('audit-logs')

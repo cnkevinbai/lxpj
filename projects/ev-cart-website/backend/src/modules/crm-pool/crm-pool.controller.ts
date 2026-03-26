@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common'
 import { ApiTags, ApiOperation } from '@nestjs/swagger'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
-import { CrmPoolService } from './crm-pool.service'
+import { CrmPoolService } from './services/crm-pool.service'
 
 @ApiTags('crm-pool')
 @Controller('crm-pool')

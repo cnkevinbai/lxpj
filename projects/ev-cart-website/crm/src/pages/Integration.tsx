@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Card, Form, Input, Button, Switch, Table, Space, Tag, message, Modal } from 'antd'
+import { Card, Form, Input, Button, Switch, Table, Space, Tag, message, Modal, Select } from 'antd'
 import { PlusOutlined, EditOutlined, DeleteOutlined, LinkOutlined } from '@ant-design/icons'
 import apiClient from '../services/api'
 
@@ -98,7 +98,7 @@ const Integration: React.FC = () => {
         response = await apiClient.post('/integration/wecom/send', { webhook, content })
       }
 
-      if (response.data.success) {
+      if (response?.data.success) {
         message.success('测试消息发送成功')
       } else {
         message.error('测试消息发送失败')
@@ -200,11 +200,11 @@ const Integration: React.FC = () => {
       >
         <Form form={form} layout="vertical" onFinish={handleSave}>
           <Form.Item name="platform" label="平台" rules={[{ required: true }]}>
-            <Input.Select>
-              <Input.Select.Option value="dingtalk">钉钉</Input.Select.Option>
-              <Input.Select.Option value="wecom">企业微信</Input.Select.Option>
-              <Input.Select.Option value="feishu">飞书</Input.Select.Option>
-            </Input.Select>
+            <Select>
+              <Select.Option value="dingtalk">钉钉</Select.Option>
+              <Select.Option value="wecom">企业微信</Select.Option>
+              <Select.Option value="feishu">飞书</Select.Option>
+            </Select>
           </Form.Item>
           <Form.Item 
             name="webhook" 
@@ -214,11 +214,11 @@ const Integration: React.FC = () => {
             <Input placeholder="请输入 Webhook 地址" />
           </Form.Item>
           <Form.Item name="events" label="通知事件" rules={[{ required: true }]}>
-            <Input.Select mode="multiple">
-              <Input.Select.Option value="新线索">新线索</Input.Select.Option>
-              <Input.Select.Option value="订单变更">订单变更</Input.Select.Option>
-              <Input.Select.Option value="商机阶段变更">商机阶段变更</Input.Select.Option>
-            </Input.Select>
+            <Select mode="multiple">
+              <Select.Option value="新线索">新线索</Select.Option>
+              <Select.Option value="订单变更">订单变更</Select.Option>
+              <Select.Option value="商机阶段变更">商机阶段变更</Select.Option>
+            </Select>
           </Form.Item>
           <Form.Item name="status" label="启用" valuePropName="checked" initialValue={true}>
             <Switch />

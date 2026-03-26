@@ -284,4 +284,20 @@ export class ComplianceService {
 
     return { stats, checks }
   }
+
+  /**
+   * 记录数据处理操作（合规要求）
+   */
+  async logDataProcessing(data: {
+    userId: string
+    actionType: string
+    resourceType: string
+    resourceId: string
+    ipAddress: string
+    userAgent: string
+    status: 'success' | 'failed'
+  }): Promise<void> {
+    // 这里应该记录到合规日志，目前仅记录 console
+    console.log('Compliance log:', data)
+  }
 }

@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common'
 import { ApiTags, ApiOperation } from '@nestjs/swagger'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
-import { WhatsAppService } from './whatsapp.service'
+import { WhatsAppService } from './services/whatsapp.service'
 import { Request, Response } from 'express'
 
 @ApiTags('whatsapp')

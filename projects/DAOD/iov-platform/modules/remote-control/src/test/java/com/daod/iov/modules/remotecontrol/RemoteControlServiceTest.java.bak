@@ -1,0 +1,335 @@
+package com.daod.iov.modules.remotecontrol;
+
+import com.daod.iov.plugin.*;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
+import java.util.*;
+import java.time.LocalDateTime;
+
+/**
+ * 远程控制服务测试类
+ */
+class RemoteControlServiceTest {
+
+    private RemoteControlService service;
+    private ModuleContext context;
+
+    @BeforeEach
+    void setUp() {
+        service = new RemoteControlService();
+        
+        // 创建模拟上下文
+        Map<String, Object> config = new HashMap<>();
+        config.put("commandTimeout", 30000);
+        config.put("maxRetryCount", 2);
+        config.put("enableAudit", true);
+        config.put("approvalRequired", false);
+        
+        context = new ModuleContext("remote-control:1.0.0", "", config);
+    }
+
+    @Test
+    void testModuleLifecycle() throws ModuleException {
+        // 验证初始状态
+        assertEquals("remote-control", service.getMetadata().getName());
+        assertEquals("1.0.0", service.getMetadata().getVersion());
+        assertEquals(ModuleState.UNINITIALIZED, service.getState());
+        assertEquals(HealthStatus.UNKNOWN, service.getHealthStatus());
+        
+        // 测试初始化
+        service.initialize(context);
+        assertEquals(ModuleState.INITIALIZED, service.getState());
+        assertEquals(HealthStatus.HEALTHY, service.getHealthStatus());
+        
+        // 测试启动
+        service.start();
+        assertEquals(ModuleState.RUNNING, service.getState());
+        assertEquals(HealthStatus.HEALTHY, service.getHealthStatus());
+        
+        // 测试停止
+        service.stop();
+        assertEquals(ModuleState.STOPPED, service.getState());
+        assertEquals(HealthStatus.OFFLINE, service.getHealthStatus());
+        
+        // 测试销毁
+        service.destroy();
+        assertEquals(ModuleState.DESTROYED, service.getState());
+    }
+
+    @Test
+    void testSendSingleCommand() {
+        service.initialize(context);
+        service.start();
+        
+        String executionId = service.sendCommand(
+            "VEH-001",
+            RemoteControlService.CommandType.LOCK_VEHICLE,
+            "{}",
+            RemoteControlService.CommandPriority.HIGH,
+            "admin"
+        );
+        
+        assertNotNull(executionId);
+        assertTrue(executionId.startsWith("CMD-"));
+        
+        // 查询执行状态
+        RemoteControlService.CommandExecution execution = 
+            service.queryCommandStatus(executionId);
+        assertNotNull(execution);
+        assertEquals("VEH-001", execution.getVehicleId());
+        assertEquals(RemoteControlService.CommandType.LOCK_VEHICLE, execution.getCommandType());
+        assertEquals(RemoteControlService.CommandPriority.HIGH, execution.getPriority());
+        
+        service.stop();
+    }
+
+    @Test
+    void testBatchCommands() {
+        service.initialize(context);
+        service.start();
+        
+        List<String> vehicleIds = Arrays.asList("VEH-001", "VEH-002", "VEH-003");
+        
+        Map<String, String> results = service.sendBatchCommand(
+            vehicleIds,
+            RemoteControlService.CommandType.UNLOCK_VEHICLE,
+            "{}",
+            RemoteControlService.CommandPriority.NORMAL,
+            "admin"
+        );
+        
+        assertEquals(3, results.size());
+        
+        for (String vehicleId : vehicleIds) {
+            String executionId = results.get(vehicleId);
+            assertNotNull(executionId);
+            
+            RemoteControlService.CommandExecution execution = 
+                service.queryCommandStatus(executionId);
+            assertNotNull(execution);
+            assertEquals(vehicleId, execution.getVehicleId());
+        }
+        
+        service.stop();
+    }
+
+    @Test
+    void testCommandPriority() {
+        service.initialize(context);
+        service.start();
+        
+        String highPriorityId = service.sendCommand(
+            "VEH-001",
+            RemoteControlService.CommandType.START_ENGINE,
+            "{}",
+            RemoteControlService.CommandPriority.IMMEDIATE,
+            "admin"
+        );
+        
+        String normalPriorityId = service.sendCommand(
+            "VEH-001",
+            RemoteControlService.CommandType.LOCATION_QUERY,
+            "{}",
+            RemoteControlService.CommandPriority.LOW,
+            "admin"
+        );
+        
+        assertNotNull(highPriorityId);
+        assertNotNull(normalPriorityId);
+        
+        RemoteControlService.CommandExecution highExec = 
+            service.queryCommandStatus(highPriorityId);
+        RemoteControlService.CommandExecution normalExec = 
+            service.queryCommandStatus(normalPriorityId);
+        
+        assertEquals(RemoteControlService.CommandPriority.IMMEDIATE, highExec.getPriority());
+        assertEquals(RemoteControlService.CommandPriority.LOW, normalExec.getPriority());
+        
+        service.stop();
+    }
+
+    @Test
+    void testCommandStatusQuery() {
+        service.initialize(context);
+        service.start();
+        
+        String executionId = service.sendCommand(
+            "VEH-001",
+            RemoteControlService.CommandType.VEHICLE_STATUS,
+            "{}",
+            RemoteControlService.CommandPriority.NORMAL,
+            "admin"
+        );
+        
+        // 多次查询状态
+        RemoteControlService.CommandExecution execution = 
+            service.queryCommandStatus(executionId);
+        
+        assertNotNull(execution);
+        assertEquals(executionId, execution.getExecutionId());
+        
+        service.stop();
+    }
+
+    @Test
+    void testAuditLog() {
+        service.initialize(context);
+        service.start();
+        
+        // 发送多个指令
+        for (int i = 0; i < 5; i++) {
+            service.sendCommand(
+                "VEH-00" + (i + 1),
+                RemoteControlService.CommandType.LOCATION_QUERY,
+                "{}",
+                RemoteControlService.CommandPriority.NORMAL,
+                "admin"
+            );
+        }
+        
+        // 获取审计日志
+        List<RemoteControlService.AuditLog> logs = service.getAuditLogs(10);
+        
+        assertNotNull(logs);
+        assertTrue(logs.size() >= 5);
+        
+        // 验证审计日志字段
+        RemoteControlService.AuditLog firstLog = logs.get(0);
+        assertNotNull(firstLog.getLogId());
+        assertNotNull(firstLog.getVehicleId());
+        assertNotNull(firstLog.getCommandType());
+        assertNotNull(firstLog.getOperator());
+        assertNotNull(firstLog.getTimestamp());
+        assertNotNull(firstLog.getStatus());
+        
+        service.stop();
+    }
+
+    @Test
+    void testCommandTypes() {
+        // 验证所有指令类型
+        RemoteControlService.CommandType[] types = RemoteControlService.CommandType.values();
+        
+        assertEquals(15, types.length);
+        
+        // 验证高风险指令
+        for (RemoteControlService.CommandType type : types) {
+            assertNotNull(type.getCode());
+            assertNotNull(type.getDescription());
+        }
+        
+        // 验证特定指令
+        assertEquals("LOCK_VEHICLE", 
+            RemoteControlService.CommandType.LOCK_VEHICLE.getCode());
+        assertEquals("锁车", 
+            RemoteControlService.CommandType.LOCK_VEHICLE.getDescription());
+        assertTrue(
+            RemoteControlService.CommandType.LOCK_VEHICLE.isHighRisk());
+    }
+
+    @Test
+    void testCommandPriorities() {
+        // 验证优先级
+        RemoteControlService.CommandPriority[] priorities = 
+            RemoteControlService.CommandPriority.values();
+        
+        assertEquals(4, priorities.length);
+        
+        // 验证优先级级别
+        assertEquals(0, RemoteControlService.CommandPriority.IMMEDIATE.getLevel());
+        assertEquals(1, RemoteControlService.CommandPriority.HIGH.getLevel());
+        assertEquals(2, RemoteControlService.CommandPriority.NORMAL.getLevel());
+        assertEquals(3, RemoteControlService.CommandPriority.LOW.getLevel());
+    }
+
+    @Test
+    void testHighRiskCommands() {
+        service.initialize(context);
+        service.start();
+        
+        // 发送高风险指令
+        String executionId = service.sendCommand(
+            "VEH-001",
+            RemoteControlService.CommandType.LIMIT_SPEED,
+            "{\"speed\":80}",
+            RemoteControlService.CommandPriority.NORMAL,
+            "admin"
+        );
+        
+        assertNotNull(executionId);
+        
+        RemoteControlService.CommandExecution execution = 
+            service.queryCommandStatus(executionId);
+        assertNotNull(execution);
+        assertEquals(RemoteControlService.CommandType.LIMIT_SPEED, 
+            execution.getCommandType());
+        
+        service.stop();
+    }
+
+    @Test
+    void testQueueSize() {
+        service.initialize(context);
+        service.start();
+        
+        // 发送多个指令
+        for (int i = 0; i < 10; i++) {
+            service.sendCommand(
+                "VEH-00" + (i + 1),
+                RemoteControlService.CommandType.LOCATION_QUERY,
+                "{}",
+                RemoteControlService.CommandPriority.NORMAL,
+                "admin"
+            );
+        }
+        
+        int queueSize = service.getCommandQueueSize();
+        assertTrue(queueSize > 0);
+        
+        service.stop();
+    }
+
+    @Test
+    void testAllCommandExecutions() {
+        service.initialize(context);
+        service.start();
+        
+        // 发送指令
+        String exec1 = service.sendCommand(
+            "VEH-001",
+            RemoteControlService.CommandType.LOCK_VEHICLE,
+            "{}",
+            RemoteControlService.CommandPriority.HIGH,
+            "admin"
+        );
+        
+        String exec2 = service.sendCommand(
+            "VEH-002",
+            RemoteControlService.CommandType.UNLOCK_VEHICLE,
+            "{}",
+            RemoteControlService.CommandPriority.NORMAL,
+            "admin"
+        );
+        
+        // 获取所有执行记录
+        List<RemoteControlService.CommandExecution> executions = 
+            service.getAllCommandExecutions();
+        
+        assertNotNull(executions);
+        assertTrue(executions.size() >= 2);
+        
+        service.stop();
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (service != null) {
+            try {
+                service.stop();
+                service.destroy();
+            } catch (ModuleException e) {
+                // 忽略清理异常
+            }
+        }
+    }
+}

@@ -1,6 +1,6 @@
 import { Controller, Get, Put, Body, Query } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger'
-import { SettingsService } from './settings.service'
+import { SettingsService } from './services/settings.service'
 
 @ApiTags('系统设置')
 @ApiBearerAuth()

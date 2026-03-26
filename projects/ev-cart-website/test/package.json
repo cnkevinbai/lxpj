@@ -1,0 +1,39 @@
+{
+  "name": "daoda-test-suite",
+  "version": "9.0.0",
+  "description": "道达智能全栈全平台测试套件",
+  "main": "dist/automated-test-system.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "ts-node automated-test-system.ts",
+    "test:fast": "cross-env HEADLESS=true ts-node automated-test-system.ts",
+    "test:p0": "ts-node p0-critical-tests.ts",
+    "test:p1": "ts-node p1-important-tests.ts",
+    "test:p2": "ts-node p2-secondary-tests.ts",
+    "test:gaps": "ts-node final-gap-tests.ts",
+    "test:100": "ts-node 100-percent-tests.ts",
+    "test:fix": "ts-node final-fixes.ts",
+    "test:frontend": "ts-node frontend-tests.ts",
+    "test:mobile": "ts-node mobile-tests.ts",
+    "test:harmonyos": "ts-node harmonyos-tests.ts",
+    "test:flow": "ts-node business-flow-tests.ts",
+    "test:website:fullstack": "ts-node website-fullstack-tests.ts",
+    "test:mobile:fullstack": "ts-node mobile-fullstack-tests.ts",
+    "test:extended": "ts-node extended-tests.ts",
+    "test:supplementary": "ts-node supplementary-tests.ts",
+    "test:all": "npm run test:p0 && npm run test:p1 && npm run test:p2 && npm run test:frontend && npm run test:mobile && npm run test:harmonyos && npm run test:flow",
+    "test:core": "npm run test:p0 && npm run test:harmonyos",
+    "test:quick": "npm run test:p0"
+  },
+  "dependencies": {
+    "playwright": "^1.40.0",
+    "typescript": "^5.3.3",
+    "ts-node": "^10.9.1",
+    "cross-env": "^7.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.3.1"
+  },
+  "author": "道达智能测试团队",
+  "license": "MIT"
+}

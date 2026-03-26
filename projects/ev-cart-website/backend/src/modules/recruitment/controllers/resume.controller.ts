@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Query, ParseUUIDPipe, UploadedFile, UseInterceptors } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiConsumes } from '@nestjs/swagger'
-import { ResumeService } from './resume.service'
-import { CreateResumeDto, UpdateResumeDto } from './dto/resume.dto'
+import { ResumeService } from '../services/resume.service'
+import { CreateResumeDto, UpdateResumeDto } from '../dto/resume.dto'
 
 @ApiTags('简历管理')
 @ApiBearerAuth()

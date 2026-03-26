@@ -1,0 +1,76 @@
+apiVersion: iov.daod.com/v1
+kind: Module
+metadata:
+  name: jtt808-adapter
+  version: 1.0.0
+  description: JT/T 808协议适配器 - 道路运输车辆卫星定位系统终端通讯协议
+  author: daod-team
+  license: proprietary
+
+spec:
+  type: adapter
+  priority: 20
+  
+  dependencies:
+    - name: plugin-framework
+      version: "^1.0.0"
+    - name: common-core
+      version: ">=1.0.0"
+
+  extensionPoints:
+    - name: message-handler
+      interface: com.daod.iov.modules.jtt808.MessageHandler
+      description: 消息处理器扩展点
+    - name: position-processor
+      interface: com.daod.iov.modules.jtt808.PositionProcessor
+      description: 位置数据处理扩展点
+
+  configSchema:
+    properties:
+      enabled:
+        type: boolean
+        default: true
+      serverPort:
+        type: integer
+        default: 8888
+        description: TCP服务端口
+      maxConnections:
+        type: integer
+        default: 5000
+        description: 最大连接数
+      idleTimeout:
+        type: integer
+        default: 300000
+        description: 空闲超时时间(毫秒)
+      heartbeatInterval:
+        type: integer
+        default: 60000
+        description: 心跳间隔(毫秒)
+      version:
+        type: string
+        default: "2019"
+        enum: ["2011", "2013", "2019"]
+        description: 协议版本
+      encoding:
+        type: string
+        default: "GBK"
+        description: 消息编码
+      enableEncryption:
+        type: boolean
+        default: false
+        description: 是否启用加密
+      encryptionKey:
+        type: string
+        description: 加密密钥
+      
+  resources:
+    cpu: "500m"
+    memory: "1Gi"
+    
+  healthCheck:
+    liveness: /health/live
+    readiness: /health/ready
+    
+  hotReload:
+    enabled: true
+    strategy: rolling

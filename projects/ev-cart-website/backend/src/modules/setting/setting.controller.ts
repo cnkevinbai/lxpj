@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common'
 import { ApiTags, ApiOperation } from '@nestjs/swagger'
-import { SettingService } from './setting.service'
+import { SettingService } from './services/setting.service'
 import { CreateSettingDto, UpdateSettingDto } from './dto/setting.dto'
 
 @ApiTags('settings')

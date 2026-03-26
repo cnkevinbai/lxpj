@@ -1,0 +1,74 @@
+# HTTP/HTTPS 协议适配器模块配置
+
+apiVersion: iov.daod.com/v1
+kind: Module
+metadata:
+  name: http-adapter
+  version: 1.0.0
+  description: HTTP/HTTPS 协议适配器 - 支持 RESTful API 方式的终端接入和第三方平台对接
+  author: daod-team
+  license: Apache-2.0
+
+spec:
+  type: adapter
+  priority: 25
+  mainClass: com.daod.iov.modules.httpadapter.HttpAdapterModule
+  
+  dependencies:
+    - name: plugin-framework
+      version: ">=1.0.0"
+      optional: false
+    - name: common-core
+      version: "^1.0.0"
+      optional: false
+    - name: vehicle-access
+      version: "^1.0.0"
+      optional: false
+  
+  provides:
+    - name: http-adapter-api
+      version: "1.0.0"
+      endpoints:
+        - path: http://*:8080/api/v1
+          description: HTTP API 端口
+        - path: https://*:8443/api/v1
+          description: HTTPS API 端口
+  
+  consumes:
+    - name: vehicle-access-api
+      version: "^1.0.0"
+      from: vehicle-access
+    - name: monitor-service-api
+      version: "^1.0.0"
+      from: monitor-service
+      optional: true
+  
+  extensionPoints:
+    - name: http-data-handler
+      interface: com.daod.iov.modules.httpadapter.api.HttpDataHandler
+      description: HTTP 数据处理器扩展点
+      multiple: true
+    - name: webhook-handler
+      interface: com.daod.iov.modules.httpadapter.api.WebhookHandler
+      description: Webhook 处理器扩展点
+      multiple: true
+  
+  permissions:
+    - HTTP_SERVER
+    - NETWORK_CONNECT
+    - FILE_READ
+    - FILE_WRITE
+  
+  resources:
+    cpu: "200m"
+    memory: "256Mi"
+    maxConnections: 5000
+  
+  healthCheck:
+    liveness: /api/v1/health/live
+    readiness: /api/v1/health/ready
+  
+  hotReload:
+    enabled: true
+    strategy: rolling
+    rollbackOnFailure: true

@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Get, Request, UseGuards } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger'
-import { AuthService } from './auth.service'
+import { AuthService } from '../services/auth.service'
 import { AuthGuard } from '@nestjs/passport'
 
 @ApiTags('认证授权')

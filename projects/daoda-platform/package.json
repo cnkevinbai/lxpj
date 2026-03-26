@@ -1,0 +1,28 @@
+{
+  "name": "daoda-platform",
+  "version": "1.0.0",
+  "description": "道达智能数字化平台 - 官网 + 门户",
+  "private": true,
+  "workspaces": [
+    "website",
+    "portal",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:website\" \"npm run dev:portal\" \"npm run dev:backend\"",
+    "dev:website": "cd website && npm run dev",
+    "dev:portal": "cd portal && npm run dev",
+    "dev:backend": "cd backend && npm run start:dev",
+    "build": "npm run build:website && npm run build:portal && npm run build:backend",
+    "build:website": "cd website && npm run build",
+    "build:portal": "cd portal && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "lint": "eslint . --ext .ts,.tsx",
+    "format": "prettier --write \"**/*.{ts,tsx,css,md,json}\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5"
+  }
+}

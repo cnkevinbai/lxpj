@@ -1,0 +1,67 @@
+apiVersion: iov.daod.com/v1
+kind: Module
+metadata:
+  name: remote-control
+  version: 1.0.0
+  description: 远程控制模块 - 车辆远程指令下发与执行
+  author: daod-team
+  license: proprietary
+
+spec:
+  type: business
+  priority: 40
+  
+  dependencies:
+    - name: plugin-framework
+      version: "^1.0.0"
+    - name: jtt808-adapter
+      version: ">=1.0.0"
+    - name: common-core
+      version: ">=1.0.0"
+
+  extensionPoints:
+    - name: control-command
+      interface: com.daod.iov.modules.remotecontrol.ControlCommand
+      description: 控制指令扩展点
+    - name: command-validator
+      interface: com.daod.iov.modules.remotecontrol.CommandValidator
+      description: 指令验证器扩展点
+
+  configSchema:
+    properties:
+      enabled:
+        type: boolean
+        default: true
+      commandTimeout:
+        type: integer
+        default: 30000
+        description: 指令超时时间(毫秒)
+      maxRetryCount:
+        type: integer
+        default: 3
+        description: 最大重试次数
+      enableAudit:
+        type: boolean
+        default: true
+        description: 是否启用审计日志
+      highRiskCommands:
+        type: array
+        items: string
+        default: ["LOCK_VEHICLE", "LIMIT_SPEED", "REMOTE_SHUTDOWN"]
+        description: 高风险指令列表
+      approvalRequired:
+        type: boolean
+        default: true
+        description: 高风险指令是否需要审批
+      
+  resources:
+    cpu: "200m"
+    memory: "256Mi"
+    
+  healthCheck:
+    liveness: /health/live
+    readiness: /health/ready
+    
+  hotReload:
+    enabled: true
+    strategy: rolling

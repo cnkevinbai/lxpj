@@ -1,6 +1,6 @@
 import { Controller, Post, Body } from '@nestjs/common'
 import { ApiTags, ApiOperation } from '@nestjs/swagger'
-import { SmsService } from './sms.service'
+import { SmsService } from './services/sms.service'
 
 @ApiTags('sms')
 @Controller('sms')

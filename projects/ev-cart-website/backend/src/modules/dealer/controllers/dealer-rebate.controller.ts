@@ -11,8 +11,8 @@ import {
   Request,
 } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger'
-import { DealerRebateService } from './dealer-rebate.service'
-import { CreateDealerRebateDto, UpdateDealerRebateDto, CalculateRebateDto, PayRebateDto } from './dto/dealer-rebate.dto'
+import { DealerRebateService } from '../services/dealer-rebate.service'
+import { CreateDealerRebateDto, UpdateDealerRebateDto, CalculateRebateDto, PayRebateDto } from '../dto/dealer-rebate.dto'
 
 @ApiTags('经销商返利')
 @ApiBearerAuth()

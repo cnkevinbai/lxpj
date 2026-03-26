@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Query, ParseUUIDPipe, Request } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger'
-import { JobService } from './job.service'
-import { CreateJobDto, UpdateJobDto } from './dto/job.dto'
+import { JobService } from '../services/job.service'
+import { CreateJobDto, UpdateJobDto } from '../dto/job.dto'
 
 @ApiTags('职位管理')
 @ApiBearerAuth()

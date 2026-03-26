@@ -1,0 +1,63 @@
+apiVersion: iov.daod.com/v1
+kind: Module
+metadata:
+  name: role-service
+  version: 1.0.0
+  description: 角色服务模块 - 多租户角色权限管理
+  author: daod-team
+  license: proprietary
+
+spec:
+  type: business
+  priority: 50
+  
+  dependencies:
+    - name: plugin-framework
+      version: "^1.0.0"
+    - name: auth-service
+      version: ">=1.0.0"
+    - name: common-core
+      version: ">=1.0.0"
+
+  extensionPoints:
+    - name: permission-provider
+      interface: com.daod.iov.modules.role.PermissionProvider
+      description: 权限提供者扩展点
+    - name: role-listener
+      interface: com.daod.iov.modules.role.RoleListener
+      description: 角色变更监听器
+
+  configSchema:
+    properties:
+      enabled:
+        type: boolean
+        default: true
+      maxRolesPerTenant:
+        type: integer
+        default: 100
+        description: 每个租户最大角色数
+      defaultRoles:
+        type: array
+        items: string
+        default: ["admin", "operator", "viewer"]
+        description: 默认角色列表
+      cacheEnabled:
+        type: boolean
+        default: true
+        description: 是否启用缓存
+      cacheTtl:
+        type: integer
+        default: 3600
+        description: 缓存过期时间(秒)
+      
+  resources:
+    cpu: "200m"
+    memory: "256Mi"
+    
+  healthCheck:
+    liveness: /health/live
+    readiness: /health/ready
+    
+  hotReload:
+    enabled: true
+    strategy: rolling

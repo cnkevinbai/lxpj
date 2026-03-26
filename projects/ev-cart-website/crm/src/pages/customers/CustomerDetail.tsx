@@ -128,9 +128,9 @@ const CustomerDetail: React.FC = () => {
               title="消费总额"
               value={customer.totalAmount || 0}
               precision={2}
-              prefix="¥"
-              valueStyle={{ color: '#52c41a' }}
               prefix={<DollarOutlined />}
+              suffix="¥"
+              valueStyle={{ color: '#52c41a' }}
             />
           </Card>
         </Col>

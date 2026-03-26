@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Form, Input, InputNumber, Select, Button, Card, message, Space, Divider } from 'antd'
+import { Form, Input, InputNumber, Select, Button, Card, message, Space, Divider, Row, Col } from 'antd'
 import { SaveOutlined, CloseOutlined } from '@ant-design/icons'
 
 const { TextArea } = Input

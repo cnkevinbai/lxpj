@@ -17,7 +17,7 @@ import {
   UseGuards
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
-import { MobileService } from './mobile.service'
+import { MobileService } from './services/mobile.service'
 
 @Controller('mobile')
 export class MobileController {

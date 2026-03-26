@@ -1,0 +1,807 @@
+package com.daod.iov.modules.subaccount;
+
+import com.daod.iov.plugin.*;
+import com.daod.iov.common.exception.BusinessException;
+import com.daod.iov.common.result.PageResult;
+import com.daod.iov.common.result.Result;
+import com.daod.iov.modules.user.entity.UserEntity;
+
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+
+/**
+ * 子账户服务模块
+ * 实现主账号-子账号管理、权限分配、账户状态管理等功能
+ */
+public class SubAccountService implements IModule {
+    
+    // 模块元数据
+    private ModuleMetadata metadata;
+    private ModuleState state;
+    private HealthStatus healthStatus;
+    private ModuleContext context;
+    
+    // 内存存储 - 实际项目中应使用数据库
+    private final Map<String, SubAccountEntity> subAccountStore = new ConcurrentHashMap<>();
+    private final Map<String, List<String>> accountRelativesStore = new ConcurrentHashMap<>();
+    private final Map<String, List<LogEntry>> auditLogStore = new ConcurrentHashMap<>();
+    private final Map<String, PasswordResetToken> passwordResetTokens = new ConcurrentHashMap<>();
+    
+    // 模块配置
+    private SubAccountConfig config = new SubAccountConfig();
+    
+    // 关联的服务（使用 Object 避免循环依赖）
+    private Object userService;
+    private Object roleService;
+    
+    /**
+     * 子账户服务构造函数
+     */
+    public SubAccountService() {
+        // 初始化模块元数据
+        this.metadata = new ModuleMetadata(
+            "sub-account-service",      // 模块名称
+            "1.0.0",                    // 模块版本
+            "子账户服务模块 - 主账号子账号管理"  // 模块描述
+        );
+        
+        // 设置模块类型和属性
+        this.metadata.setType("business");  // business类型
+        this.metadata.setPriority(55);      // 优先级
+        
+        // 设置初始状态
+        this.state = ModuleState.UNINITIALIZED;
+        this.healthStatus = HealthStatus.UNKNOWN;
+    }
+    
+    @Override
+    public ModuleMetadata getMetadata() {
+        return metadata;
+    }
+    
+    @Override
+    public void initialize(ModuleContext context) throws ModuleException {
+        this.context = context;
+        System.out.println("子账户服务模块初始化: " + metadata.getName());
+        
+        try {
+            // 读取配置
+            this.config = readConfig();
+            
+            // 注册扩展点
+            registerExtensionPoints();
+            
+            // 初始化存储
+            initializeStore();
+            
+        } catch (Exception e) {
+            Thread.currentThread().interrupt();
+            throw new ModuleException("INITIALIZATION_FAILED", 
+                "模块初始化失败: " + e.getMessage(), e);
+        }
+        
+        state = ModuleState.INITIALIZED;
+        healthStatus = HealthStatus.HEALTHY;
+    }
+    
+    @Override
+    public void start() throws ModuleException {
+        System.out.println("子账户服务模块启动: " + metadata.getName());
+        
+        try {
+            // 启动定时任务
+            startScheduledTasks();
+            
+        } catch (Exception e) {
+            Thread.currentThread().interrupt();
+            throw new ModuleException("START_FAILED", 
+                "模块启动失败: " + e.getMessage(), e);
+        }
+        
+        state = ModuleState.RUNNING;
+        healthStatus = HealthStatus.HEALTHY;
+    }
+    
+    @Override
+    public void stop() throws ModuleException {
+        System.out.println("子账户服务模块停止: " + metadata.getName());
+        
+        try {
+            // 停止定时任务
+            stopScheduledTasks();
+            
+        } catch (Exception e) {
+            Thread.currentThread().interrupt();
+            throw new ModuleException("STOP_FAILED", 
+                "模块停止失败: " + e.getMessage(), e);
+        }
+        
+        state = ModuleState.STOPPED;
+        healthStatus = HealthStatus.OFFLINE;
+    }
+    
+    @Override
+    public void destroy() throws ModuleException {
+        System.out.println("子账户服务模块销毁: " + metadata.getName());
+        
+        try {
+            // 清理资源
+            cleanup();
+            
+        } catch (Exception e) {
+            Thread.currentThread().interrupt();
+            throw new ModuleException("DESTROY_FAILED", 
+                "模块销毁失败: " + e.getMessage(), e);
+        }
+        
+        state = ModuleState.DESTROYED;
+    }
+    
+    @Override
+    public ModuleState getState() {
+        return state;
+    }
+    
+    @Override
+    public HealthStatus getHealthStatus() {
+        return healthStatus;
+    }
+    
+    // ==================== 公开服务方法 ====================
+    
+    /**
+     * 创建子账户
+     */
+    public Result<SubAccountEntity> createSubAccount(SubAccountCreateRequest request) {
+        try {
+            // 验证请求
+            validateCreateRequest(request);
+            
+            // 检查配额
+            checkQuota(request.getParentAccountId());
+            
+            // 检查扩展点
+            if (!executeAccountValidator(request)) {
+                return Result.fail("ACCOUNT_VALIDATION_FAILED", "账户验证失败");
+            }
+            
+            // 创建子账户实体
+            SubAccountEntity subAccount = new SubAccountEntity();
+            subAccount.setId(UUID.randomUUID().toString());
+            subAccount.setParentAccountId(request.getParentAccountId());
+            subAccount.setUsername(request.getUsername());
+            subAccount.setDisplayName(request.getDisplayName());
+            subAccount.setEmail(request.getEmail());
+            subAccount.setPhone(request.getPhone());
+            subAccount.setStatus(AccountStatus.ACTIVE);
+            subAccount.setPasswordHash(encryptPassword(request.getPassword()));
+            subAccount.setCreatedAt(LocalDateTime.now());
+            subAccount.setUpdatedAt(LocalDateTime.now());
+            subAccount.setCreatedBy(request.getParentAccountId());
+            
+            // 设置过期时间
+            if (config.getAccountExpirationDays() > 0) {
+                subAccount.setExpiresAt(LocalDateTime.now()
+                    .plusDays(config.getAccountExpirationDays()));
+            }
+            
+            // 设置配额限制
+            subAccount.setMaxDevices(request.getMaxDevices() != null ? 
+                request.getMaxDevices() : config.getMaxSubAccountsPerTenant());
+            subAccount.setMaxLocations(request.getMaxLocations() != null ? 
+                request.getMaxLocations() : 100);
+            
+            // 存储子账户
+            subAccountStore.put(subAccount.getId(), subAccount);
+            
+            // 建立关联关系
+            accountRelativesStore.computeIfAbsent(
+                request.getParentAccountId(), k -> new ArrayList<>())
+                .add(subAccount.getId());
+            
+            // 记录审计日志
+            logAuditEvent(AuditEventType.SUB_ACCOUNT_CREATED, subAccount);
+            
+            return Result.success(subAccount);
+            
+        } catch (BusinessException e) {
+            return Result.fail(e.getCode(), e.getMessage());
+        } catch (Exception e) {
+            return Result.fail("CREATE_SUB_ACCOUNT_FAILED", "创建子账户失败: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * 查询子账户详情
+     */
+    public Result<SubAccountEntity> getSubAccount(String subAccountId) {
+        try {
+            SubAccountEntity subAccount = subAccountStore.get(subAccountId);
+            
+            if (subAccount == null) {
+                return Result.fail("SUB_ACCOUNT_NOT_FOUND", "子账户不存在");
+            }
+            
+            // 验证账户状态
+            if (!validateAccountStatus(subAccount)) {
+                return Result.fail("ACCOUNT_INACTIVE", "账户状态异常");
+            }
+            
+            return Result.success(subAccount);
+            
+        } catch (Exception e) {
+            return Result.fail("GET_SUB_ACCOUNT_FAILED", "查询子账户失败: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * 更新子账户信息
+     */
+    public Result<SubAccountEntity> updateSubAccount(String subAccountId, 
+                                                     SubAccountUpdateRequest request) {
+        try {
+            SubAccountEntity subAccount = subAccountStore.get(subAccountId);
+            
+            if (subAccount == null) {
+                return Result.fail("SUB_ACCOUNT_NOT_FOUND", "子账户不存在");
+            }
+            
+            // 验证账户状态
+            if (!validateAccountStatus(subAccount)) {
+                return Result.fail("ACCOUNT_INACTIVE", "账户状态异常");
+            }
+            
+            // 更新字段
+            if (request.getDisplayName() != null) {
+                subAccount.setDisplayName(request.getDisplayName());
+            }
+            
+            if (request.getEmail() != null) {
+                subAccount.setEmail(request.getEmail());
+            }
+            
+            if (request.getPhone() != null) {
+                subAccount.setPhone(request.getPhone());
+            }
+            
+            if (request.getMaxDevices() != null) {
+                subAccount.setMaxDevices(request.getMaxDevices());
+            }
+            
+            if (request.getMaxLocations() != null) {
+                subAccount.setMaxLocations(request.getMaxLocations());
+            }
+            
+            subAccount.setUpdatedAt(LocalDateTime.now());
+            
+            // 更新存储
+            subAccountStore.put(subAccountId, subAccount);
+            
+            // 记录审计日志
+            logAuditEvent(AuditEventType.SUB_ACCOUNT_UPDATED, subAccount);
+            
+            return Result.success(subAccount);
+            
+        } catch (Exception e) {
+            return Result.fail("UPDATE_SUB_ACCOUNT_FAILED", "更新子账户失败: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * 删除子账户
+     */
+    public Result<Void> deleteSubAccount(String subAccountId) {
+        try {
+            SubAccountEntity subAccount = subAccountStore.get(subAccountId);
+            
+            if (subAccount == null) {
+                return Result.fail("SUB_ACCOUNT_NOT_FOUND", "子账户不存在");
+            }
+            
+            // 记录审计日志
+            logAuditEvent(AuditEventType.SUB_ACCOUNT_DELETED, subAccount);
+            
+            // 删除子账户
+            subAccountStore.remove(subAccountId);
+            
+            // 清理关联关系
+            accountRelativesStore.values().forEach(relatives -> 
+                relatives.remove(subAccountId));
+            
+            return Result.success();
+            
+        } catch (Exception e) {
+            return Result.fail("DELETE_SUB_ACCOUNT_FAILED", "删除子账户失败: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * 分页查询子账户列表
+     */
+    public Result<PageResult<SubAccountEntity>> listSubAccounts(
+            String parentAccountId, Integer page, Integer size) {
+        try {
+            // 验证父账号存在
+            UserEntity parentUser = userService.getUserById(parentAccountId);
+            if (parentUser == null) {
+                return Result.fail("PARENT_ACCOUNT_NOT_FOUND", "父账号不存在");
+            }
+            
+            // 获取该父账号的所有子账号
+            List<String> subAccountIds = accountRelativesStore.getOrDefault(
+                parentAccountId, new ArrayList<>());
+            
+            // 分页处理
+            int fromIndex = (page - 1) * size;
+            int toIndex = Math.min(fromIndex + size, subAccountIds.size());
+            
+            List<SubAccountEntity> pageData = new ArrayList<>();
+            for (int i = fromIndex; i < toIndex; i++) {
+                SubAccountEntity subAccount = subAccountStore.get(subAccountIds.get(i));
+                if (subAccount != null) {
+                    pageData.add(subAccount);
+                }
+            }
+            
+            PageResult<SubAccountEntity> pageResult = new PageResult<>();
+            pageResult.setTotal((long) subAccountIds.size());
+            pageResult.setSize((long) size);
+            pageResult.setPage((long) page);
+            pageResult.setRecords(pageData);
+            
+            return Result.success(pageResult);
+            
+        } catch (Exception e) {
+            return Result.fail("LIST_SUB_ACCOUNTS_FAILED", "查询子账户列表失败: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * 启用子账户
+     */
+    public Result<Void> enableSubAccount(String subAccountId) {
+        return updateAccountStatus(subAccountId, AccountStatus.ACTIVE);
+    }
+    
+    /**
+     * 禁用子账户
+     */
+    public Result<Void> disableSubAccount(String subAccountId) {
+        return updateAccountStatus(subAccountId, AccountStatus.DISABLED);
+    }
+    
+    /**
+     * 重置子账户密码
+     */
+    public Result<Void> resetPassword(String subAccountId, String newPassword) {
+        try {
+            SubAccountEntity subAccount = subAccountStore.get(subAccountId);
+            
+            if (subAccount == null) {
+                return Result.fail("SUB_ACCOUNT_NOT_FOUND", "子账户不存在");
+            }
+            
+            // 验证密码策略
+            if (!validatePasswordPolicy(newPassword)) {
+                return Result.fail("PASSWORD_POLICY_VIOLATION", "密码不符合策略要求");
+            }
+            
+            // 更新密码
+            subAccount.setPasswordHash(encryptPassword(newPassword));
+            subAccount.setPasswordResetAt(LocalDateTime.now());
+            subAccount.setUpdatedAt(LocalDateTime.now());
+            
+            // 存储更新
+            subAccountStore.put(subAccountId, subAccount);
+            
+            // 记录审计日志
+            logAuditEvent(AuditEventType.PASSWORD_RESET, subAccount);
+            
+            return Result.success();
+            
+        } catch (Exception e) {
+            return Result.fail("RESET_PASSWORD_FAILED", "重置密码失败: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * 分配角色权限
+     */
+    public Result<Void> assignRoles(String subAccountId, List<String> roleIds) {
+        try {
+            SubAccountEntity subAccount = subAccountStore.get(subAccountId);
+            
+            if (subAccount == null) {
+                return Result.fail("SUB_ACCOUNT_NOT_FOUND", "子账户不存在");
+            }
+            
+            // 验证角色存在
+            for (String roleId : roleIds) {
+                RoleEntity role = roleService.getRoleById(roleId);
+                if (role == null) {
+                    return Result.fail("ROLE_NOT_FOUND", "角色不存在: " + roleId);
+                }
+            }
+            
+            // 设置角色
+            subAccount.setRoleIds(roleIds);
+            subAccount.setUpdatedAt(LocalDateTime.now());
+            
+            // 存储更新
+            subAccountStore.put(subAccountId, subAccount);
+            
+            // 记录审计日志
+            logAuditEvent(AuditEventType.ROLES_ASSIGNED, subAccount);
+            
+            return Result.success();
+            
+        } catch (Exception e) {
+            return Result.fail("ASSIGN_ROLES_FAILED", "分配角色失败: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * 查询登录日志
+     */
+    public Result<PageResult<LogEntry>> getLoginLogs(String subAccountId, 
+                                                      Integer page, Integer size) {
+        try {
+            List<LogEntry> logs = auditLogStore.getOrDefault(subAccountId, new ArrayList<>());
+            
+            // 分页处理
+            int fromIndex = (page - 1) * size;
+            int toIndex = Math.min(fromIndex + size, logs.size());
+            
+            List<LogEntry> pageData = logs.subList(fromIndex, toIndex);
+            
+            PageResult<LogEntry> pageResult = new PageResult<>();
+            pageResult.setTotal((long) logs.size());
+            pageResult.setSize((long) size);
+            pageResult.setPage((long) page);
+            pageResult.setRecords(pageData);
+            
+            return Result.success(pageResult);
+            
+        } catch (Exception e) {
+            return Result.fail("GET_LOGIN_LOGS_FAILED", "查询登录日志失败: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * 查询配额使用情况
+     */
+    public Result<QuotaInfo> getQuotaInfo(String subAccountId) {
+        try {
+            SubAccountEntity subAccount = subAccountStore.get(subAccountId);
+            
+            if (subAccount == null) {
+                return Result.fail("SUB_ACCOUNT_NOT_FOUND", "子账户不存在");
+            }
+            
+            QuotaInfo quotaInfo = new QuotaInfo();
+            quotaInfo.setMaxDevices(subAccount.getMaxDevices());
+            quotaInfo.setMaxLocations(subAccount.getMaxLocations());
+            quotaInfo.setDevicesUsed(countDevices(subAccountId));
+            quotaInfo.setLocationsUsed(countLocations(subAccountId));
+            
+            return Result.success(quotaInfo);
+            
+        } catch (Exception e) {
+            return Result.fail("GET_QUOTA_INFO_FAILED", "查询配额信息失败: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * 检查账户是否过期
+     */
+    public Result<Boolean> checkAccountExpired(String subAccountId) {
+        try {
+            SubAccountEntity subAccount = subAccountStore.get(subAccountId);
+            
+            if (subAccount == null) {
+                return Result.fail("SUB_ACCOUNT_NOT_FOUND", "子账户不存在");
+            }
+            
+            boolean expired = subAccount.getExpiresAt() != null 
+                && LocalDateTime.now().isAfter(subAccount.getExpiresAt());
+            
+            return Result.success(expired);
+            
+        } catch (Exception e) {
+            return Result.fail("CHECK_EXPIRED_FAILED", "检查账户过期失败: " + e.getMessage());
+        }
+    }
+    
+    // ==================== 内部辅助方法 ====================
+    
+    /**
+     * 读取模块配置
+     */
+    private SubAccountConfig readConfig() throws ModuleException {
+        SubAccountConfig config = new SubAccountConfig();
+        
+        // 从上下文获取配置
+        config.setEnabled(context.getConfig("enabled", true));
+        config.setMaxSubAccountsPerTenant(context.getConfig("maxSubAccountsPerTenant", 500));
+        config.setPasswordPolicy(context.getConfig("passwordPolicy", "medium"));
+        config.setAccountExpirationDays(context.getConfig("accountExpirationDays", 365));
+        config.setEnableAudit(context.getConfig("enableAudit", true));
+        
+        return config;
+    }
+    
+    /**
+     * 注册扩展点
+     */
+    private void registerExtensionPoints() {
+        // 注册账户验证器扩展点
+        context.registerExtensionPoint("account-validator", 
+            AccountValidator.class);
+        
+        // 注册账户生命周期监听器扩展点
+        context.registerExtensionPoint("account-lifecycle-listener", 
+            AccountLifecycleListener.class);
+    }
+    
+    /**
+     * 初始化存储
+     */
+    private void initializeStore() {
+        System.out.println("子账户服务初始化存储");
+    }
+    
+    /**
+     * 启动定时任务
+     */
+    private void startScheduledTasks() {
+        System.out.println("子账户服务启动定时任务");
+        
+        // 启动过期账户检查任务
+        context.getScheduledExecutor().scheduleAtFixedRate(
+            this::checkExpiredAccounts,
+            0, 1, java.util.concurrent.TimeUnit.HOURS
+        );
+    }
+    
+    /**
+     * 停止定时任务
+     */
+    private void stopScheduledTasks() {
+        System.out.println("子账户服务停止定时任务");
+    }
+    
+    /**
+     * 清理资源
+     */
+    private void cleanup() {
+        subAccountStore.clear();
+        accountRelativesStore.clear();
+        auditLogStore.clear();
+        passwordResetTokens.clear();
+    }
+    
+    /**
+     * 验证创建请求
+     */
+    private void validateCreateRequest(SubAccountCreateRequest request) 
+            throws BusinessException {
+        if (request.getParentAccountId() == null || request.getParentAccountId().trim().isEmpty()) {
+            throw new BusinessException("PARENT_ACCOUNT_ID_REQUIRED", "父账号ID不能为空");
+        }
+        
+        if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
+            throw new BusinessException("USERNAME_REQUIRED", "用户名不能为空");
+        }
+        
+        if (request.getPassword() == null || request.getPassword().length() < 8) {
+            throw new BusinessException("PASSWORD_TOO_SHORT", "密码长度至少8位");
+        }
+        
+        if (request.getEmail() != null && !isValidEmail(request.getEmail())) {
+            throw new BusinessException("INVALID_EMAIL", "邮件格式不正确");
+        }
+    }
+    
+    /**
+     * 检查配额限制
+     */
+    private void checkQuota(String parentAccountId) throws BusinessException {
+        List<String> relatives = accountRelativesStore.getOrDefault(
+            parentAccountId, new ArrayList<>());
+        
+        if (relatives.size() >= config.getMaxSubAccountsPerTenant()) {
+            throw new BusinessException("QUOTA_EXCEEDED", "子账号数量已达上限");
+        }
+    }
+    
+    /**
+     * 验证账户状态
+     */
+    private boolean validateAccountStatus(SubAccountEntity subAccount) {
+        if (subAccount.getStatus() == AccountStatus.DISABLED) {
+            return false;
+        }
+        
+        if (subAccount.getExpiresAt() != null && 
+            LocalDateTime.now().isAfter(subAccount.getExpiresAt())) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * 验证密码策略
+     */
+    private boolean validatePasswordPolicy(String password) {
+        if (config.getPasswordPolicy().equals("low")) {
+            return password.length() >= 6;
+        } else if (config.getPasswordPolicy().equals("medium")) {
+            return password.length() >= 8 && 
+                   password.matches(".*[a-zA-Z].*") && 
+                   password.matches(".*\\d.*");
+        } else {
+            return password.length() >= 12 && 
+                   password.matches(".*[a-z].*") && 
+                   password.matches(".*[A-Z].*") && 
+                   password.matches(".*\\d.*") && 
+                   password.matches(".*[^a-zA-Z0-9].*");
+        }
+    }
+    
+    /**
+     * 更新账户状态
+     */
+    private Result<Void> updateAccountStatus(String subAccountId, AccountStatus status) {
+        try {
+            SubAccountEntity subAccount = subAccountStore.get(subAccountId);
+            
+            if (subAccount == null) {
+                return Result.fail("SUB_ACCOUNT_NOT_FOUND", "子账户不存在");
+            }
+            
+            subAccount.setStatus(status);
+            subAccount.setUpdatedAt(LocalDateTime.now());
+            
+            subAccountStore.put(subAccountId, subAccount);
+            
+            AuditEventType eventType = status == AccountStatus.ACTIVE ? 
+                AuditEventType.ACCOUNT_ENABLED : AuditEventType.ACCOUNT_DISABLED;
+            logAuditEvent(eventType, subAccount);
+            
+            return Result.success();
+            
+        } catch (Exception e) {
+            return Result.fail("UPDATE_STATUS_FAILED", "更新状态失败: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * 执行账户验证器扩展点
+     */
+    private boolean executeAccountValidator(SubAccountCreateRequest request) {
+        // 扩展点调用 - 实际项目中会在这里调用扩展点
+        return true;
+    }
+    
+    /**
+     * 记录审计日志
+     */
+    private void logAuditEvent(AuditEventType eventType, SubAccountEntity subAccount) {
+        if (!config.isEnableAudit()) {
+            return;
+        }
+        
+        LogEntry logEntry = new LogEntry();
+        logEntry.setId(UUID.randomUUID().toString());
+        logEntry.setSubAccountId(subAccount.getId());
+        logEntry.setEventType(eventType.getType());
+        logEntry.setEventTypeCode(eventType.getCode());
+        logEntry.setTimestamp(LocalDateTime.now());
+        logEntry.setIpAddress("127.0.0.1"); // 实际项目中从请求获取
+        logEntry.setUserInfo("System"); // 实际项目中从认证获取
+        
+        auditLogStore.computeIfAbsent(subAccount.getId(), k -> new ArrayList<>())
+            .add(logEntry);
+    }
+    
+    /**
+     * 检查过期账户
+     */
+    private void checkExpiredAccounts() {
+        System.out.println("检查过期账户");
+        
+        LocalDateTime now = LocalDateTime.now();
+        
+        subAccountStore.values().stream()
+            .filter(subAccount -> subAccount.getExpiresAt() != null 
+                && now.isAfter(subAccount.getExpiresAt())
+                && subAccount.getStatus() == AccountStatus.ACTIVE)
+            .forEach(subAccount -> {
+                subAccount.setStatus(AccountStatus.EXPIRED);
+                subAccount.setUpdatedAt(now);
+                subAccountStore.put(subAccount.getId(), subAccount);
+                logAuditEvent(AuditEventType.ACCOUNT_EXPIRED, subAccount);
+            });
+    }
+    
+    /**
+     * 验证邮箱格式
+     */
+    private boolean isValidEmail(String email) {
+        return email != null && 
+               email.matches("^[A-Za-z0-9+_.-]+@(.+)$");
+    }
+    
+    /**
+     * 加密密码
+     */
+    private String encryptPassword(String password) {
+        // 实际项目中应使用BCrypt或类似的安全算法
+        return "ENC:" + password;
+    }
+    
+    /**
+     * 统计设备数量
+     */
+    private int countDevices(String subAccountId) {
+        // 实际项目中应从设备服务查询
+        return 0;
+    }
+    
+    /**
+     * 统计位置数量
+     */
+    private int countLocations(String subAccountId) {
+        // 实际项目中应从位置服务查询
+        return 0;
+    }
+    
+    // ==================== Getter/Setter ====================
+    
+    public Object getUserService() {
+        return userService;
+    }
+    
+    public void setUserService(Object userService) {
+        this.userService = userService;
+    }
+    
+    public Object getRoleService() {
+        return roleService;
+    }
+    
+    public void setRoleService(Object roleService) {
+        this.roleService = roleService;
+    }
+    
+    public SubAccountConfig getConfig() {
+        return config;
+    }
+    
+    // ==================== 配置类 ====================
+    
+    public static class SubAccountConfig {
+        private boolean enabled = true;
+        private int maxSubAccountsPerTenant = 500;
+        private String passwordPolicy = "medium";
+        private int accountExpirationDays = 365;
+        private boolean enableAudit = true;
+        
+        public boolean isEnabled() { return enabled; }
+        public void setEnabled(boolean enabled) { this.enabled = enabled; }
+        
+        public int getMaxSubAccountsPerTenant() { return maxSubAccountsPerTenant; }
+        public void setMaxSubAccountsPerTenant(int max) { this.maxSubAccountsPerTenant = max; }
+        
+        public String getPasswordPolicy() { return passwordPolicy; }
+        public void setPasswordPolicy(String policy) { this.passwordPolicy = policy; }
+        
+        public int getAccountExpirationDays() { return accountExpirationDays; }
+        public void setAccountExpirationDays(int days) { this.accountExpirationDays = days; }
+        
+        public boolean isEnableAudit() { return enableAudit; }
+        public void setEnableAudit(boolean enable) { this.enableAudit = enable; }
+    }
+}

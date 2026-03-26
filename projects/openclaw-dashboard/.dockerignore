@@ -1,0 +1,14 @@
+# Docker 忽略文件
+node_modules
+dist
+.git
+.gitignore
+*.md
+.env
+.env.*
+!.env.production
+coverage
+.nyc_output
+*.log
+.DS_Store
+Thumbs.db

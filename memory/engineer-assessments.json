@@ -1,0 +1,61 @@
+[
+  {
+    "date": "2026-03-13T16:12:01.218868",
+    "pillars": {
+      "engineering": {
+        "competencies": {
+          "可维护性 (Maintainability)": 4,
+          "可扩展性 (Extensibility)": 4,
+          "防御性编程 (Defensive Programming)": 4,
+          "容错设计 (Fault Tolerance)": 4,
+          "自动化意识 (Automation Mindset)": 5
+        },
+        "average": 4.2
+      },
+      "first_principles": {
+        "competencies": {
+          "穿透黑盒 (穿透 Black Boxes)": 4,
+          "技术选型定力 (Technology Selection)": 4,
+          "数学与算法直觉 (Math & Algorithm Intuition)": 3
+        },
+        "average": 3.67
+      },
+      "architecture": {
+        "competencies": {
+          "全局观 (Systems Thinking)": 5,
+          "演进式架构 (Evolutionary Architecture)": 4,
+          "成本意识 (Cost Consciousness)": 3
+        },
+        "average": 4.0
+      },
+      "communication": {
+        "competencies": {
+          "技术翻译官 (Technical Translator)": 4,
+          "文档文化 (Documentation Culture)": 5
+        },
+        "average": 4.5
+      },
+      "problem_solving": {
+        "competencies": {
+          "绝境求生 (Survival Mode)": 4,
+          "遗留系统重构 (Legacy Refactoring)": 4,
+          "无中生有 (Building from Zero)": 5
+        },
+        "average": 4.33
+      },
+      "learning": {
+        "competencies": {
+          "跨界学习 (Cross-Domain Learning)": 5,
+          "拥抱变化 (Embrace Change)": 5,
+          "反思习惯 (Reflection Practice)": 5
+        },
+        "average": 5.0
+      }
+    },
+    "overall": {
+      "average": 4.28,
+      "strongest": "learning",
+      "needs_work": "first_principles"
+    }
+  }
+]

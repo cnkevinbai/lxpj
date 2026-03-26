@@ -1,0 +1,157 @@
+package com.daod.iov.modules.ota;
+
+import com.daod.iov.modules.ota.entity.*;
+import com.daod.iov.modules.ota.service.*;
+import com.daod.iov.plugin.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.*;
+
+/**
+ * OTA升级服务模块测试类
+ */
+class OtaServiceTest {
+
+    @Test
+    void testModuleLifecycle() throws ModuleException {
+        OtaService module = new OtaService();
+        
+        assertEquals("ota-service", module.getMetadata().getName());
+        assertEquals("1.0.0", module.getMetadata().getVersion());
+        assertEquals(ModuleState.UNINITIALIZED, module.getState());
+        assertEquals(HealthStatus.UNKNOWN, module.getHealthStatus());
+        
+        ModuleContext context = new ModuleContext("ota-service:1.0.0", "", null);
+        
+        module.initialize(context);
+        assertEquals(ModuleState.INITIALIZED, module.getState());
+        assertEquals(HealthStatus.HEALTHY, module.getHealthStatus());
+        
+        module.start();
+        assertEquals(ModuleState.RUNNING, module.getState());
+        assertEquals(HealthStatus.HEALTHY, module.getHealthStatus());
+        
+        module.stop();
+        assertEquals(ModuleState.STOPPED, module.getState());
+        assertEquals(HealthStatus.OFFLINE, module.getHealthStatus());
+        
+        module.destroy();
+        assertEquals(ModuleState.DESTROYED, module.getState());
+    }
+    
+    @Test
+    void testModuleConfiguration() throws ModuleException {
+        OtaService module = new OtaService();
+        ModuleContext context = new ModuleContext("ota-service:1.0.0", "", null);
+        
+        module.initialize(context);
+        
+        assertNotNull(module.getMetadata());
+        assertEquals("ota-service", module.getMetadata().getName());
+        assertEquals("business", module.getMetadata().getType());
+        assertEquals(30, module.getMetadata().getPriority());
+    }
+    
+    @Test
+    void testDefaultStrategies() {
+        StrategyService service = new StrategyService();
+        
+        assertNotNull(service.getStrategy("full"));
+        assertNotNull(service.getStrategy("incremental"));
+        assertNotNull(service.getStrategy("differential"));
+        
+        assertTrue(service.supportsStrategy("full"));
+        assertTrue(service.supportsStrategy("incremental"));
+        assertTrue(service.supportsStrategy("differential"));
+    }
+    
+    @Test
+    void testStrategyBindings() {
+        OtaStrategy fullStrategy = new OtaStrategy() {
+            @Override
+            public String getType() { return "test-full"; }
+            @Override
+            public String getName() { return "测试全量"; }
+            @Override
+            public String getDescription() { return "测试全量升级"; }
+            
+            @Override
+            public void execute(UpgradeTask task, UpgradeCallback callback) {}
+            @Override
+            public boolean isCompatible(String fromVersion, String toVersion) { return true; }
+            @Override
+            public java.util.List<String> getDependencies(String version) { return new ArrayList<>(); }
+            @Override
+            public java.util.List<String> getUpgradeRange(String fromVersion, String toVersion) { return new ArrayList<>(); }
+            @Override
+            public boolean supportsIncremental() { return false; }
+            @Override
+            public long estimateUpgradeTime(String firmwareId, int vehicleCount) { return 1000; }
+        };
+        
+        StrategyService service = new StrategyService();
+        service.registerStrategy(fullStrategy);
+        
+        assertEquals("test-full", service.getStrategy("test-full").getType());
+    }
+    
+    @Test
+    void testUpgradeTaskStatusTransitions() throws OtaException {
+        FirmwareService firmwareService = new FirmwareService("/tmp/test", 1024, true);
+        
+        // 创建测试固件
+        FirmwareInfo info = FirmwareInfo.builder()
+            .deviceId("test-device")
+            .deviceModel("test-model")
+            .version("1.0.0")
+            .fileName("firmware.bin")
+            .fileSize(1024)
+            .createdBy("test-user")
+            .build();
+        
+        Firmware firmware = firmwareService.uploadFirmware(new byte[1024], info);
+        
+        UpgradeTaskService taskService = new UpgradeTaskService(firmwareService, 3, 600000L);
+        
+        UpgradeTaskDto dto = UpgradeTaskDto.builder()
+            .firmwareId(firmware.getId())
+            .vehicleIds(Arrays.asList("vehicle-001", "vehicle-002"))
+            .createdBy("test-user")
+            .build();
+        
+        UpgradeTask task = taskService.createUpgradeTask(dto);
+        assertEquals(UpgradeTask.Status.PENDING, task.getStatus());
+        
+        taskService.executeUpgrade(task);
+        assertEquals(UpgradeTask.Status.RUNNING, task.getTask(task.getId()).getStatus());
+    }
+    
+    @Test
+    void testAuditLogging() {
+        AuditService service = new AuditService();
+        
+        service.logAudit("UPLOAD_FIRMWARE", "firmware-001", "上传固件版本1.0.0");
+        
+        List<AuditLog> logs = service.getAllLogs();
+        assertTrue(logs.size() >= 1);
+        
+        AuditLog log = logs.get(0);
+        assertEquals("UPLOAD_FIRMWARE", log.getOperation());
+        assertEquals("firmware-001", log.getTargetId());
+    }
+    
+    @Test
+    void testModuleManagerIntegration() throws ModuleException {
+        ModuleManager manager = ModuleManagerFactory.getInstance();
+        manager.initialize();
+        
+        OtaService module = new OtaService();
+        
+        assertNotNull(module.getMetadata());
+        assertEquals("ota-service", module.getMetadata().getName());
+        assertEquals("business", module.getMetadata().getType());
+        
+        System.out.println("模块测试通过: " + module.getMetadata().getName());
+    }
+}
