@@ -2,7 +2,17 @@
  * 合同模块 DTO 定义
  */
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { IsString, IsOptional, IsEnum, IsNumber, Min, Max, IsDateString, IsArray, IsBoolean } from 'class-validator'
+import {
+  IsString,
+  IsOptional,
+  IsEnum,
+  IsNumber,
+  Min,
+  Max,
+  IsDateString,
+  IsArray,
+  IsBoolean,
+} from 'class-validator'
 
 /**
  * 合同状态枚举

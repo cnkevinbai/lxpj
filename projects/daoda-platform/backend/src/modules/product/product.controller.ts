@@ -1,17 +1,7 @@
 /**
  * 产品控制器
  */
-import {
-  Controller,
-  Get,
-  Post,
-  Put,
-  Delete,
-  Body,
-  Param,
-  Query,
-  UseGuards,
-} from '@nestjs/common'
+import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse, ApiQuery } from '@nestjs/swagger'
 import { ProductService } from './product.service'
 import { CreateProductDto, UpdateProductDto, ProductQueryDto } from './product.dto'

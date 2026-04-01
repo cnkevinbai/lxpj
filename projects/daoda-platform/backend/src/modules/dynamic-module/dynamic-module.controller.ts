@@ -14,7 +14,7 @@ export class DynamicModuleController {
   @Get()
   @ApiOperation({ summary: '获取所有模块状态' })
   getAllModules() {
-    return this.registry.getAllModules().map(m => ({
+    return this.registry.getAllModules().map((m) => ({
       id: m.id,
       name: m.name,
       version: m.version,

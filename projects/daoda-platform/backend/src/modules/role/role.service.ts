@@ -78,14 +78,14 @@ export class RoleService {
       code: dto.code,
       description: dto.description,
       status: dto.status,
-    };
+    }
 
     if (dto.permissions !== undefined) {
       roleData.permissions = Array.isArray(dto.permissions)
         ? dto.permissions
         : typeof dto.permissions === 'string'
           ? (dto.permissions as string).split(',').map((p: string) => p.trim())
-          : [];
+          : []
     }
 
     const updated = await this.prisma.role.update({
@@ -112,7 +112,7 @@ export class RoleService {
     // 软删除
     await this.prisma.role.update({
       where: { id },
-      data: { status: "INACTIVE" },
+      data: { status: 'INACTIVE' },
     })
 
     this.logger.log(`删除角色成功: ${role.name}`)

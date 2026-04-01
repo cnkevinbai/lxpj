@@ -20,7 +20,11 @@ export class CreateBomDto {
   @IsString()
   version?: string = '1.0'
 
-  @ApiPropertyOptional({ description: '状态', enum: ['DRAFT', 'ACTIVE', 'INACTIVE'], default: 'ACTIVE' })
+  @ApiPropertyOptional({
+    description: '状态',
+    enum: ['DRAFT', 'ACTIVE', 'INACTIVE'],
+    default: 'ACTIVE',
+  })
   @IsOptional()
   status?: BomStatus = 'ACTIVE'
 

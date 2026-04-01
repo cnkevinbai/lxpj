@@ -1,11 +1,6 @@
 // 复用 LoggingInterceptor 的功能
 // 记录请求和响应日志
-import {
-  Injectable,
-  NestInterceptor,
-  ExecutionContext,
-  CallHandler,
-} from '@nestjs/common'
+import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common'
 import { Observable } from 'rxjs'
 import { tap } from 'rxjs/operators'
 import { Request, Response } from 'express'
@@ -25,9 +20,7 @@ export class LoggingInterceptor implements NestInterceptor {
     return next.handle().pipe(
       tap(() => {
         const duration = Date.now() - now
-        console.log(
-          `[${method}] ${url} ${response.statusCode} ${userAgent} ${duration}ms`,
-        )
+        console.log(`[${method}] ${url} ${response.statusCode} ${userAgent} ${duration}ms`)
       }),
     )
   }

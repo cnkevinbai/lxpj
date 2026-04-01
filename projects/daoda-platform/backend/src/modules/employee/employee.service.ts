@@ -2,7 +2,12 @@
  * 员工模块 Service
  * 负责员工数据的 CRUD 操作和业务逻辑
  */
-import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common'
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+  ConflictException,
+} from '@nestjs/common'
 import { PrismaService } from '../../common/prisma/prisma.service'
 import { CreateEmployeeDto, UpdateEmployeeDto, EmployeeQueryDto } from './employee.dto'
 import { EmployeeStatus } from '@prisma/client'

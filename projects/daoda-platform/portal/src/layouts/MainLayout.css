@@ -1,70 +1,117 @@
-/* 主布局样式 */
+/**
+ * 门户主布局样式 - 深色玻璃态现代化风格
+ * 基于效果图重构
+ */
 
+/* 主布局容器 */
 .main-layout {
   min-height: 100vh;
-  background: #f5f5f7;
+  background: #0A0A0A;
 }
 
-/* 侧边栏 */
+/* ========================================
+   侧边栏 - 深色玻璃态
+   ======================================== */
+
 .sider {
-  background: #fff !important;
-  border-right: 1px solid #e5e7eb;
+  background: rgba(10, 10, 10, 0.95) !important;
+  backdrop-filter: blur(12px);
+  border-right: 1px solid rgba(102, 0, 255, 0.15);
   display: flex;
   flex-direction: column;
 }
 
+/* Logo区域 - 紫色渐变 */
 .sider .logo {
   height: 64px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 600;
-  color: #0066ff;
-  border-bottom: 1px solid #e5e7eb;
+  font-weight: 700;
+  color: #fff;
+  border-bottom: 1px solid rgba(102, 0, 255, 0.15);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   transition: all 0.3s;
+  background: linear-gradient(135deg, rgba(102, 0, 255, 0.1) 0%, rgba(168, 85, 247, 0.05) 100%);
 }
 
 .sider .logo:hover {
-  background: #fafafa;
+  background: linear-gradient(135deg, rgba(102, 0, 255, 0.15) 0%, rgba(168, 85, 247, 0.1) 100%);
+  border-color: rgba(102, 0, 255, 0.25);
 }
 
+/* 菜单样式 - 深色玻璃态 */
 .sider .ant-menu {
+  background: transparent;
   border-right: none;
   flex: 1;
+  color: #f1f5f9;
 }
 
 .sider .ant-menu-item {
   margin: 4px 8px;
-  border-radius: 8px;
+  border-radius: 12px;
   transition: all 0.3s;
+  color: #94a3b8;
+  height: 48px;
+  line-height: 48px;
 }
 
 .sider .ant-menu-item:hover {
-  background: #e6f4ff;
+  background: rgba(102, 0, 255, 0.1);
+  color: #f1f5f9;
 }
 
 .sider .ant-menu-item-selected {
-  background: #e6f4ff;
-  color: #0066ff;
+  background: linear-gradient(135deg, rgba(102, 0, 255, 0.2) 0%, rgba(168, 85, 247, 0.15) 100%);
+  color: #fff;
   font-weight: 500;
+  border: 1px solid rgba(102, 0, 255, 0.2);
 }
 
 .sider .ant-menu-item-selected::after {
-  border-right: 3px solid #0066ff;
+  border-right: 3px solid #6600ff;
+  border-radius: 0 3px 3px 0;
 }
 
-/* 头部 */
+/* 子菜单样式 */
+.sider .ant-menu-submenu-title {
+  color: #94a3b8;
+  margin: 4px 8px;
+  border-radius: 12px;
+  transition: all 0.3s;
+}
+
+.sider .ant-menu-submenu-title:hover {
+  background: rgba(102, 0, 255, 0.1);
+  color: #f1f5f9;
+}
+
+.sider .ant-menu-submenu-selected > .ant-menu-submenu-title {
+  color: #fff;
+}
+
+/* 子菜单弹出层 */
+.sider .ant-menu-sub {
+  background: rgba(10, 10, 10, 0.9);
+  backdrop-filter: blur(12px);
+}
+
+/* ========================================
+   顶部导航 - 深色玻璃态
+   ======================================== */
+
 .header {
-  background: #fff;
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(12px);
   padding: 0 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #e5e7eb;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  border-bottom: 1px solid rgba(102, 0, 255, 0.15);
+  box-shadow: 0 1px 8px rgba(102, 0, 255, 0.1);
   min-height: 64px;
 }
 
@@ -74,21 +121,61 @@
   gap: 12px;
 }
 
-/* 左侧搜索区域 */
+/* 搜索框样式 */
 .header .ant-space {
   display: flex;
   align-items: center;
 }
 
-.header .ant-input {
+.header .ant-input-affix-wrapper {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(102, 0, 255, 0.15);
+  border-radius: 8px;
   transition: all 0.3s;
 }
 
-.header .ant-input:hover {
-  border-color: #0066ff;
+.header .ant-input-affix-wrapper:hover {
+  border-color: rgba(102, 0, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08);
 }
 
-/* 内容区 */
+.header .ant-input-affix-wrapper:focus,
+.header .ant-input-affix-wrapper-focused {
+  border-color: #6600ff;
+  box-shadow: 0 0 0 2px rgba(102, 0, 255, 0.2);
+}
+
+.header .ant-input {
+  background: transparent;
+  color: #f1f5f9;
+}
+
+.header .ant-input::placeholder {
+  color: #64748b;
+}
+
+.header .ant-input-prefix {
+  color: #64748b;
+}
+
+/* 折叠按钮 */
+.header .ant-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(102, 0, 255, 0.15);
+  color: #94a3b8;
+  transition: all 0.3s;
+}
+
+.header .ant-btn:hover {
+  background: rgba(102, 0, 255, 0.1);
+  border-color: rgba(102, 0, 255, 0.25);
+  color: #f1f5f9;
+}
+
+/* ========================================
+   内容区 - 深色背景
+   ======================================== */
+
 .content {
   margin: 16px;
   padding: 0;
@@ -96,7 +183,155 @@
   background: transparent;
 }
 
-/* 响应式 */
+/* ========================================
+   用户头像下拉菜单 - 深色玻璃态
+   ======================================== */
+
+.header .ant-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(102, 0, 255, 0.15);
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.header .ant-dropdown-trigger:hover {
+  background: rgba(102, 0, 255, 0.1);
+  border-color: rgba(102, 0, 255, 0.25);
+}
+
+.header .ant-avatar {
+  background: linear-gradient(135deg, #6600ff 0%, #a855f7 100%);
+  border: 2px solid rgba(102, 0, 255, 0.3);
+}
+
+.header .ant-dropdown-trigger .ant-typography {
+  color: #f1f5f9;
+}
+
+/* 下拉菜单内容 */
+.ant-dropdown-menu {
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(102, 0, 255, 0.15);
+  border-radius: 12px;
+  padding: 4px;
+}
+
+.ant-dropdown-menu-item {
+  color: #94a3b8;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.ant-dropdown-menu-item:hover {
+  background: rgba(102, 0, 255, 0.1);
+  color: #f1f5f9;
+}
+
+/* ========================================
+   通知按钮 - 深色玻璃态
+   ======================================== */
+
+.header .ant-badge {
+  color: #94a3b8;
+}
+
+.header .ant-badge-count {
+  background: linear-gradient(135deg, #6600ff 0%, #a855f7 100%);
+  box-shadow: 0 0 8px rgba(102, 0, 255, 0.4);
+}
+
+.header .ant-btn-icon-only {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(102, 0, 255, 0.15);
+  color: #94a3b8;
+  transition: all 0.3s;
+}
+
+.header .ant-btn-icon-only:hover {
+  background: rgba(102, 0, 255, 0.1);
+  border-color: rgba(102, 0, 255, 0.25);
+  color: #f1f5f9;
+}
+
+/* ========================================
+   通知弹窗 - 深色玻璃态
+   ======================================== */
+
+.ant-modal-notification .ant-modal-content {
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(102, 0, 255, 0.15);
+  border-radius: 16px;
+}
+
+.ant-modal-notification .ant-modal-header {
+  background: transparent;
+  border-bottom: 1px solid rgba(102, 0, 255, 0.15);
+  color: #f1f5f9;
+}
+
+.ant-modal-notification .ant-modal-title {
+  color: #f1f5f9;
+}
+
+.ant-modal-notification .ant-modal-body {
+  padding: 0;
+  background: transparent;
+}
+
+.ant-modal-notification .ant-modal-close {
+  color: #94a3b8;
+}
+
+.ant-modal-notification .ant-modal-close:hover {
+  color: #f1f5f9;
+}
+
+.ant-modal-notification .ant-list-item {
+  transition: background 0.3s;
+  border-bottom: 1px solid rgba(102, 0, 255, 0.1);
+  color: #f1f5f9;
+}
+
+.ant-modal-notification .ant-list-item:hover {
+  background: rgba(102, 0, 255, 0.1);
+}
+
+.ant-modal-notification .ant-list-item-meta-title {
+  color: #f1f5f9;
+}
+
+.ant-modal-notification .ant-list-item-meta-description {
+  color: #94a3b8;
+}
+
+/* ========================================
+   租户选择器 - 深色玻璃态
+   ======================================== */
+
+.tenant-selector {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(102, 0, 255, 0.15);
+  border-radius: 8px;
+  padding: 4px 12px;
+  transition: all 0.3s;
+}
+
+.tenant-selector:hover {
+  background: rgba(102, 0, 255, 0.1);
+  border-color: rgba(102, 0, 255, 0.25);
+}
+
+/* ========================================
+   响应式适配
+   ======================================== */
+
 @media (max-width: 768px) {
   .header {
     padding: 0 12px;
@@ -106,33 +341,99 @@
     margin: 12px;
   }
 
-  .header .ant-input {
+  .header .ant-input-affix-wrapper {
     width: 120px;
   }
 
   .sider .logo {
     font-size: 14px;
+    padding: 0 8px;
+  }
+
+  .sider .ant-menu-item {
+    margin: 2px 4px;
+    height: 40px;
+    line-height: 40px;
   }
 }
 
-/* 通知弹窗 */
-.header .ant-btn-icon {
-  transition: all 0.3s;
-}
+/* ========================================
+   折叠状态样式
+   ======================================== */
 
-.header .ant-btn-icon:hover {
-  color: #0066ff;
-  background: #e6f4ff;
-}
-
-.ant-modal-notification .ant-modal-body {
+.sider.ant-layout-sider-collapsed .logo {
   padding: 0;
 }
 
-.ant-modal-notification .ant-list-item {
-  transition: background 0.3s;
+.sider.ant-layout-sider-collapsed .ant-menu-item {
+  margin: 4px;
+  padding: 0 !important;
 }
 
-.ant-modal-notification .ant-list-item:hover {
-  background: #fafafa;
+/* ========================================
+   全局 Ant Design 覆盖
+   ======================================== */
+
+/* Card 组件 */
+.ant-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(102, 0, 255, 0.15);
+  color: #f1f5f9;
+}
+
+.ant-card-head {
+  background: transparent;
+  border-bottom: 1px solid rgba(102, 0, 255, 0.15);
+  color: #f1f5f9;
+}
+
+.ant-card-head-title {
+  color: #f1f5f9;
+}
+
+.ant-card-body {
+  color: #f1f5f9;
+}
+
+/* Typography */
+.ant-typography {
+  color: #f1f5f9;
+}
+
+.ant-typography.ant-typography-secondary {
+  color: #94a3b8;
+}
+
+/* List */
+.ant-list {
+  color: #f1f5f9;
+}
+
+.ant-list-item {
+  color: #f1f5f9;
+  border-bottom: 1px solid rgba(102, 0, 255, 0.1);
+}
+
+.ant-list-item-meta-title {
+  color: #f1f5f9;
+}
+
+.ant-list-item-meta-description {
+  color: #94a3b8;
+}
+
+/* Badge */
+.ant-badge-status-text {
+  color: #94a3b8;
+}
+
+/* Spin 加载 */
+.ant-spin-dot-item {
+  background: #6600ff;
+}
+
+/* Divider */
+.ant-divider {
+  border-color: rgba(102, 0, 255, 0.15);
 }

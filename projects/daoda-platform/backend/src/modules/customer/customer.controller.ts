@@ -105,7 +105,10 @@ export class CustomerController {
   @Roles('ADMIN', 'MANAGER')
   @ApiOperation({ summary: '批量导入客户' })
   @ApiResponse({ status: 200, description: '导入完成' })
-  async batchImport(@Body(new ParseArrayPipe({ items: CreateCustomerDto })) customers: CreateCustomerDto[], @Request() req: any) {
+  async batchImport(
+    @Body(new ParseArrayPipe({ items: CreateCustomerDto })) customers: CreateCustomerDto[],
+    @Request() req: any,
+  ) {
     return this.customerService.batchImport(customers, req.user?.sub)
   }
 

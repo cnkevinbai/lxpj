@@ -14,7 +14,7 @@ import { JwtStrategy } from './jwt.strategy'
   imports: [
     // Passport 模块
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    
+
     // JWT 模块
     JwtModule.registerAsync({
       imports: [ConfigModule],

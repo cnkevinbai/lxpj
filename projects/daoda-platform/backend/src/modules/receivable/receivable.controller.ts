@@ -2,17 +2,7 @@
  * 应收模块 Controller
  * 提供应收管理的 RESTful API 接口
  */
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Query,
-  UseGuards,
-} from '@nestjs/common'
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger'
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard'
 import { ReceivableService } from './receivable.service'
@@ -88,10 +78,7 @@ export class ReceivableController {
   @ApiOperation({ summary: '更新应收状态' })
   @ApiResponse({ status: 200, description: '状态更新成功' })
   @ApiResponse({ status: 404, description: '应收不存在' })
-  updateStatus(
-    @Param('id') id: string,
-    @Body('status') status: ReceivableStatus,
-  ) {
+  updateStatus(@Param('id') id: string, @Body('status') status: ReceivableStatus) {
     return this.receivableService.update(id, { status } as any)
   }
 

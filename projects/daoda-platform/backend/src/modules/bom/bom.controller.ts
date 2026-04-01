@@ -1,20 +1,16 @@
 /**
  * BOM 模块控制器
  */
-import {
-  Controller,
-  Get,
-  Post,
-  Put,
-  Delete,
-  Body,
-  Param,
-  Query,
-  UseGuards,
-} from '@nestjs/common'
+import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse, ApiQuery } from '@nestjs/swagger'
 import { BomService } from './bom.service'
-import { CreateBomDto, UpdateBomDto, CreateBomItemDto, UpdateBomItemDto, BomQueryDto } from './bom.dto'
+import {
+  CreateBomDto,
+  UpdateBomDto,
+  CreateBomItemDto,
+  UpdateBomItemDto,
+  BomQueryDto,
+} from './bom.dto'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
 import { RolesGuard } from '../auth/guards/roles.guard'
 import { Roles } from '../auth/decorators/roles.decorator'

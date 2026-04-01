@@ -49,7 +49,9 @@ export class ProductionPlanService {
     }
 
     if (dto.planNo && dto.planNo !== plan.planNo) {
-      const existing = await this.prisma.productionPlan.findUnique({ where: { planNo: dto.planNo } })
+      const existing = await this.prisma.productionPlan.findUnique({
+        where: { planNo: dto.planNo },
+      })
       if (existing && existing.id !== id) {
         throw new BadRequestException('计划编号已被使用')
       }

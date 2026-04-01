@@ -22,7 +22,10 @@ export class UploadService {
     }
   }
 
-  async uploadFile(file: Express.Multer.File, subDir?: string): Promise<{ url: string; filename: string }> {
+  async uploadFile(
+    file: Express.Multer.File,
+    subDir?: string,
+  ): Promise<{ url: string; filename: string }> {
     if (!file) throw new BadRequestException('请选择要上传的文件')
     const maxSize = this.configService.get<number>('MAX_FILE_SIZE') || 10 * 1024 * 1024
     if (file.size > maxSize) throw new BadRequestException('文件大小超过限制')

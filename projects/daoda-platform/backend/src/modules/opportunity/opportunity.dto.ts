@@ -19,7 +19,11 @@ export class CreateOpportunityDto {
   @Min(0)
   amount: number
 
-  @ApiPropertyOptional({ description: '商机阶段', enum: OpportunityStage, default: OpportunityStage.LEAD })
+  @ApiPropertyOptional({
+    description: '商机阶段',
+    enum: OpportunityStage,
+    default: OpportunityStage.LEAD,
+  })
   @IsOptional()
   @IsEnum(OpportunityStage)
   stage?: OpportunityStage

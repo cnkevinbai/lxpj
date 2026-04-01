@@ -2,7 +2,16 @@
  * 认证控制器
  * 处理登录、注册、刷新令牌等 HTTP 请求
  */
-import { Controller, Post, Get, Body, UseGuards, Request, HttpCode, HttpStatus } from '@nestjs/common'
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  UseGuards,
+  Request,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger'
 import { AuthService, LoginDto, RegisterDto, LoginResponse, UserInfo } from './auth.service'
 import { JwtAuthGuard } from './guards/jwt-auth.guard'
@@ -81,11 +90,7 @@ export class AuthController {
     @Request() req: any,
     @Body() body: { oldPassword: string; newPassword: string },
   ): Promise<{ message: string }> {
-    await this.authService.changePassword(
-      req.user.sub,
-      body.oldPassword,
-      body.newPassword,
-    )
+    await this.authService.changePassword(req.user.sub, body.oldPassword, body.newPassword)
     return { message: '密码修改成功' }
   }
 

@@ -1,10 +1,82 @@
 /**
  * 道达智能官网首页
  * 基于 Tailwind CSS 设计重构
+ * 包含 Hero 轮播功能
  */
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Carousel } from 'antd';
 import './Home.css';
+
+/**
+ * Banner 数据接口
+ * 对应 CMS 模块的 BannerContent 类型
+ */
+interface BannerData {
+  id: string;
+  title: string;
+  titleEn?: string;
+  subtitle?: string;
+  subtitleEn?: string;
+  image?: string;
+  imageEn?: string;
+  link?: string;
+  linkEn?: string;
+  buttonText?: string;
+  buttonTextEn?: string;
+  position: string;
+  sortOrder: number;
+  isActive: boolean;
+}
+
+/**
+ * 模拟 Banner 数据
+ * 实际应从 CMS API 获取: GET /api/v1/cms/banner/position/hero
+ */
+const MOCK_BANNERS: BannerData[] = [
+  {
+    id: '1',
+    title: '以智能科技',
+    titleEn: 'Redefining Travel',
+    subtitle: '重新定义出行体验',
+    subtitleEn: 'With Smart Technology',
+    image: undefined, // 使用 CSS 背景渐变
+    buttonText: '探索产品',
+    buttonTextEn: 'Explore Products',
+    link: '/products',
+    position: 'hero',
+    sortOrder: 1,
+    isActive: true,
+  },
+  {
+    id: '2',
+    title: '全球领先',
+    titleEn: 'Global Leader',
+    subtitle: '电动观光车解决方案提供商',
+    subtitleEn: 'Electric Sightseeing Solutions',
+    image: undefined,
+    buttonText: '了解更多',
+    buttonTextEn: 'Learn More',
+    link: '/about',
+    position: 'hero',
+    sortOrder: 2,
+    isActive: true,
+  },
+  {
+    id: '3',
+    title: '智慧运营',
+    titleEn: 'Smart Operations',
+    subtitle: '数字化赋能车队效率',
+    subtitleEn: 'Digital Efficiency Platform',
+    image: undefined,
+    buttonText: '进入系统',
+    buttonTextEn: 'Enter System',
+    link: '/portal',
+    position: 'hero',
+    sortOrder: 3,
+    isActive: true,
+  },
+];
 
 const Home: React.FC = () => {
   const [language, setLanguage] = useState<'zh' | 'en'>('zh');
@@ -212,34 +284,63 @@ const Home: React.FC = () => {
         </div>
       </header>
 
-      {/* Hero Section */}
+      {/* Hero Section - Banner Carousel */}
       <section className="daoda-hero">
-        <div className="daoda-hero-bg">
-          <div className="daoda-hero-gradient"></div>
-          <div className="daoda-hero-image"></div>
-        </div>
-        <div className="daoda-hero-content">
-          <div className="daoda-hero-badge">
-            <span className="daoda-pulse-dot"></span>
-            {currentText.heroTag}
-          </div>
-          <h1 className="daoda-hero-title">
-            {currentText.heroTitle1}<br/>
-            <span className="daoda-gradient-text">{currentText.heroTitle2}</span>
-          </h1>
-          <p className="daoda-hero-desc">{currentText.heroDesc}</p>
-          <div className="daoda-hero-actions">
-            <button className="daoda-btn-primary">
-              {currentText.btnExplore}
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
-              </svg>
-            </button>
-            <button className="daoda-btn-secondary">
-              {currentText.btnVideo}
-            </button>
-          </div>
-        </div>
+        <Carousel
+          autoplay
+          autoplaySpeed={5000}
+          effect="fade"
+          dots={{ className: 'daoda-carousel-dots' }}
+          className="daoda-hero-carousel"
+        >
+          {MOCK_BANNERS.filter(b => b.isActive).sort((a, b) => a.sortOrder - b.sortOrder).map((banner, index) => (
+            <div key={banner.id} className="daoda-hero-slide">
+              <div className="daoda-hero-bg">
+                <div className="daoda-hero-gradient"></div>
+                <div 
+                  className="daoda-hero-image" 
+                  style={banner.image ? { backgroundImage: `url(${language === 'en' && banner.imageEn ? banner.imageEn : banner.image})` } : undefined}
+                ></div>
+              </div>
+              <div className="daoda-hero-content">
+                <div className="daoda-hero-badge">
+                  <span className="daoda-pulse-dot"></span>
+                  {index === 0 ? (language === 'zh' ? '下一代移动出行' : 'Next Generation Mobility') : 
+                   index === 1 ? (language === 'zh' ? '全球服务网络' : 'Global Service Network') :
+                   (language === 'zh' ? '数字化生态' : 'Digital Ecosystem')}
+                </div>
+                <h1 className="daoda-hero-title">
+                  {language === 'en' && banner.titleEn ? banner.titleEn : banner.title}<br/>
+                  <span className="daoda-gradient-text">
+                    {language === 'en' && banner.subtitleEn ? banner.subtitleEn : banner.subtitle}
+                  </span>
+                </h1>
+                <p className="daoda-hero-desc">
+                  {language === 'zh' 
+                    ? '道达智能 — 全球领先的电动观光车解决方案提供商，致力于通过科技创新为全球客户提供智慧出行方案。'
+                    : 'DAODA Smart — Global leader in electric sightseeing vehicle solutions, dedicated to providing smart mobility solutions through technological innovation.'
+                  }
+                </p>
+                <div className="daoda-hero-actions">
+                  <Link 
+                    to={language === 'en' && banner.linkEn ? banner.linkEn : banner.link || '/products'} 
+                    className="daoda-btn-primary"
+                  >
+                    {language === 'en' && banner.buttonTextEn ? banner.buttonTextEn : banner.buttonText}
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                    </svg>
+                  </Link>
+                  {index === 0 && (
+                    <button className="daoda-btn-secondary">
+                      {language === 'zh' ? '观看 2025 愿景' : 'Watch 2025 Vision'}
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </Carousel>
       </section>
 
       {/* Stats Section */}

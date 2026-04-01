@@ -33,7 +33,7 @@ export class TenantMiddleware implements NestMiddleware {
   async use(req: Request, res: Response, next: NextFunction) {
     // 从请求头获取租户ID
     const tenantId = req.headers['x-tenant-id'] as string
-    
+
     if (!tenantId) {
       // 如果没有指定租户，使用默认租户
       req.tenantId = 'default-tenant-id'
@@ -43,15 +43,15 @@ export class TenantMiddleware implements NestMiddleware {
         const tenant = await this.prisma.tenant.findUnique({
           where: { id: tenantId },
         })
-        
+
         if (!tenant) {
           throw new UnauthorizedException('租户不存在')
         }
-        
+
         if (tenant.status !== 'ACTIVE') {
           throw new UnauthorizedException('租户已禁用或过期')
         }
-        
+
         req.tenantId = tenantId
       } catch (error) {
         if (error instanceof UnauthorizedException) {
@@ -61,10 +61,10 @@ export class TenantMiddleware implements NestMiddleware {
         req.tenantId = 'default-tenant-id'
       }
     }
-    
+
     // 设置租户上下文
     this.tenantContext.setTenant(req.tenantId, req.user?.id)
-    
+
     next()
   }
 }

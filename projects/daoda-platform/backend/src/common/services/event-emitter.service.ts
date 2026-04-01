@@ -13,12 +13,12 @@ export class EventEmitterService {
     LEAD_CREATED: 'lead.created',
     OPPORTUNITY_WON: 'opportunity.won',
     ORDER_CREATED: 'order.created',
-    
+
     // ERP 事件
     PURCHASE_COMPLETED: 'purchase.completed',
     PRODUCTION_STARTED: 'production.started',
     INVENTORY_LOW: 'inventory.low',
-    
+
     // 财务事件
     INVOICE_ISSUED: 'invoice.issued',
     PAYMENT_RECEIVED: 'payment.received',

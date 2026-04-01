@@ -2,21 +2,15 @@
  * 系统配置模块 Controller
  * 提供系统配置管理的 RESTful API 接口
  */
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Query,
-  UseGuards,
-} from '@nestjs/common'
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger'
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard'
 import { SystemConfigService } from './system-config.service'
-import { CreateSystemConfigDto, UpdateSystemConfigDto, SystemConfigQueryDto } from './system-config.dto'
+import {
+  CreateSystemConfigDto,
+  UpdateSystemConfigDto,
+  SystemConfigQueryDto,
+} from './system-config.dto'
 
 @ApiTags('系统配置管理')
 @Controller('system-configs')

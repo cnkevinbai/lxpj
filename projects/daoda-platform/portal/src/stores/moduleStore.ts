@@ -40,7 +40,7 @@ const MODULE_CODE_MAP: Record<string, string> = {
 }
 
 // 默认启用的菜单模块
-const DEFAULT_ENABLED_MODULES = ['crm', 'erp', 'finance', 'service', 'hr', 'settings']
+const DEFAULT_ENABLED_MODULES = ['crm', 'erp', 'finance', 'service', 'hr', 'workflow', 'notification', 'settings']
 
 export const useModuleStore = create<ModuleState>()(
   persist(

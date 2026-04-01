@@ -1,7 +1,6 @@
 /**
  * 官网布局组件 - 重新定义导航栏
  */
-import { useState } from 'react'
 import { Outlet, Link, useLocation } from 'react-router-dom'
 import { Layout as AntLayout, Menu, Button, Dropdown, Space } from 'antd'
 import {
@@ -11,7 +10,6 @@ import {
   BulbOutlined,
   CustomerServiceOutlined,
   TeamOutlined,
-  EnvironmentOutlined,
   ReadOutlined,
   TrophyOutlined,
 } from '@ant-design/icons'
@@ -61,7 +59,6 @@ const langItems = [
 
 export default function Layout() {
   const location = useLocation()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
     <AntLayout className="layout">

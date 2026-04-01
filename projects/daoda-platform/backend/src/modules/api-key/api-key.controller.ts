@@ -57,11 +57,7 @@ export class ApiKeyController {
   @ApiOperation({ summary: '更新 API Key' })
   @ApiResponse({ status: 200, description: 'API Key 更新成功' })
   @ApiResponse({ status: 404, description: 'API Key 不存在' })
-  async update(
-    @Param('id') id: string,
-    @Body() dto: UpdateApiKeyDto,
-    @Req() req: Request,
-  ) {
+  async update(@Param('id') id: string, @Body() dto: UpdateApiKeyDto, @Req() req: Request) {
     const tenantId = req.tenantId as string
     return this.apiKeyService.update(id, dto, tenantId)
   }

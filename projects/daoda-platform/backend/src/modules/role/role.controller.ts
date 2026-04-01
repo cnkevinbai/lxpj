@@ -2,17 +2,7 @@
  * 角色控制器
  * 处理角色管理的 HTTP 请求
  */
-import {
-  Controller,
-  Get,
-  Post,
-  Put,
-  Delete,
-  Body,
-  Param,
-  Query,
-  UseGuards,
-} from '@nestjs/common'
+import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse, ApiQuery } from '@nestjs/swagger'
 import { RoleService } from './role.service'
 import { CreateRoleDto, UpdateRoleDto, UpdateRolePermissionsDto, RoleQueryDto } from './role.dto'
@@ -109,10 +99,7 @@ export class RoleController {
   @ApiResponse({ status: 200, description: '更新成功' })
   @ApiResponse({ status: 404, description: '角色不存在' })
   @ApiResponse({ status: 400, description: '参数错误' })
-  async updatePermissions(
-    @Param('id') id: string,
-    @Body() dto: UpdateRolePermissionsDto,
-  ) {
+  async updatePermissions(@Param('id') id: string, @Body() dto: UpdateRolePermissionsDto) {
     return this.roleService.updatePermissions(id, dto)
   }
 

@@ -108,7 +108,7 @@ export class OrderService {
           create: itemsData,
         },
       },
-    });
+    })
 
     this.logger.log(`创建订单成功：${order.orderNo}`)
     return order
@@ -183,32 +183,20 @@ export class OrderService {
    * @param query 查询参数
    */
   async findAll(query: OrderQueryDto): Promise<OrderListResponse> {
-    const { page = 1, pageSize = 10, keyword, status, paymentStatus, customerId, userId, startDate, endDate } = query
+    const {
+      page = 1,
+      pageSize = 10,
+      keyword,
+      status,
+      paymentStatus,
+      customerId,
+      userId,
+      startDate,
+      endDate,
+    } = query
 
     // 构建查询条件
     const where: any = {}
-
-    // 关键词搜索（订单号）
-    if (keyword) {
-      where.orderNo = { contains: keyword, mode: 'insensitive' }
-    }
-
-    // 状态筛选
-    if (status) {
-      where.status = status
-    }
-
-    if (paymentStatus) {
-      where.paymentStatus = paymentStatus
-    }
-
-    if (customerId) {
-      where.customerId = customerId
-    }
-
-    if (userId) {
-      where.userId = userId
-    }
 
     // 关键词搜索（订单号）
     if (keyword) {
@@ -268,9 +256,10 @@ export class OrderService {
    *                          ↓
    *                       CANCELLED
    * @param id 订单 ID
-   * @param dto 状态更新信息
+   * @param status 新状态
+   * @param remark 备注
    */
-  async updateStatus(id: string, dto: UpdateOrderStatusDto): Promise<Order> {
+  async updateStatus(id: string, status: string, remark?: string): Promise<Order> {
     const order = await this.prisma.order.findUnique({
       where: { id },
     })
@@ -289,22 +278,22 @@ export class OrderService {
     }
 
     const allowedStatuses = validTransitions[order.status]
-    if (!allowedStatuses.includes(dto.status)) {
-      throw new BadRequestException(
-        `订单状态不能从 ${order.status} 变更为 ${dto.status}`
-      )
+    if (!allowedStatuses.includes(status as OrderStatus)) {
+      throw new BadRequestException(`订单状态不能从 ${order.status} 变更为 ${status}`)
     }
 
     // 更新状态
     const updated = await this.prisma.order.update({
       where: { id },
       data: {
-        status: dto.status,
-        remark: dto.remark ? `${order.remark || ''}\n[${new Date().toISOString()}] ${dto.remark}` : order.remark,
+        status: status as OrderStatus,
+        remark: remark
+          ? `${order.remark || ''}\n[${new Date().toISOString()}] ${remark}`
+          : order.remark,
       },
-    });
+    })
 
-    this.logger.log(`订单状态更新：${order.orderNo} ${order.status} -> ${dto.status}`)
+    this.logger.log(`订单状态更新：${order.orderNo} ${order.status} -> ${status}`)
     return updated
   }
 
@@ -313,9 +302,10 @@ export class OrderService {
   /**
    * 记录支付
    * @param id 订单 ID
-   * @param dto 支付信息
+   * @param amount 支付金额
+   * @param remark 备注
    */
-  async recordPayment(id: string, dto: PaymentDto): Promise<Order> {
+  async recordPayment(id: string, amount: number, remark?: string): Promise<Order> {
     const order = await this.prisma.order.findUnique({
       where: { id },
     })
@@ -329,7 +319,7 @@ export class OrderService {
 
     const totalAmount = parseFloat(order.amount.toString())
     const paidAmount = parseFloat(order.paidAmount.toString())
-    const newPaidAmount = paidAmount + dto.amount
+    const newPaidAmount = paidAmount + amount
 
     // 检查支付金额
     if (newPaidAmount > totalAmount) {
@@ -352,11 +342,13 @@ export class OrderService {
       data: {
         paidAmount: newPaidAmount.toString(),
         paymentStatus,
-        remark: dto.remark ? `${order.remark || ''}\n[支付] ${dto.remark}` : order.remark,
+        remark: remark ? `${order.remark || ''}\n[支付] ${remark}` : order.remark,
       },
     })
 
-    this.logger.log(`订单支付记录：${order.orderNo} 支付 ${dto.amount}，累计 ${newPaidAmount}/${totalAmount}`)
+    this.logger.log(
+      `订单支付记录：${order.orderNo} 支付 ${amount}，累计 ${newPaidAmount}/${totalAmount}`,
+    )
     return updated
   }
 
@@ -409,25 +401,28 @@ export class OrderService {
    */
   async getStats(): Promise<OrderStatsResponse> {
     // 总订单数和总金额
-    const [totalResult, statsResult] = await this.prisma.$transaction([
-      this.prisma.order.aggregate({
-        _sum: { amount: true },
-        _count: { id: true },
-      }),
-      this.prisma.order.groupBy({
-        by: ['status'],
-        orderBy: { _count: { id: 'desc' } },
-        _count: { id: true },
-        _sum: { amount: true },
-      }),
-    ])
+    const [totalResult, statsResult] = await this.prisma.$transaction(
+      async (prisma) =>
+        [
+          await prisma.order.aggregate({
+            _sum: { amount: true },
+            _count: { id: true },
+          }),
+          await prisma.order.groupBy({
+            by: ['status'],
+            orderBy: { _count: { id: 'desc' } },
+            _count: { id: true },
+            _sum: { amount: true },
+          }),
+        ] as any[],
+    )
 
     // 按状态统计
     const statusStats: Record<string, { count: number; amount: number }> = {}
-    statsResult.forEach((s) => {
+    statsResult.forEach((s: any) => {
       statusStats[s.status] = {
-        count: (s._count as any).id,
-        amount: parseFloat((s._sum?.amount as any)?.toString() || '0'),
+        count: (s as any)._count.id,
+        amount: parseFloat((s as any)?._sum?.amount?.toString() || '0'),
       }
     })
 

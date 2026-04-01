@@ -1,17 +1,7 @@
 /**
  * 生产计划模块控制器
  */
-import {
-  Controller,
-  Get,
-  Post,
-  Put,
-  Delete,
-  Body,
-  Param,
-  Query,
-  UseGuards,
-} from '@nestjs/common'
+import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse, ApiQuery } from '@nestjs/swagger'
 import { ProductionPlanService } from './production-plan.service'
 import {
@@ -46,7 +36,11 @@ export class ProductionPlanController {
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'pageSize', required: false, example: 10 })
   @ApiQuery({ name: 'planNo', required: false })
-  @ApiQuery({ name: 'status', required: false, enum: ['DRAFT', 'APPROVED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'] })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    enum: ['DRAFT', 'APPROVED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'],
+  })
   @ApiQuery({ name: 'startDateStart', required: false })
   @ApiQuery({ name: 'startDateEnd', required: false })
   @ApiResponse({ status: 200, description: '查询成功' })

@@ -52,19 +52,19 @@ export class WebhookService {
 
   async test(id: string, tenantId: string): Promise<{ success: boolean; log: WebhookLog }> {
     const webhook = await this.findOne(id, tenantId)
-    
+
     if (!webhook) {
       throw new NotFoundException('Webhook 不存在')
     }
-    
+
     const payload = {
       test: true,
       timestamp: new Date().toISOString(),
       message: '测试 Webhook',
     }
-    
+
     const result = await this.sendWebhook(webhook, 'webhook.test', payload)
-    
+
     const log = await this.prisma.webhookLog.create({
       data: {
         webhookId: webhook.id,
@@ -76,7 +76,7 @@ export class WebhookService {
         duration: result.duration,
       },
     })
-    
+
     return { success: result.success, log }
   }
 
@@ -89,7 +89,7 @@ export class WebhookService {
         },
       },
     })
-    
+
     for (const webhook of webhooks) {
       try {
         await this.sendWebhook(webhook, event, payload)
@@ -100,24 +100,28 @@ export class WebhookService {
     }
   }
 
-  private async sendWebhook(webhook: Webhook, event: string, payload: any): Promise<{
+  private async sendWebhook(
+    webhook: Webhook,
+    event: string,
+    payload: any,
+  ): Promise<{
     success: boolean
     statusCode?: number
     response?: any
     duration?: number
   }> {
     const startTime = Date.now()
-    
+
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       'X-Webhook-Event': event,
     }
-    
+
     if (webhook.secret) {
       const signature = this.signPayload(webhook.secret, payload)
       headers['X-Webhook-Signature'] = signature
     }
-    
+
     try {
       // 使用 AbortController 实现超时
       const controller = new AbortController()
@@ -131,17 +135,17 @@ export class WebhookService {
       })
 
       clearTimeout(timeoutId)
-      
+
       const duration = Date.now() - startTime
       const responseText = await response.text()
       let responseBody: any = null
-      
+
       try {
         responseBody = responseText ? JSON.parse(responseText) : null
       } catch {
         responseBody = responseText
       }
-      
+
       const success = response.ok
       return {
         success,

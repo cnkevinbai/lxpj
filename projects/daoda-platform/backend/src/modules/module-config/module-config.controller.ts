@@ -1,7 +1,11 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, Query } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse, ApiQuery } from '@nestjs/swagger'
 import { ModuleConfigService } from './module-config.service'
-import { CreateModuleConfigDto, UpdateModuleConfigDto, ModuleConfigQueryDto } from './module-config.dto'
+import {
+  CreateModuleConfigDto,
+  UpdateModuleConfigDto,
+  ModuleConfigQueryDto,
+} from './module-config.dto'
 
 @ApiTags('模块配置')
 @Controller('module-configs')

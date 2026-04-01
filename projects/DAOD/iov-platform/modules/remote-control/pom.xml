@@ -46,17 +46,10 @@
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
         
-        <!-- 日志依赖 -->
+        <!-- 日志依赖 (由 Spring Boot BOM 管理版本) -->
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>2.0.9</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.4.11</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
         
         <!-- Lombok -->

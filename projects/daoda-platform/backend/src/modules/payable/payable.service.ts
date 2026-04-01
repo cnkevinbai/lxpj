@@ -19,7 +19,9 @@ export class PayableService {
   private generatePayableNo(): string {
     const date = new Date()
     const dateStr = date.toISOString().slice(0, 10).replace(/-/g, '')
-    const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0')
+    const random = Math.floor(Math.random() * 10000)
+      .toString()
+      .padStart(4, '0')
     return `AP-${dateStr}-${random}`
   }
 
@@ -157,9 +159,8 @@ export class PayableService {
       if (dto.paidAmount < 0) {
         throw new BadRequestException('已付金额不能为负数')
       }
-      const existingAmount = existing.amount instanceof Decimal 
-        ? existing.amount.toNumber() 
-        : Number(existing.amount)
+      const existingAmount =
+        existing.amount instanceof Decimal ? existing.amount.toNumber() : Number(existing.amount)
       if (dto.paidAmount > existingAmount) {
         throw new BadRequestException('已付金额不能大于总金额')
       }
@@ -220,13 +221,10 @@ export class PayableService {
       throw new BadRequestException('已经付款的应付不能再次付款')
     }
 
-    const existingAmount = payable.amount instanceof Decimal 
-      ? payable.amount.toNumber() 
-      : Number(payable.amount)
+    const existingAmount =
+      payable.amount instanceof Decimal ? payable.amount.toNumber() : Number(payable.amount)
     const amount = paidAmount || existingAmount
-    const status = amount >= existingAmount
-      ? PayableStatus.PAID
-      : PayableStatus.APPROVED // 部分付款保持已批准状态
+    const status = amount >= existingAmount ? PayableStatus.PAID : PayableStatus.APPROVED // 部分付款保持已批准状态
 
     return this.prisma.payable.update({
       where: { id },

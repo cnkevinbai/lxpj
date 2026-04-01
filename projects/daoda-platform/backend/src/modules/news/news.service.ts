@@ -61,10 +61,7 @@ export class NewsService {
 
     // 关键词搜索（标题或摘要）
     if (keyword) {
-      where.OR = [
-        { title: { contains: keyword } },
-        { summary: { contains: keyword } },
-      ]
+      where.OR = [{ title: { contains: keyword } }, { summary: { contains: keyword } }]
     }
 
     // 状态筛选

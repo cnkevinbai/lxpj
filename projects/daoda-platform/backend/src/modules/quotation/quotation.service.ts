@@ -22,7 +22,9 @@ export class QuotationService {
   private generateQuotationNo(): string {
     const date = new Date()
     const dateStr = date.toISOString().slice(0, 10).replace(/-/g, '')
-    const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0')
+    const random = Math.floor(Math.random() * 10000)
+      .toString()
+      .padStart(4, '0')
     return `QT-${dateStr}-${random}`
   }
 
@@ -42,8 +44,9 @@ export class QuotationService {
     let totalAmount = 0
 
     // 处理报价项目
-    const items = dto.items.map(item => {
-      const amount = Number(item.quantity) * Number(item.unitPrice) * (1 - Number(item.discount || 0) / 100)
+    const items = dto.items.map((item) => {
+      const amount =
+        Number(item.quantity) * Number(item.unitPrice) * (1 - Number(item.discount || 0) / 100)
       totalAmount += amount
       return {
         productId: item.productId,
@@ -151,8 +154,9 @@ export class QuotationService {
     // 如果更新了项目，重新计算金额
     if (dto.items && dto.items.length > 0) {
       totalAmount = 0
-      const items = dto.items.map(item => {
-        const amount = Number(item.quantity) * Number(item.unitPrice) * (1 - Number(item.discount || 0) / 100)
+      const items = dto.items.map((item) => {
+        const amount =
+          Number(item.quantity) * Number(item.unitPrice) * (1 - Number(item.discount || 0) / 100)
         totalAmount += amount
         return {
           productId: item.productId,
@@ -312,7 +316,7 @@ export class QuotationService {
         status: 'PENDING',
         paymentStatus: 'UNPAID',
         items: {
-          create: quotation.items.map(item => ({
+          create: quotation.items.map((item) => ({
             productId: item.productId,
             productName: item.productName,
             quantity: item.quantity,

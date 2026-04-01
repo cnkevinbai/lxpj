@@ -3,7 +3,16 @@
  * 用于数据传输和验证
  */
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { IsString, IsOptional, IsEnum, IsInt, Min, Max, IsArray, IsDateString } from 'class-validator'
+import {
+  IsString,
+  IsOptional,
+  IsEnum,
+  IsInt,
+  Min,
+  Max,
+  IsArray,
+  IsDateString,
+} from 'class-validator'
 import { Priority, TicketStatus } from '@prisma/client'
 
 // ==================== 创建工单 DTO ====================
@@ -17,7 +26,12 @@ export class CreateServiceTicketDto {
   @IsString()
   type: string
 
-  @ApiPropertyOptional({ description: '优先级', enum: Priority, default: Priority.NORMAL, example: 'NORMAL' })
+  @ApiPropertyOptional({
+    description: '优先级',
+    enum: Priority,
+    default: Priority.NORMAL,
+    example: 'NORMAL',
+  })
   @IsOptional()
   @IsEnum(Priority)
   priority?: Priority
@@ -141,7 +155,7 @@ export class ServiceTicketResponse {
   assignee?: {
     id: string
     name: string
-    email?: string    // 改为可选，兼容不同查询场景
+    email?: string // 改为可选，兼容不同查询场景
   } | null
 }
 

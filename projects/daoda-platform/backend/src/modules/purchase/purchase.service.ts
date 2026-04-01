@@ -18,7 +18,9 @@ export class PurchaseService {
   private generatePurchaseNo(): string {
     const date = new Date()
     const dateStr = date.toISOString().slice(0, 10).replace(/-/g, '')
-    const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0')
+    const random = Math.floor(Math.random() * 10000)
+      .toString()
+      .padStart(4, '0')
     return `PO-${dateStr}-${random}`
   }
 
@@ -93,10 +95,7 @@ export class PurchaseService {
 
     // 关键词搜索（采购单号或供应商）
     if (keyword) {
-      where.OR = [
-        { purchaseNo: { contains: keyword } },
-        { supplier: { contains: keyword } },
-      ]
+      where.OR = [{ purchaseNo: { contains: keyword } }, { supplier: { contains: keyword } }]
     }
 
     // 状态筛选

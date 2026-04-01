@@ -42,7 +42,11 @@ export class CreateProductDto {
   @IsString()
   specs?: string
 
-  @ApiPropertyOptional({ description: '产品状态', enum: ProductStatus, default: ProductStatus.ACTIVE })
+  @ApiPropertyOptional({
+    description: '产品状态',
+    enum: ProductStatus,
+    default: ProductStatus.ACTIVE,
+  })
   @IsOptional()
   @IsEnum(ProductStatus)
   status?: ProductStatus

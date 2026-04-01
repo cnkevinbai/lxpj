@@ -49,13 +49,13 @@ export class LogService {
    * 获取操作日志列表（分页）
    */
   async findAll(query: LogQueryDto): Promise<LogListResponse> {
-    const { 
-      page = 1, 
-      pageSize = 10, 
-      username, 
-      action, 
+    const {
+      page = 1,
+      pageSize = 10,
+      username,
+      action,
       method,
-      status, 
+      status,
       startTime,
       endTime,
       includeParams = false,
@@ -102,9 +102,9 @@ export class LogService {
       orderBy: { createdAt: 'desc' },
     })
 
-    const logs = list.map(log => this.mapToResponse(log))
+    const logs = list.map((log) => this.mapToResponse(log))
     return {
-      list: includeParams ? logs : logs.map(log => ({ ...log, params: null })),
+      list: includeParams ? logs : logs.map((log) => ({ ...log, params: null })),
       total,
       page,
       pageSize,

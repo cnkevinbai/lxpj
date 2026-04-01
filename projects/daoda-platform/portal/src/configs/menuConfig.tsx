@@ -1,4 +1,4 @@
-import { SettingOutlined } from '@ant-design/icons'
+import { SettingOutlined, CheckSquareOutlined, BellOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 
 type MenuItem = Required<MenuProps>['items'][number]
@@ -16,6 +16,33 @@ export interface MenuDataType {
 const menuData: MenuDataType[] = [
   { key: '/dashboard', label: '工作台', path: '/dashboard' },
   
+  // Workflow - 审批流程
+  { 
+    key: '/workflow', 
+    label: '审批流程', 
+    module: 'workflow',
+    icon: <CheckSquareOutlined />,
+    children: [
+      { key: '/workflow/pending', label: '我的待审批', path: '/workflow/pending' },
+      { key: '/workflow/initiated', label: '我发起的', path: '/workflow/initiated' },
+      { key: '/workflow/approved', label: '已审批', path: '/workflow/approved' },
+      { key: '/workflow/definitions', label: '流程定义', path: '/workflow/definitions' },
+    ]
+  },
+  
+  // Notification - 消息通知
+  { 
+    key: '/notification', 
+    label: '消息中心', 
+    module: 'notification',
+    icon: <BellOutlined />,
+    children: [
+      { key: '/notification/center', label: '消息列表', path: '/notification/center' },
+      { key: '/notification/templates', label: '消息模板', path: '/notification/templates' },
+      { key: '/notification/preferences', label: '偏好设置', path: '/notification/preferences' },
+    ]
+  },
+  
   // CRM - 客户关系管理
   { 
     key: '/crm', 
@@ -23,10 +50,16 @@ const menuData: MenuDataType[] = [
     module: 'crm',
     children: [
       { key: '/crm/customers', label: '客户列表', path: '/crm/customers' },
+      { key: '/crm/pool', label: '客户公海池', path: '/crm/pool' },
+      { key: '/crm/follow-ups', label: '跟进记录', path: '/crm/follow-ups' },
       { key: '/crm/leads', label: '线索管理', path: '/crm/leads' },
+      { key: '/crm/lead-scoring', label: '线索评分', path: '/crm/lead-scoring' },
       { key: '/crm/opportunities', label: '商机管理', path: '/crm/opportunities' },
+      { key: '/crm/funnel', label: '销售漏斗', path: '/crm/funnel' },
       { key: '/crm/orders', label: '订单管理', path: '/crm/orders' },
       { key: '/crm/quotations', label: '报价管理', path: '/crm/quotations' },
+      { key: '/crm/prediction', label: '销售预测', path: '/crm/prediction' },
+      { key: '/crm/performance', label: '业绩分析', path: '/crm/performance' },
     ]
   },
   
@@ -37,7 +70,12 @@ const menuData: MenuDataType[] = [
     module: 'erp',
     children: [
       { key: '/erp/purchase', label: '采购管理', path: '/erp/purchase' },
+      { key: '/erp/suppliers', label: '供应商管理', path: '/erp/suppliers' },
       { key: '/erp/inventory', label: '库存管理', path: '/erp/inventory' },
+      { key: '/erp/inventory-warning', label: '库存预警', path: '/erp/inventory-warning' },
+      { key: '/erp/inventory-transfer', label: '库存调拨', path: '/erp/inventory-transfer' },
+      { key: '/erp/inventory-check', label: '库存盘点', path: '/erp/inventory-check' },
+      { key: '/erp/quality-inspection', label: '质检管理', path: '/erp/quality-inspection' },
       { key: '/erp/production', label: '生产管理', path: '/erp/production' },
       { key: '/erp/products', label: '产品管理', path: '/erp/products' },
       { key: '/erp/bom', label: '物料清单', path: '/erp/bom' },
@@ -55,6 +93,22 @@ const menuData: MenuDataType[] = [
       { key: '/finance/receivables', label: '应收管理', path: '/finance/receivables' },
       { key: '/finance/payables', label: '应付管理', path: '/finance/payables' },
       { key: '/finance/invoices', label: '发票管理', path: '/finance/invoices' },
+      { key: '/finance/reports', label: '财务报表', path: '/finance/reports' },
+      { key: '/finance/cost', label: '成本核算', path: '/finance/cost' },
+    ]
+  },
+  
+  // Finance - 财务管理
+  { 
+    key: '/finance', 
+    label: '财务管理', 
+    module: 'finance',
+    children: [
+      { key: '/finance/overview', label: '财务概览', path: '/finance/overview' },
+      { key: '/finance/receivables', label: '应收管理', path: '/finance/receivables' },
+      { key: '/finance/payables', label: '应付管理', path: '/finance/payables' },
+      { key: '/finance/invoices', label: '发票管理', path: '/finance/invoices' },
+      { key: '/finance/reports', label: '财务报表', path: '/finance/reports' },
     ]
   },
   
@@ -78,6 +132,7 @@ const menuData: MenuDataType[] = [
     children: [
       { key: '/hr/employees', label: '员工管理', path: '/hr/employees' },
       { key: '/hr/attendance', label: '考勤管理', path: '/hr/attendance' },
+      { key: '/hr/leave-approval', label: '请假审批', path: '/hr/leave-approval' },
       { key: '/hr/salary', label: '薪资管理', path: '/hr/salary' },
     ]
   },

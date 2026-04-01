@@ -14,6 +14,7 @@ import type {
   BindingStatistics,
   BindingStatus,
   ProtocolType,
+  BindDeviceRequest,
 } from '@/types/binding';
 import * as bindingService from '@/services/binding';
 
@@ -47,7 +48,7 @@ interface BindingState {
   fetchBindingEvents: (bindingId: string) => Promise<void>;
   fetchStatistics: () => Promise<void>;
   
-  bindDevice: (terminalId: string, data: bindingService.BindDeviceRequest) => Promise<boolean>;
+  bindDevice: (terminalId: string, data: BindDeviceRequest) => Promise<boolean>;
   unbindDevice: (bindingId: string, reason: string) => Promise<boolean>;
   
   selectBinding: (binding: DeviceBinding | null) => void;
@@ -160,7 +161,7 @@ export const useBindingStore = create<BindingState>((set, get) => ({
   },
   
   // 绑定设备
-  bindDevice: async (terminalId: string, data: bindingService.BindDeviceRequest) => {
+  bindDevice: async (terminalId: string, data: BindDeviceRequest) => {
     try {
       const result = await bindingService.bindDevice(terminalId, data);
       

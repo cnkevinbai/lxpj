@@ -2,7 +2,12 @@
  * 工资模块 Service
  * 负责工资数据的 CRUD 操作和业务逻辑
  */
-import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common'
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+  ConflictException,
+} from '@nestjs/common'
 import { PrismaService } from '../../common/prisma/prisma.service'
 import { CreateSalaryDto, UpdateSalaryDto, SalaryQueryDto } from './salary.dto'
 import { SalaryStatus } from '@prisma/client'
@@ -194,7 +199,8 @@ export class SalaryService {
     // 使用 Decimal 处理计算
     const baseDecimal = baseSalary instanceof Decimal ? baseSalary : new Decimal(Number(baseSalary))
     const bonusDecimal = bonus instanceof Decimal ? bonus : new Decimal(Number(bonus))
-    const deductionDecimal = deduction instanceof Decimal ? deduction : new Decimal(Number(deduction))
+    const deductionDecimal =
+      deduction instanceof Decimal ? deduction : new Decimal(Number(deduction))
     const total = baseDecimal.plus(bonusDecimal).minus(deductionDecimal)
 
     // 更新工资记录

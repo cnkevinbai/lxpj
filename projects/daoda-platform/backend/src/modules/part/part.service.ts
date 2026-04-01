@@ -4,7 +4,13 @@
 import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common'
 import { PrismaService } from '../../common/prisma/prisma.service'
 import { Part, PartStatus, PartLogType } from '@prisma/client'
-import { CreatePartDto, UpdatePartDto, PartQueryDto, PartListResponse, PartInventoryDto } from './part.dto'
+import {
+  CreatePartDto,
+  UpdatePartDto,
+  PartQueryDto,
+  PartListResponse,
+  PartInventoryDto,
+} from './part.dto'
 
 @Injectable()
 export class PartService {
@@ -205,7 +211,9 @@ export class PartService {
       }),
     ])
 
-    this.logger.log(`配件库存日志：${part.partNo} - 类型: ${dto.type}, 数量: ${dto.qty}, 新库存: ${newStock}`)
+    this.logger.log(
+      `配件库存日志：${part.partNo} - 类型: ${dto.type}, 数量: ${dto.qty}, 新库存: ${newStock}`,
+    )
     return updated[0]
   }
 
@@ -229,9 +237,10 @@ export class PartService {
       orderBy: { _count: { id: 'desc' } },
     })
 
-    return (stats as Array<{ status: PartStatus; _count: { id: number } }>).map(
-      (s) => ({ status: s.status, count: s._count.id })
-    )
+    return (stats as Array<{ status: PartStatus; _count: { id: number } }>).map((s) => ({
+      status: s.status,
+      count: s._count.id,
+    }))
   }
 
   async getSupplierStats(): Promise<{ supplier: string; count: number }[]> {

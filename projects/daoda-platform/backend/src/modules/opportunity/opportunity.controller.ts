@@ -1,7 +1,18 @@
 /**
  * 商机模块 Controller
  */
-import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Request } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+  Request,
+} from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery, ApiBearerAuth } from '@nestjs/swagger'
 import { OpportunityService } from './opportunity.service'
 import { CreateOpportunityDto, UpdateOpportunityDto, OpportunityQueryDto } from './opportunity.dto'

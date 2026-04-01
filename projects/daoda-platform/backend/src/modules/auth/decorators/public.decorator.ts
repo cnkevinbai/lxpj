@@ -9,7 +9,7 @@ export const IS_PUBLIC_KEY = 'isPublic'
 /**
  * @Public() 装饰器
  * 标记接口为公开访问，无需 JWT 认证
- * 
+ *
  * @example
  * @Public()
  * @Get('public-data')

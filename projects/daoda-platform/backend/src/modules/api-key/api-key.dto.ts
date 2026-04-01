@@ -2,7 +2,16 @@
  * API Key DTO
  */
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { IsString, IsOptional, IsBoolean, IsDateString, IsInt, Min, IsArray, Max } from 'class-validator'
+import {
+  IsString,
+  IsOptional,
+  IsBoolean,
+  IsDateString,
+  IsInt,
+  Min,
+  IsArray,
+  Max,
+} from 'class-validator'
 import { Type } from 'class-transformer'
 
 export class CreateApiKeyDto {

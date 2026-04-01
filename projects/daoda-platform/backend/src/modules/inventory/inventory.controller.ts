@@ -114,10 +114,7 @@ export class InventoryController {
   @ApiResponse({ status: 200, description: '变动成功' })
   @ApiResponse({ status: 400, description: '库存不足' })
   @ApiResponse({ status: 404, description: '库存记录不存在' })
-  changeStock(
-    @Param('id') id: string,
-    @Body() dto: InventoryChangeDto,
-  ) {
+  changeStock(@Param('id') id: string, @Body() dto: InventoryChangeDto) {
     return this.inventoryService.changeStock(id, dto)
   }
 

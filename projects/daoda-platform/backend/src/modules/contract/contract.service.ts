@@ -4,7 +4,12 @@
  */
 import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common'
 import { PrismaService } from '../../common/prisma/prisma.service'
-import { CreateContractDto, UpdateContractDto, ContractQueryDto, ContractStatus } from './contract.dto'
+import {
+  CreateContractDto,
+  UpdateContractDto,
+  ContractQueryDto,
+  ContractStatus,
+} from './contract.dto'
 
 @Injectable()
 export class ContractService {
@@ -19,7 +24,9 @@ export class ContractService {
   private generateContractNo(): string {
     const date = new Date()
     const dateStr = date.toISOString().slice(0, 10).replace(/-/g, '')
-    const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0')
+    const random = Math.floor(Math.random() * 10000)
+      .toString()
+      .padStart(4, '0')
     return `CT-${dateStr}-${random}`
   }
 
@@ -91,10 +98,7 @@ export class ContractService {
 
     // 搜索关键词
     if (keyword) {
-      where.OR = [
-        { contractNo: { contains: keyword } },
-        { title: { contains: keyword } },
-      ]
+      where.OR = [{ contractNo: { contains: keyword } }, { title: { contains: keyword } }]
     }
 
     // 状态过滤
@@ -112,13 +116,10 @@ export class ContractService {
       const now = new Date()
       const thirtyDaysLater = new Date()
       thirtyDaysLater.setDate(now.getDate() + 30)
-      
+
       where.AND = [
         {
-          OR: [
-            { status: ContractStatus.ACTIVE },
-            { status: ContractStatus.PENDING_RENEWAL },
-          ],
+          OR: [{ status: ContractStatus.ACTIVE }, { status: ContractStatus.PENDING_RENEWAL }],
         },
         {
           endDate: {
@@ -162,7 +163,7 @@ export class ContractService {
     if (dto.startDate || dto.endDate) {
       const startDate = new Date(dto.startDate || contract.startDate)
       const endDate = new Date(dto.endDate || contract.endDate)
-      
+
       if (startDate >= endDate) {
         throw new BadRequestException('开始日期必须晚于结束日期')
       }
@@ -220,7 +221,10 @@ export class ContractService {
     const contract = await this.findOne(id)
 
     // 只有 ACTIVE 或 PENDING_RENEWAL 状态的合同可以续约
-    if (contract.status !== ContractStatus.ACTIVE && contract.status !== ContractStatus.PENDING_RENEWAL) {
+    if (
+      contract.status !== ContractStatus.ACTIVE &&
+      contract.status !== ContractStatus.PENDING_RENEWAL
+    ) {
       throw new BadRequestException('只有 ACTIVE 或 PENDING_RENEWAL 状态的合同可以续约')
     }
 
@@ -248,7 +252,10 @@ export class ContractService {
     const contract = await this.findOne(id)
 
     // 只有 ACTIVE 或 PENDING_RENEWAL 状态的合同可以终止
-    if (contract.status !== ContractStatus.ACTIVE && contract.status !== ContractStatus.PENDING_RENEWAL) {
+    if (
+      contract.status !== ContractStatus.ACTIVE &&
+      contract.status !== ContractStatus.PENDING_RENEWAL
+    ) {
       throw new BadRequestException('只有 ACTIVE 或 PENDING_RENEWAL 状态的合同可以终止')
     }
 
@@ -275,10 +282,7 @@ export class ContractService {
       where: {
         AND: [
           {
-            OR: [
-              { status: ContractStatus.ACTIVE },
-              { status: ContractStatus.PENDING_RENEWAL },
-            ],
+            OR: [{ status: ContractStatus.ACTIVE }, { status: ContractStatus.PENDING_RENEWAL }],
           },
           {
             endDate: {

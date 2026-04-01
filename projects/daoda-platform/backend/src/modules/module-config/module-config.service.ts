@@ -1,6 +1,10 @@
 import { Injectable, NotFoundException, ConflictException, Logger } from '@nestjs/common'
 import { PrismaService } from '../../common/prisma/prisma.service'
-import { CreateModuleConfigDto, UpdateModuleConfigDto, ModuleConfigQueryDto } from './module-config.dto'
+import {
+  CreateModuleConfigDto,
+  UpdateModuleConfigDto,
+  ModuleConfigQueryDto,
+} from './module-config.dto'
 import { Prisma } from '@prisma/client'
 
 const DEFAULT_MODULES = [

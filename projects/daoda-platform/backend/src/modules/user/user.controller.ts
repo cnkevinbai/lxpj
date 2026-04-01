@@ -2,17 +2,7 @@
  * 用户控制器
  * 处理用户管理的 HTTP 请求
  */
-import { 
-  Controller, 
-  Get, 
-  Post, 
-  Put, 
-  Delete, 
-  Body, 
-  Param, 
-  Query, 
-  UseGuards,
-} from '@nestjs/common'
+import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse, ApiQuery } from '@nestjs/swagger'
 import { UserService, CreateUserDto, UpdateUserDto, UserQueryDto } from './user.service'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
@@ -120,10 +110,7 @@ export class UserController {
   @ApiOperation({ summary: '重置密码', description: '重置用户密码' })
   @ApiResponse({ status: 200, description: '重置成功' })
   @ApiResponse({ status: 404, description: '用户不存在' })
-  async resetPassword(
-    @Param('id') id: string,
-    @Body() body: { newPassword: string },
-  ) {
+  async resetPassword(@Param('id') id: string, @Body() body: { newPassword: string }) {
     await this.userService.resetPassword(id, body.newPassword)
     return { message: '密码重置成功' }
   }

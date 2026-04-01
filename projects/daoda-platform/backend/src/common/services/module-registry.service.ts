@@ -43,7 +43,7 @@ export class ModuleRegistryService {
    * 获取已启用的模块
    */
   getEnabledModules(): ModuleMetadata[] {
-    return Array.from(this.modules.values()).filter(m => m.enabled)
+    return Array.from(this.modules.values()).filter((m) => m.enabled)
   }
 
   /**

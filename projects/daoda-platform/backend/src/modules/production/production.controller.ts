@@ -17,7 +17,13 @@ import {
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger'
 import { JwtAuthGuard } from '../../modules/auth/guards/jwt-auth.guard'
 import { ProductionService } from './production.service'
-import { CreateProductionDto, UpdateProductionDto, ProductionQueryDto, StartProductionDto, CompleteProductionDto } from './production.dto'
+import {
+  CreateProductionDto,
+  UpdateProductionDto,
+  ProductionQueryDto,
+  StartProductionDto,
+  CompleteProductionDto,
+} from './production.dto'
 
 @ApiTags('生产管理')
 @Controller('production')

@@ -2,7 +2,17 @@
  * 采购模块 DTO 定义
  */
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { IsString, IsOptional, IsInt, IsEnum, IsNumber, Min, Max, IsArray, ValidateNested } from 'class-validator'
+import {
+  IsString,
+  IsOptional,
+  IsInt,
+  IsEnum,
+  IsNumber,
+  Min,
+  Max,
+  IsArray,
+  ValidateNested,
+} from 'class-validator'
 import { PurchaseStatus, PaymentStatus } from '@prisma/client'
 import { Type } from 'class-transformer'
 

@@ -10,7 +10,7 @@ export const ROLES_KEY = 'roles'
  * @Roles() 装饰器
  * 标记访问接口所需的角色列表（角色编码）
  * 需要配合 RolesGuard 使用
- * 
+ *
  * @example
  * @Roles('admin')
  * @UseGuards(JwtAuthGuard, RolesGuard)

@@ -7,6 +7,7 @@ import EmployeeList from './EmployeeList'
 import EmployeeDetail from './EmployeeDetail'
 import AttendanceList from './AttendanceList'
 import SalaryList from './SalaryList'
+import LeaveApproval from './LeaveApproval'
 
 export default function HR() {
   return (
@@ -15,6 +16,7 @@ export default function HR() {
       <Route path="employees" element={<EmployeeList />} />
       <Route path="employees/:id" element={<EmployeeDetail />} />
       <Route path="attendance" element={<AttendanceList />} />
+      <Route path="leave-approval" element={<LeaveApproval />} />
       <Route path="salary" element={<SalaryList />} />
     </Routes>
   )

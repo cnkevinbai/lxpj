@@ -1,48 +1,66 @@
 /**
  * 道达智能门户 - 全局样式变量和通用组件样式
- * 基于工作台UI风格统一
+ * 基于效果图重构：深色玻璃态现代化风格
  */
 
 /* ========================================
-   CSS 变量定义
+   CSS 变量定义 - 深色玻璃态主题
    ======================================== */
 
 :root {
-  /* 主色调 */
-  --primary-color: #1890ff;
-  --primary-color-hover: #40a9ff;
-  --primary-color-active: #096dd9;
+  /* 主色调 - 紫色渐变 */
+  --primary-color: #6600ff;
+  --primary-color-hover: #7c3aed;
+  --primary-color-active: #5500cc;
+  --primary-gradient: linear-gradient(135deg, #6600ff 0%, #a855f7 100%);
   
   /* 功能色 */
-  --success-color: #52c41a;
-  --warning-color: #faad14;
-  --error-color: #ff4d4f;
-  --info-color: #1890ff;
+  --success-color: #22c55e;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+  --info-color: #3b82f6;
   
-  /* 中性色 */
-  --text-primary: #1f1f1f;
-  --text-secondary: #595959;
-  --text-tertiary: #8c8c8c;
-  --text-quaternary: #bfbfbf;
-  --border-color: #f0f0f0;
-  --border-color-light: #f5f5f5;
+  /* 模块主题色 - 更鲜艳 */
+  --crm-color: #3b82f6;
+  --erp-color: #8b5cf6;
+  --finance-color: #f59e0b;
+  --service-color: #14b8a6;
+  --hr-color: #ec4899;
+  --settings-color: #6b7280;
   
-  /* 背景色 */
-  --bg-page: #f5f7fa;
-  --bg-card: #ffffff;
-  --bg-hover: #fafafa;
-  --bg-active: #f0f5ff;
+  /* 深色背景色 */
+  --bg-page: #0A0A0A;
+  --bg-card: rgba(255, 255, 255, 0.05);
+  --bg-card-hover: rgba(255, 255, 255, 0.08);
+  --bg-active: rgba(102, 0, 255, 0.1);
+  --bg-glass: rgba(255, 255, 255, 0.03);
+  
+  /* 文字色 - 浅色 */
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --text-quaternary: #475569;
+  
+  /* 边框色 - 紫色光晕 */
+  --border-color: rgba(102, 0, 255, 0.15);
+  --border-color-light: rgba(102, 0, 255, 0.08);
+  --border-glow: rgba(102, 0, 255, 0.25);
   
   /* 圆角 */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
   
-  /* 阴影 */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.03);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  /* 阴影 - 紫色光晕 */
+  --shadow-sm: 0 2px 8px rgba(102, 0, 255, 0.1);
+  --shadow-md: 0 4px 16px rgba(102, 0, 255, 0.15);
+  --shadow-lg: 0 8px 32px rgba(102, 0, 255, 0.2);
+  --shadow-glow: 0 0 40px rgba(102, 0, 255, 0.3);
+  
+  /* 玻璃态 */
+  --glass-blur: blur(12px);
+  --glass-bg: rgba(255, 255, 255, 0.05);
   
   /* 间距 */
   --spacing-xs: 4px;
@@ -50,34 +68,29 @@
   --spacing-md: 16px;
   --spacing-lg: 24px;
   --spacing-xl: 32px;
-  
-  /* 模块主题色 */
-  --crm-color: #1890ff;
-  --erp-color: #722ed1;
-  --finance-color: #fa8c16;
-  --service-color: #13c2c2;
-  --hr-color: #eb2f96;
-  --settings-color: #8c8c8c;
 }
 
 /* ========================================
-   页面基础样式
+   页面基础样式 - 深色背景
    ======================================== */
 
 .page-container {
   padding: 0;
   min-height: 100%;
   background: var(--bg-page);
+  color: var(--text-primary);
 }
 
-/* 页面标题区域 */
+/* 页面标题区域 - 玻璃态 */
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: var(--spacing-lg);
   background: var(--bg-card);
-  border-radius: var(--radius-md);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
   margin-bottom: var(--spacing-md);
   box-shadow: var(--shadow-sm);
 }
@@ -90,7 +103,7 @@
 
 .page-header-title {
   margin: 0 !important;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
   color: var(--text-primary);
 }
@@ -106,36 +119,56 @@
 }
 
 /* ========================================
-   卡片样式
+   卡片样式 - 玻璃态
    ======================================== */
 
 .daoda-card {
-  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
-  border: none;
+  transition: all 0.3s ease;
 }
 
 .daoda-card:hover {
-  box-shadow: var(--shadow-md);
+  background: var(--bg-card-hover);
+  border-color: var(--border-glow);
+  box-shadow: var(--shadow-md), var(--shadow-glow);
 }
 
 .daoda-card .ant-card-head {
   border-bottom: 1px solid var(--border-color-light);
   padding: 0 var(--spacing-lg);
   min-height: 56px;
+  color: var(--text-primary);
+}
+
+.daoda-card .ant-card-head-title {
+  color: var(--text-primary);
 }
 
 .daoda-card .ant-card-body {
   padding: var(--spacing-lg);
+  color: var(--text-primary);
 }
 
 /* ========================================
-   统计卡片样式
+   统计卡片样式 - 玻璃态渐变
    ======================================== */
 
 .stat-card {
-  height: 120px;
-  transition: all 0.2s ease;
+  height: 140px;
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-glow);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
 }
 
 .stat-card .ant-card-body {
@@ -146,14 +179,17 @@
 }
 
 .stat-icon {
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: 26px;
   flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(102, 0, 255, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(102, 0, 255, 0.2);
 }
 
 .stat-content {
@@ -176,8 +212,9 @@
 }
 
 .stat-value .ant-typography {
-  font-size: 28px;
-  font-weight: 600;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--primary-color);
 }
 
 .stat-trend {
@@ -192,35 +229,46 @@
   color: var(--error-color);
 }
 
+.stat-footer {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
 /* ========================================
-   按钮图标样式
+   按钮图标样式 - 渐变背景
    ======================================== */
 
 .icon-btn {
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
-  transition: transform 0.2s ease;
+  font-size: 24px;
+  background: linear-gradient(135deg, rgba(102, 0, 255, 0.15) 0%, rgba(168, 85, 247, 0.15) 100%);
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
   cursor: pointer;
 }
 
 .icon-btn:hover {
   transform: scale(1.1);
+  border-color: var(--border-glow);
+  box-shadow: var(--shadow-md);
 }
 
 .icon-btn-sm {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   font-size: 18px;
   border-radius: var(--radius-md);
 }
 
 /* ========================================
-   列表项样式
+   列表项样式 - 玻璃态
    ======================================== */
 
 .list-item {
@@ -231,12 +279,14 @@
   border-bottom: 1px solid var(--border-color-light);
   cursor: pointer;
   transition: all 0.2s ease;
+  color: var(--text-primary);
 }
 
 .list-item:hover {
-  background: var(--bg-hover);
+  background: var(--bg-active);
   margin: 0 calc(var(--spacing-lg) * -1);
   padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--radius-md);
 }
 
 .list-item:last-child {
@@ -248,15 +298,18 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: var(--text-primary);
 }
 
 /* ========================================
-   表格页面样式
+   表格页面样式 - 深色玻璃态
    ======================================== */
 
 .table-page {
   background: var(--bg-card);
-  border-radius: var(--radius-md);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
 }
 
@@ -264,7 +317,7 @@
   padding: var(--spacing-lg);
 }
 
-/* 搜索筛选区 */
+/* 搜索筛选区 - 玻璃态 */
 .filter-section {
   display: flex;
   flex-wrap: wrap;
@@ -281,8 +334,15 @@
 }
 
 .filter-item .ant-input,
-.filter-item .ant-select {
-  width: 200px;
+.filter-item .ant-select-selector {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.filter-item .ant-input:hover,
+.filter-item .ant-select-selector:hover {
+  border-color: var(--border-glow);
 }
 
 /* 操作按钮区 */
@@ -303,15 +363,30 @@
   gap: var(--spacing-sm);
 }
 
-/* 表格样式 */
+/* 表格样式 - 深色 */
+.daoda-table {
+  background: transparent;
+}
+
+.daoda-table .ant-table {
+  background: transparent;
+}
+
 .daoda-table .ant-table-thead > tr > th {
-  background: #fafafa;
+  background: var(--bg-glass);
   font-weight: 600;
   color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.daoda-table .ant-table-tbody > tr > td {
+  background: transparent;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color-light);
 }
 
 .daoda-table .ant-table-tbody > tr:hover > td {
-  background: var(--bg-hover);
+  background: var(--bg-active);
 }
 
 .daoda-table .ant-table-tbody > tr:last-child > td {
@@ -319,12 +394,14 @@
 }
 
 /* ========================================
-   表单页面样式
+   表单页面样式 - 玻璃态
    ======================================== */
 
 .form-page {
   background: var(--bg-card);
-  border-radius: var(--radius-md);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   padding: var(--spacing-xl);
 }
@@ -352,40 +429,41 @@
 }
 
 /* ========================================
-   状态标签样式
+   状态标签样式 - 玻璃态渐变
    ======================================== */
 
 .status-tag {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 2px 8px;
+  padding: 4px 12px;
   border-radius: var(--radius-sm);
   font-size: 12px;
+  backdrop-filter: blur(4px);
 }
 
 .status-tag.success {
-  background: #f6ffed;
+  background: rgba(34, 197, 94, 0.15);
   color: var(--success-color);
-  border-color: #b7eb8f;
+  border: 1px solid rgba(34, 197, 94, 0.3);
 }
 
 .status-tag.warning {
-  background: #fffbe6;
+  background: rgba(245, 158, 11, 0.15);
   color: var(--warning-color);
-  border-color: #ffe58f;
+  border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
 .status-tag.error {
-  background: #fff2f0;
+  background: rgba(239, 68, 68, 0.15);
   color: var(--error-color);
-  border-color: #ffccc7;
+  border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 .status-tag.info {
-  background: #e6f7ff;
+  background: rgba(59, 130, 246, 0.15);
   color: var(--info-color);
-  border-color: #91d5ff;
+  border: 1px solid rgba(59, 130, 246, 0.3);
 }
 
 /* ========================================
@@ -397,7 +475,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-xl) * 2;
+  padding: calc(var(--spacing-xl) * 2);
   text-align: center;
 }
 
@@ -414,7 +492,7 @@
 }
 
 /* ========================================
-   快捷入口样式
+   快捷入口样式 - 渐变玻璃态
    ======================================== */
 
 .shortcut-grid {
@@ -429,17 +507,19 @@
   align-items: center;
   gap: var(--spacing-sm);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   padding: var(--spacing-md) var(--spacing-sm);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
 }
 
 .shortcut-item:hover {
-  background: var(--bg-hover);
+  background: var(--bg-active);
 }
 
 .shortcut-item:hover .icon-btn {
   transform: scale(1.1);
+  border-color: var(--border-glow);
+  box-shadow: var(--shadow-md);
 }
 
 .shortcut-label {
@@ -449,21 +529,25 @@
 }
 
 /* ========================================
-   模块入口卡片
+   模块入口卡片 - 玻璃态渐变
    ======================================== */
 
 .module-card {
   padding: var(--spacing-md);
-  background: var(--bg-hover);
-  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   height: 100%;
 }
 
 .module-card:hover {
-  background: var(--bg-active);
-  transform: translateY(-2px);
+  background: var(--bg-card-hover);
+  border-color: var(--border-glow);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
 }
 
 .module-card-header {
@@ -474,13 +558,16 @@
 }
 
 .module-card-icon {
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: 26px;
+  background: linear-gradient(135deg, rgba(102, 0, 255, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(102, 0, 255, 0.2);
 }
 
 .module-card-info {
@@ -493,7 +580,7 @@
   display: flex;
   gap: var(--spacing-lg);
   padding-top: var(--spacing-md);
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-color-light);
 }
 
 .module-card-stat {
@@ -510,6 +597,52 @@
 
 .module-card-stat-value {
   font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* ========================================
+   Ant Design 组件覆盖样式
+   ======================================== */
+
+/* 按钮 */
+.ant-btn-primary {
+  background: var(--primary-gradient);
+  border: none;
+}
+
+.ant-btn-primary:hover {
+  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+}
+
+/* 输入框 */
+.ant-input {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.ant-input:hover,
+.ant-input:focus {
+  border-color: var(--border-glow);
+  box-shadow: 0 0 0 2px rgba(102, 0, 255, 0.1);
+}
+
+/* 选择器 */
+.ant-select-selector {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.ant-select:hover .ant-select-selector {
+  border-color: var(--border-glow);
+}
+
+/* 标签 */
+.ant-tag {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
 }
 
 /* ========================================
@@ -552,15 +685,15 @@
   }
   
   .stat-value .ant-typography {
-    font-size: 22px !important;
+    font-size: 24px !important;
   }
   
   .stat-icon,
   .module-card-icon,
   .icon-btn {
-    width: 40px;
-    height: 40px;
-    font-size: 18px;
+    width: 48px;
+    height: 48px;
+    font-size: 22px;
   }
   
   .form-page {

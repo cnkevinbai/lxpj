@@ -58,10 +58,7 @@ export class AuthService {
     // 1. 查找用户（包含角色信息）
     const user = await this.prisma.user.findFirst({
       where: {
-        OR: [
-          { email: dto.email },
-          { phone: dto.phone },
-        ],
+        OR: [{ email: dto.email }, { phone: dto.phone }],
         deletedAt: null,
       },
       include: {

@@ -1,4 +1,10 @@
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException, Logger } from '@nestjs/common'
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+  Logger,
+} from '@nestjs/common'
 import { ModuleConfigService } from '../../modules/module-config/module-config.service'
 
 /**
@@ -17,7 +23,7 @@ export class ModuleEnabledGuard implements CanActivate {
     opportunities: 'opportunity',
     orders: 'order',
     quotations: 'quotation',
-    
+
     // ERP 模块
     products: 'product',
     inventory: 'inventory',
@@ -28,32 +34,32 @@ export class ModuleEnabledGuard implements CanActivate {
     'production-orders': 'production',
     bom: 'production',
     'production-plans': 'production',
-    
+
     // Finance 模块
     invoices: 'invoice',
     receivables: 'receivable',
     payables: 'payable',
-    
+
     // HR 模块
     employees: 'employee',
     attendance: 'attendance',
     salary: 'salary',
-    
+
     // Service 模块 (嵌套路径)
     'service/tickets': 'service',
     'service/contracts': 'service',
     'service/parts': 'service',
-    
+
     // 兼容旧路径
     tickets: 'service',
     contracts: 'service',
     parts: 'service',
-    
+
     // CMS 模块
     news: 'cms',
     cases: 'cms',
     videos: 'cms',
-    
+
     // Settings 模块
     users: 'user',
     roles: 'auth',
@@ -65,7 +71,7 @@ export class ModuleEnabledGuard implements CanActivate {
     logs: 'auth',
     'system-configs': 'auth',
     system: 'auth',
-    
+
     // Auth 模块
     auth: 'auth',
     login: 'auth',
@@ -130,7 +136,7 @@ export class ModuleEnabledGuard implements CanActivate {
     if (nestedMatch) {
       return nestedMatch[1]
     }
-    
+
     // 再尝试匹配单层路径 /api/v1/xxx
     const singleMatch = path.match(/\/api\/v1\/([a-z-]+)/)
     return singleMatch ? singleMatch[1] : null

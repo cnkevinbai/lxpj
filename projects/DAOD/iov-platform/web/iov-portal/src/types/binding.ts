@@ -75,6 +75,7 @@ export interface DeviceBinding {
 export interface BindDeviceRequest {
   terminalId: string;
   vin: string;
+  vehicleNo?: string;  // 车牌号
   deviceType?: string;
   deviceModel?: string;
   simNumber?: string;

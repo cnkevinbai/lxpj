@@ -187,12 +187,12 @@ export class MenuService {
     const roots: MenuTreeNode[] = []
 
     // 先转换为响应对象
-    menus.forEach(menu => {
+    menus.forEach((menu) => {
       map.set(menu.id, this.mapToResponse(menu))
     })
 
     // 构建树形结构
-    menus.forEach(menu => {
+    menus.forEach((menu) => {
       const node = map.get(menu.id)!
       if (menu.parentId) {
         const parent = map.get(menu.parentId)

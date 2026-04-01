@@ -4,7 +4,11 @@
  */
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common'
 import { PrismaService } from '../../common/prisma/prisma.service'
-import { CreateSystemConfigDto, UpdateSystemConfigDto, SystemConfigQueryDto } from './system-config.dto'
+import {
+  CreateSystemConfigDto,
+  UpdateSystemConfigDto,
+  SystemConfigQueryDto,
+} from './system-config.dto'
 
 @Injectable()
 export class SystemConfigService {

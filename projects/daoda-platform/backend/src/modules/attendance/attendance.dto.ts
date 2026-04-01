@@ -28,7 +28,11 @@ export class CreateAttendanceDto {
   @Type(() => Date)
   checkOut?: Date
 
-  @ApiPropertyOptional({ description: '考勤状态', enum: AttendanceStatus, default: AttendanceStatus.PRESENT })
+  @ApiPropertyOptional({
+    description: '考勤状态',
+    enum: AttendanceStatus,
+    default: AttendanceStatus.PRESENT,
+  })
   @IsOptional()
   @IsEnum(AttendanceStatus)
   status?: AttendanceStatus

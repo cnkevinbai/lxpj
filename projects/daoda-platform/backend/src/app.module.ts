@@ -6,6 +6,10 @@ import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { ThrottlerModule } from '@nestjs/throttler'
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
+
+// Core 核心模块 - 热插拔系统
+import { CoreModule } from './core'
+
 import { PrismaModule } from './common/prisma/prisma.module'
 import { PrismaService } from './common/prisma/prisma.service'
 import { TenantContextService } from './common/services/tenant-context.service'
@@ -44,6 +48,9 @@ import { SalaryModule } from './modules/salary/salary.module'
 // CMS 相关模块
 import { NewsModule } from './modules/news/news.module'
 import { CaseModule } from './modules/case/case.module'
+
+// Supplier 供应商管理模块
+import { SupplierModule } from './modules/supplier/supplier.module'
 import { VideoModule } from './modules/video/video.module'
 
 // Settings 相关模块
@@ -72,8 +79,16 @@ import { EventEmitterService } from './common/services/event-emitter.service'
 import { ApiKeyModule } from './modules/api-key/api-key.module'
 import { PublicApiModule } from './modules/public-api/public-api.module'
 
+// Plugin 插件管理模块
+import { PluginNestModule } from './common/modules/plugin.module'
+
 @Module({
   imports: [
+    // ============================================
+    // Core 核心模块 - 热插拔系统 (优先导入)
+    // ============================================
+    CoreModule,
+
     // 配置模块
     ConfigModule.forRoot({
       isGlobal: true,
@@ -90,6 +105,12 @@ import { PublicApiModule } from './modules/public-api/public-api.module'
 
     // Prisma 模块
     PrismaModule,
+
+    // 插件管理模块
+    PluginNestModule,
+
+    // 供应商管理模块
+    SupplierModule,
 
     // 核心业务模块（10 个已完成）
     AuthModule,
@@ -172,12 +193,13 @@ import { PublicApiModule } from './modules/public-api/public-api.module'
   ],
 })
 export class AppModule implements NestModule {
-  constructor(private prisma: PrismaService, private tenantContext: TenantContextService) {}
+  constructor(
+    private prisma: PrismaService,
+    private tenantContext: TenantContextService,
+  ) {}
 
   configure(consumer: MiddlewareConsumer) {
     // 为所有 API 路由添加租户中间件
-    consumer
-      .apply(TenantMiddleware)
-      .forRoutes('*')
+    consumer.apply(TenantMiddleware).forRoutes('*')
   }
 }

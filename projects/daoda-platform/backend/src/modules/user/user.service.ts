@@ -136,7 +136,7 @@ export class UserService {
     // 软删除
     await this.prisma.user.update({
       where: { id },
-      data: { status: "INACTIVE" },
+      data: { status: 'INACTIVE' },
     })
 
     this.logger.log(`删除用户成功: ${user.email}`)
@@ -189,7 +189,7 @@ export class UserService {
       skip: (page - 1) * pageSize,
       take: pageSize,
       orderBy: { createdAt: 'desc' },
-      include: { roleRel: true }
+      include: { roleRel: true },
     })
 
     return { list, total, page, pageSize }

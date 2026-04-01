@@ -198,13 +198,15 @@ export class InventoryService {
 
   async checkWarning() {
     // 获取库存低于预警值的记录
-    const warnings = await this.prisma.$queryRaw<Array<{
-      id: string
-      productId: string
-      warehouse: string
-      quantity: Decimal
-      warningQty: Decimal
-    }>>`
+    const warnings = await this.prisma.$queryRaw<
+      Array<{
+        id: string
+        productId: string
+        warehouse: string
+        quantity: Decimal
+        warningQty: Decimal
+      }>
+    >`
       SELECT id, "product_id", warehouse, quantity, warning_qty
       FROM inventories
       WHERE quantity <= COALESCE(warning_qty, 10)

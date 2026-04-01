@@ -2,17 +2,7 @@
  * 菜单控制器
  * 处理菜单管理的 HTTP 请求
  */
-import {
-  Controller,
-  Get,
-  Post,
-  Put,
-  Delete,
-  Body,
-  Param,
-  Query,
-  UseGuards,
-} from '@nestjs/common'
+import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse, ApiQuery } from '@nestjs/swagger'
 import { MenuService } from './menu.service'
 import { CreateMenuDto, UpdateMenuDto, MenuQueryDto } from './menu.dto'

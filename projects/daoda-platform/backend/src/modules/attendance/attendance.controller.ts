@@ -17,7 +17,13 @@ import {
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger'
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard'
 import { AttendanceService } from './attendance.service'
-import { CreateAttendanceDto, UpdateAttendanceDto, AttendanceQueryDto, CheckInDto, CheckOutDto } from './attendance.dto'
+import {
+  CreateAttendanceDto,
+  UpdateAttendanceDto,
+  AttendanceQueryDto,
+  CheckInDto,
+  CheckOutDto,
+} from './attendance.dto'
 
 @ApiTags('考勤管理')
 @Controller('attendance')

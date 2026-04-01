@@ -186,7 +186,17 @@ export class ServiceService {
    * @param userId 当前用户 ID（用于 technicians 筛选自己的工单）
    */
   async findAll(query: ServiceTicketQueryDto, userId?: string): Promise<ServiceTicketListResponse> {
-    const { page = 1, pageSize = 10, keyword, status, priority, customerId, assigneeId, startDate, endDate } = query
+    const {
+      page = 1,
+      pageSize = 10,
+      keyword,
+      status,
+      priority,
+      customerId,
+      assigneeId,
+      startDate,
+      endDate,
+    } = query
 
     // 构建查询条件
     const where: any = {}
@@ -277,9 +287,9 @@ export class ServiceService {
     // 检查技术人员是否存在
     const assignee = await this.prisma.user.findFirst({
       where: {
-        id: assigneeId, 
+        id: assigneeId,
         role: 'TECHNICIAN',
-        deletedAt: null 
+        deletedAt: null,
       },
     })
     if (!assignee) {
@@ -333,9 +343,7 @@ export class ServiceService {
 
     const allowedStatuses = validTransitions[ticket.status]
     if (!allowedStatuses?.includes(status)) {
-      throw new BadRequestException(
-        `工单状态不能从 ${ticket.status} 变更为 ${status}`,
-      )
+      throw new BadRequestException(`工单状态不能从 ${ticket.status} 变更为 ${status}`)
     }
 
     // 更新工单
@@ -446,7 +454,9 @@ export class ServiceService {
    * 获取客户售后服务统计
    * @param customerId 客户 ID
    */
-  async getCustomerStats(customerId: string): Promise<{ ticketCount: number; completedCount: number; pendingCount: number }> {
+  async getCustomerStats(
+    customerId: string,
+  ): Promise<{ ticketCount: number; completedCount: number; pendingCount: number }> {
     const stats = await this.prisma.serviceTicket.groupBy({
       by: ['status'],
       where: { customerId },

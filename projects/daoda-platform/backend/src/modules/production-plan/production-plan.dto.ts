@@ -19,7 +19,11 @@ export class CreateProductionPlanDto {
   @IsNumber()
   quantity: number
 
-  @ApiPropertyOptional({ description: '计划状态', enum: ['PLANNED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'], default: 'PLANNED' })
+  @ApiPropertyOptional({
+    description: '计划状态',
+    enum: ['PLANNED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'],
+    default: 'PLANNED',
+  })
   @IsOptional()
   status?: string = 'PLANNED'
 
@@ -53,7 +57,10 @@ export class UpdateProductionPlanDto {
   @IsNumber()
   quantity?: number
 
-  @ApiPropertyOptional({ description: '计划状态', enum: ['PLANNED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'] })
+  @ApiPropertyOptional({
+    description: '计划状态',
+    enum: ['PLANNED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'],
+  })
   @IsOptional()
   status?: string
 
@@ -114,7 +121,10 @@ export class ProductionPlanQueryDto {
   @IsString()
   planNo?: string
 
-  @ApiPropertyOptional({ description: '计划状态', enum: ['DRAFT', 'APPROVED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'] })
+  @ApiPropertyOptional({
+    description: '计划状态',
+    enum: ['DRAFT', 'APPROVED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'],
+  })
   @IsOptional()
   status?: PlanStatus
 

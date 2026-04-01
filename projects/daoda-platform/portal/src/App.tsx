@@ -2,7 +2,7 @@
  * 门户路由配置
  */
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, lazy, Suspense } from 'react'
 import { Spin } from 'antd'
 import MainLayout from './layouts/MainLayout'
 import Login from './pages/Login'
@@ -16,6 +16,30 @@ import Message from './pages/message/Message'
 import Settings from './pages/settings/Settings'
 import NotFound from './pages/NotFound'
 import { useModuleStore } from './stores/moduleStore'
+
+// 懒加载 Workflow 页面
+const WorkflowPending = lazy(() => import('./pages/workflow/PendingApproval'))
+const WorkflowInitiated = lazy(() => import('./pages/workflow/WorkflowInitiated'))
+const WorkflowApproved = lazy(() => import('./pages/workflow/WorkflowApproved'))
+const WorkflowDefinitions = lazy(() => import('./pages/workflow/WorkflowDefinitionList'))
+
+// 懒加载 Notification 页面
+const NotificationCenter = lazy(() => import('./pages/notification/NotificationCenter'))
+const NotificationTemplates = lazy(() => import('./pages/notification/NotificationTemplates'))
+const NotificationPreferences = lazy(() => import('./pages/notification/NotificationPreference'))
+
+// 懒加载包装器
+function LazyWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense fallback={
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+        <Spin size="large" />
+      </div>
+    }>
+      {children}
+    </Suspense>
+  )
+}
 
 // 懒加载保护路由
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -58,6 +82,16 @@ export default function App() {
   // 路由定义（支持模块过滤）
   const allRoutes = [
     { path: '/dashboard', element: <Dashboard />, module: null },
+    // Workflow 路由
+    { path: '/workflow/pending', element: <LazyWrapper><WorkflowPending /></LazyWrapper>, module: 'workflow' },
+    { path: '/workflow/initiated', element: <LazyWrapper><WorkflowInitiated /></LazyWrapper>, module: 'workflow' },
+    { path: '/workflow/approved', element: <LazyWrapper><WorkflowApproved /></LazyWrapper>, module: 'workflow' },
+    { path: '/workflow/definitions', element: <LazyWrapper><WorkflowDefinitions /></LazyWrapper>, module: 'workflow' },
+    // Notification 路由
+    { path: '/notification/center', element: <LazyWrapper><NotificationCenter /></LazyWrapper>, module: 'notification' },
+    { path: '/notification/templates', element: <LazyWrapper><NotificationTemplates /></LazyWrapper>, module: 'notification' },
+    { path: '/notification/preferences', element: <LazyWrapper><NotificationPreferences /></LazyWrapper>, module: 'notification' },
+    // 其他模块路由
     { path: '/crm/*', element: <CRM />, module: 'crm' },
     { path: '/erp/*', element: <ERP />, module: 'erp' },
     { path: '/finance/*', element: <Finance />, module: 'finance' },

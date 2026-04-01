@@ -12,10 +12,10 @@ import { PrismaService } from '../../common/prisma/prisma.service'
  * JWT Payload 接口
  */
 export interface JwtPayload {
-  sub: string    // 用户 ID
-  role: string   // 用户角色代码
-  iat?: number   // 签发时间
-  exp?: number   // 过期时间
+  sub: string // 用户 ID
+  role: string // 用户角色代码
+  iat?: number // 签发时间
+  exp?: number // 过期时间
 }
 
 /**

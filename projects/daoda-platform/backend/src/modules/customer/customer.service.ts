@@ -141,7 +141,10 @@ export class CustomerService {
     return { list, total, page, pageSize }
   }
 
-  async batchImport(customers: CreateCustomerDto[], userId?: string): Promise<{ success: number; failed: number; errors: any[] }> {
+  async batchImport(
+    customers: CreateCustomerDto[],
+    userId?: string,
+  ): Promise<{ success: number; failed: number; errors: any[] }> {
     const errors: any[] = []
     let successCount = 0
 

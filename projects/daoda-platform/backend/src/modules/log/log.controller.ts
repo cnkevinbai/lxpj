@@ -2,14 +2,7 @@
  * 操作日志控制器
  * 处理操作日志的 HTTP 请求
  */
-import {
-  Controller,
-  Get,
-  Delete,
-  Param,
-  Query,
-  UseGuards,
-} from '@nestjs/common'
+import { Controller, Get, Delete, Param, Query, UseGuards } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse, ApiQuery } from '@nestjs/swagger'
 import { LogQueryDto } from './log.dto'
 import { LogService } from './log.service'
@@ -35,11 +28,11 @@ export class LogController {
   @ApiQuery({ name: 'page', required: false, description: '页码' })
   @ApiQuery({ name: 'pageSize', required: false, description: '每页数量' })
   @ApiQuery({ name: 'keyword', required: false, description: '搜索关键词' })
-  @ApiQuery({ 
-    name: 'status', 
-    required: false, 
+  @ApiQuery({
+    name: 'status',
+    required: false,
     description: '操作状态筛选',
-    enum: LogStatus
+    enum: LogStatus,
   })
   @ApiQuery({ name: 'username', required: false, description: '操作人' })
   @ApiQuery({ name: 'action', required: false, description: '操作动作' })

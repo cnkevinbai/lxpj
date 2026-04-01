@@ -21,7 +21,9 @@ export class ReceivableService {
   private generateReceivableNo(): string {
     const date = new Date()
     const dateStr = date.toISOString().slice(0, 10).replace(/-/g, '')
-    const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0')
+    const random = Math.floor(Math.random() * 10000)
+      .toString()
+      .padStart(4, '0')
     return `REC-${dateStr}-${random}`
   }
 
@@ -208,7 +210,10 @@ export class ReceivableService {
   async markOverdue(id: string) {
     const receivable = await this.findOne(id)
 
-    if (receivable.status !== ReceivableStatus.PENDING && receivable.status !== ReceivableStatus.PARTIAL) {
+    if (
+      receivable.status !== ReceivableStatus.PENDING &&
+      receivable.status !== ReceivableStatus.PARTIAL
+    ) {
       throw new BadRequestException('只有待收或部分收款状态可以标记为逾期')
     }
 

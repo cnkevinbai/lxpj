@@ -1,4 +1,14 @@
-import { IsString, IsNotEmpty, IsEmail, MinLength, IsOptional, IsInt, Min, Max, IsEnum } from 'class-validator'
+import {
+  IsString,
+  IsNotEmpty,
+  IsEmail,
+  MinLength,
+  IsOptional,
+  IsInt,
+  Min,
+  Max,
+  IsEnum,
+} from 'class-validator'
 import { UserRole } from '../../common/enums/user-role.enum'
 import { UserStatus } from '@prisma/client'
 

@@ -29,11 +29,7 @@ export class RateLimiterService {
    * @param limit - 时间窗口内允许的最大请求数
    * @param windowSeconds - 时间窗口大小 (秒)
    */
-  async checkLimit(
-    key: string,
-    limit: number,
-    windowSeconds: number = 3600,
-  ): Promise<boolean> {
+  async checkLimit(key: string, limit: number, windowSeconds: number = 3600): Promise<boolean> {
     const redisKey = `ratelimit:${key}:${Math.floor(Date.now() / 1000 / windowSeconds)}`
 
     try {

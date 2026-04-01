@@ -856,3 +856,152 @@
     text-align: center;
   }
 }
+
+/* ========== Hero Carousel 轮播样式 ========== */
+
+/* 轮播容器 */
+.daoda-hero-carousel {
+  width: 100%;
+  height: 100vh;
+  min-height: 600px;
+}
+
+.daoda-hero-carousel .ant-carousel {
+  height: 100%;
+}
+
+/* 轮播幻灯片 */
+.daoda-hero-slide {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 600px;
+}
+
+/* 轮播指示点 */
+.daoda-carousel-dots {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  gap: 12px;
+}
+
+.daoda-carousel-dots li {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.daoda-carousel-dots li:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.daoda-carousel-dots li.slick-active {
+  background: #6600FF;
+  border-color: rgba(255, 255, 255, 0.8);
+  transform: scale(1.2);
+}
+
+/* 轮播箭头按钮 (可选) */
+.daoda-hero-carousel .slick-prev,
+.daoda-hero-carousel .slick-next {
+  display: none !important; /* 隐藏默认箭头，使用自动播放 */
+}
+
+/* 轮播淡入淡出效果 */
+.daoda-hero-carousel .slick-slide {
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.daoda-hero-carousel .slick-active {
+  opacity: 1;
+}
+
+/* 幻灯片内容动画 */
+.daoda-hero-slide .daoda-hero-content {
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 幻灯片 Badge 动画 */
+.daoda-hero-slide .daoda-hero-badge {
+  animation: fadeIn 0.5s ease 0.2s forwards;
+  opacity: 0;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* 幻灯片标题动画 */
+.daoda-hero-slide .daoda-hero-title {
+  animation: slideInLeft 0.6s ease 0.3s forwards;
+  opacity: 0;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* 幻灯片描述动画 */
+.daoda-hero-slide .daoda-hero-desc {
+  animation: fadeIn 0.5s ease 0.5s forwards;
+  opacity: 0;
+}
+
+/* 幻灯片按钮动画 */
+.daoda-hero-slide .daoda-hero-actions {
+  animation: fadeIn 0.5s ease 0.7s forwards;
+  opacity: 0;
+}
+
+/* 移动端轮播调整 */
+@media (max-width: 768px) {
+  .daoda-hero-carousel {
+    height: auto;
+    min-height: 500px;
+  }
+  
+  .daoda-hero-slide {
+    height: auto;
+    min-height: 500px;
+    padding-bottom: 60px; /* 为指示点留空间 */
+  }
+  
+  .daoda-carousel-dots {
+    bottom: 20px;
+    gap: 8px;
+  }
+  
+  .daoda-carousel-dots li {
+    width: 8px;
+    height: 8px;
+  }
+}

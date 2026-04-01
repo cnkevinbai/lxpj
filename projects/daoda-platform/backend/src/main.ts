@@ -59,13 +59,13 @@ async function bootstrap() {
     .setVersion('1.0')
     .addBearerAuth()
     .build()
-  
+
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('api/docs', app, document)
 
   const port = process.env.PORT || 4000
   await app.listen(port)
-  
+
   console.log(`🚀 道达智能后端服务已启动: http://localhost:${port}`)
   console.log(`📚 API 文档: http://localhost:${port}/api/docs`)
 }

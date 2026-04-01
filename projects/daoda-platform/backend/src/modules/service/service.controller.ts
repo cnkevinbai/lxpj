@@ -57,7 +57,10 @@ export class ServiceController {
    */
   @Get()
   @Roles('ADMIN', 'MANAGER', 'SALES', 'TECHNICIAN')
-  @ApiOperation({ summary: '获取售后服务工单列表', description: '分页查询售后服务工单列表，支持搜索和筛选' })
+  @ApiOperation({
+    summary: '获取售后服务工单列表',
+    description: '分页查询售后服务工单列表，支持搜索和筛选',
+  })
   @ApiQuery({ name: 'page', required: false, description: '页码', example: 1 })
   @ApiQuery({ name: 'pageSize', required: false, description: '每页数量', example: 10 })
   @ApiQuery({ name: 'keyword', required: false, description: '搜索关键词（工单号）' })
@@ -79,7 +82,10 @@ export class ServiceController {
    */
   @Get(':id')
   @Roles('ADMIN', 'MANAGER', 'SALES', 'TECHNICIAN')
-  @ApiOperation({ summary: '获取售后服务工单详情', description: '根据 ID 获取售后服务工单详细信息' })
+  @ApiOperation({
+    summary: '获取售后服务工单详情',
+    description: '根据 ID 获取售后服务工单详细信息',
+  })
   @ApiResponse({ status: 200, description: '查询成功' })
   @ApiResponse({ status: 404, description: '工单不存在' })
   async findOne(@Param('id') id: string) {

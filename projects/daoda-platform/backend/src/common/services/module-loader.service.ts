@@ -27,7 +27,7 @@ export class ModuleLoaderService implements OnModuleInit {
    */
   private async loadModuleStates(): Promise<void> {
     const moduleConfigs = await this.prisma.moduleConfig.findMany()
-    
+
     for (const config of moduleConfigs) {
       const metadata = this.registry.getMetadata(config.moduleCode)
       if (metadata) {
@@ -110,7 +110,7 @@ export class ModuleLoaderService implements OnModuleInit {
    */
   private async checkDependents(moduleId: string): Promise<void> {
     const allModules = this.registry.getAllModules()
-    
+
     for (const mod of allModules) {
       if (mod.dependencies.includes(moduleId) && mod.enabled) {
         throw new Error(`Module ${mod.id} depends on ${moduleId}`)
@@ -128,7 +128,7 @@ export class ModuleLoaderService implements OnModuleInit {
     dependencies: string[]
   } {
     const metadata = this.registry.getMetadata(moduleId)
-    
+
     return {
       registered: !!metadata,
       enabled: metadata?.enabled || false,

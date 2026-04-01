@@ -4,7 +4,12 @@
 import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common'
 import { PrismaService } from '../../common/prisma/prisma.service'
 import { Product, ProductStatus } from '@prisma/client'
-import { CreateProductDto, UpdateProductDto, ProductQueryDto, ProductListResponse } from './product.dto'
+import {
+  CreateProductDto,
+  UpdateProductDto,
+  ProductQueryDto,
+  ProductListResponse,
+} from './product.dto'
 
 @Injectable()
 export class ProductService {
@@ -88,7 +93,7 @@ export class ProductService {
 
   async findAll(query: ProductQueryDto): Promise<ProductListResponse> {
     const { page = 1, pageSize = 10, keyword, category, series, status, minPrice, maxPrice } = query
-    const where: any = {  }
+    const where: any = {}
 
     if (keyword) {
       where.OR = [
@@ -163,7 +168,7 @@ export class ProductService {
     })
 
     const updates = products.map((product) => {
-      const oldPrice = parseFloat(product.price?.toString() || "0")
+      const oldPrice = parseFloat(product.price?.toString() || '0')
       const newPrice = oldPrice * (1 + percentage / 100)
       return this.prisma.product.update({
         where: { id: product.id },
@@ -183,7 +188,9 @@ export class ProductService {
       orderBy: { _count: { id: 'desc' } },
     })
 
-    return stats.filter((s) => s.category !== null).map((s) => ({ category: s.category!, count: s._count.id }))
+    return stats
+      .filter((s) => s.category !== null)
+      .map((s) => ({ category: s.category!, count: s._count.id }))
   }
 
   async getSeriesStats(): Promise<{ series: string; count: number }[]> {
@@ -194,7 +201,9 @@ export class ProductService {
       orderBy: { _count: { id: 'desc' } },
     })
 
-    return stats.filter((s) => s.series !== null).map((s) => ({ series: s.series!, count: s._count.id }))
+    return stats
+      .filter((s) => s.series !== null)
+      .map((s) => ({ series: s.series!, count: s._count.id }))
   }
 
   async getCategories(): Promise<string[]> {

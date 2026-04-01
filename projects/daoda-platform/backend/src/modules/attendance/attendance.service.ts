@@ -2,7 +2,12 @@
  * 考勤模块 Service
  * 负责考勤数据的 CRUD 操作和业务逻辑
  */
-import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common'
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+  ConflictException,
+} from '@nestjs/common'
 import { PrismaService } from '../../common/prisma/prisma.service'
 import { CreateAttendanceDto, UpdateAttendanceDto, AttendanceQueryDto } from './attendance.dto'
 import { AttendanceStatus } from '@prisma/client'

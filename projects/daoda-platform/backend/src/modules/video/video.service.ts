@@ -62,10 +62,7 @@ export class VideoService {
 
     // 关键词搜索（标题或摘要）
     if (keyword) {
-      where.OR = [
-        { title: { contains: keyword } },
-        { summary: { contains: keyword } },
-      ]
+      where.OR = [{ title: { contains: keyword } }, { summary: { contains: keyword } }]
     }
 
     // 来源筛选

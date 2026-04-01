@@ -6,7 +6,6 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Security;
-import java.util.HexAdapter;
 
 /**
  * 国密 SM3 哈希算法工具类

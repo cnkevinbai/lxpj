@@ -2,7 +2,18 @@
  * 报价单模块 DTO 定义
  */
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { IsString, IsOptional, IsEnum, IsNumber, IsDecimal, Min, Max, IsDateString, IsArray, ValidateNested } from 'class-validator'
+import {
+  IsString,
+  IsOptional,
+  IsEnum,
+  IsNumber,
+  IsDecimal,
+  Min,
+  Max,
+  IsDateString,
+  IsArray,
+  ValidateNested,
+} from 'class-validator'
 import { Type } from 'class-transformer'
 import { QuotationStatus } from '@prisma/client'
 

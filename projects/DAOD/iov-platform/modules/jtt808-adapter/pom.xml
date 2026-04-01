@@ -23,6 +23,13 @@
             <version>${project.version}</version>
         </dependency>
         
+        <!-- Vehicle Access (提供 BindingService API) -->
+        <dependency>
+            <groupId>com.daod.iov</groupId>
+            <artifactId>vehicle-access</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
         <!-- Plugin Framework -->
         <dependency>
             <groupId>com.daod.iov</groupId>
